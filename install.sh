@@ -51,7 +51,7 @@ mkdir -p "$HOME/.zsh"
 ([ -d "$HOME/.zsh/pure" ] && git pull) || git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 
 log_info "Installing oh-my-zsh ..."
-which omz >/dev/null || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+[ -d "$HOME/.oh-my-zsh" ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 log_info "Setting up .zshrc symbolic link ..."
 ln -sf "$HOME/.dotfiles/.zshrc" "$HOME/.zshrc"

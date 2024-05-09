@@ -25,7 +25,7 @@ if [ "$(uname -o)" = "GNU/Linux" ]; then
     sudo apt update -y && sudo apt dist-upgrade -y
 
     log_info "Installing useful dependencies (git, curl, jq, vim, etc.) ..."
-    sudo apt install -y git ca-certificates curl gnupg jq software-properties-common file wget vim tree socat man gettext shc bash-completion unzip keychain make zsh uidmap rsync fonts-jetbrains-mono
+    sudo apt install -y git ca-certificates curl gnupg jq software-properties-common file wget vim tree socat man gettext shc bash-completion unzip keychain make zsh uidmap rsync autojump
     # sudo apt install openjdk-17-jdk maven redis-server
 
     log_info "Auto uninstalling unnecessary dependencies ..."
@@ -47,7 +47,7 @@ fi
 "$HOME/.dotfiles/cli.sh" --git
 
 log_info "Updating or cloning pure prompt ..."
-mkdir -p "$HOME/.zsh"
+mkdir -p "$HOME/.zsh" && mkdir -p "$HOME/.ssh"
 ([ -d "$HOME/.zsh/pure" ] && cd "$HOME/.zsh/pure" && git pull) || git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 
 log_info "Installing oh-my-zsh ..."

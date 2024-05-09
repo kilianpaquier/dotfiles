@@ -22,7 +22,7 @@ set -e
 
 if [ "$(uname -o)" = "GNU/Linux" ]; then
     log_info "Upgrading current dependencies and distribution ..."
-    sudo apt update -y && sudo apt dist-upgrade
+    sudo apt update -y && sudo apt dist-upgrade -y
 
     log_info "Installing useful dependencies (git, curl, jq, vim, etc.) ..."
     sudo apt install -y git ca-certificates curl gnupg jq software-properties-common file wget vim tree socat man gettext shc bash-completion unzip keychain make zsh uidmap rsync fonts-jetbrains-mono

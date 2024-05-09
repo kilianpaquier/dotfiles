@@ -1,4 +1,5 @@
 zstyle :omz:plugins:keychain options --quiet
+zstyle :omz:plugins:keychain agents ssh
 
 zmodload zsh/nearcolor
 zstyle :prompt:pure:git:stash show yes

@@ -1,5 +1,6 @@
-zstyle :omz:plugins:keychain options --quiet
-zstyle :omz:plugins:keychain agents ssh
+zstyle :omz:plugins:keychain options --quiet --ignore-missing
+zstyle :omz:plugins:keychain agents gpg,ssh
+zstyle :omz:plugins:keychain identities id_ed25519 id_rsa
 
 zmodload zsh/nearcolor
 zstyle :prompt:pure:git:stash show yes

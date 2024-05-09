@@ -48,7 +48,7 @@ fi
 
 log_info "Updating or cloning pure prompt ..."
 mkdir -p "$HOME/.zsh"
-([ -d "$HOME/.zsh/pure" ] && git pull) || git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
+([ -d "$HOME/.zsh/pure" ] && cd "$HOME/.zsh/pure" && git pull) || git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 
 log_info "Installing oh-my-zsh ..."
 [ -d "$HOME/.oh-my-zsh" ] || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

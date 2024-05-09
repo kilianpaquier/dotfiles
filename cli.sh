@@ -212,15 +212,17 @@ set -e
 # set positional arguments in their proper place
 eval set -- "$PARAMS"
 
-log_info "Installing workspace ..."
-mkdir -p "${HOME}/.local/bin"
+if [ "$(uname -o)" = "GNU/Linux" ]; then
+    log_info "Installing workspace ..."
+    mkdir -p "${HOME}/.local/bin"
 
-log_info "Upgrading current dependencies and distribution ..."
-sudo apt update -y && sudo apt dist-upgrade
+    log_info "Upgrading current dependencies and distribution ..."
+    sudo apt update -y && sudo apt dist-upgrade
 
-log_info "Installing useful dependencies (git, curl, jq, vim, etc.) ..."
-sudo apt install -y git ca-certificates curl gnupg jq software-properties-common file wget vim tree socat man gettext shc bash-completion unzip keychain make zsh uidmap rsync fonts-jetbrains-mono
-# sudo apt install openjdk-17-jdk maven redis-server
+    log_info "Installing useful dependencies (git, curl, jq, vim, etc.) ..."
+    sudo apt install -y git ca-certificates curl gnupg jq software-properties-common file wget vim tree socat man gettext shc bash-completion unzip keychain make zsh uidmap rsync fonts-jetbrains-mono
+    # sudo apt install openjdk-17-jdk maven redis-server
+fi
 
 [ "$BUN" = 0 ] && setup_bun
 [ "$DOCKER" = 0 ] && setup_docker
@@ -232,5 +234,7 @@ sudo apt install -y git ca-certificates curl gnupg jq software-properties-common
 [ "$SHELLCHECK" = 0 ] && setup_shellcheck
 [ "$TRIVY" = 0 ] && setup_trivy
 
-log_info "Auto uninstalling unnecessary dependencies ..."
-sudo apt autoremove -y
+if [ "$(uname -o)" = "GNU/Linux" ]; then
+    log_info "Auto uninstalling unnecessary dependencies ..."
+    sudo apt autoremove -y
+fi

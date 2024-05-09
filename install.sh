@@ -27,6 +27,9 @@ if [ "$(uname -o)" = "GNU/Linux" ]; then
     log_info "Installing useful dependencies (git, curl, jq, vim, etc.) ..."
     sudo apt install -y git ca-certificates curl gnupg jq software-properties-common file wget vim tree socat man gettext shc bash-completion unzip keychain make zsh uidmap rsync fonts-jetbrains-mono
     # sudo apt install openjdk-17-jdk maven redis-server
+
+    log_info "Auto uninstalling unnecessary dependencies ..."
+    sudo apt autoremove -y
 fi
 
 log_info "Updating or cloning dotfiles project ..."

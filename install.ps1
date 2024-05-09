@@ -74,12 +74,12 @@ git config --global gpg.ssh.program "$env:programfiles\OpenSSH\ssh-keygen.exe"
 # -------------------------------------------------------------
 # zsh
 
-mkdir "$env:temp\zsh"
-Invoke-WebRequest -Uri "https://mirror.msys2.org/msys/x86_64/zsh-5.9-2-x86_64.pkg.tar.zst" -OutFile "$env:temp\zsh-5.9-2-x86_64.pkg.tar.zst"
-tar -xf "$env:temp\zsh-5.9-2-x86_64.pkg.tar.zst" -C "$env:temp\zsh"
-mv "$env:temp\zsh" "$env:programfiles\Git"
+# mkdir "$env:temp\zsh"
+# Invoke-WebRequest -Uri "https://mirror.msys2.org/msys/x86_64/zsh-5.9-2-x86_64.pkg.tar.zst" -OutFile "$env:temp\zsh-5.9-2-x86_64.pkg.tar.zst"
+# tar -xf "$env:temp\zsh-5.9-2-x86_64.pkg.tar.zst" -C "$env:temp\zsh"
+# mv "$env:temp\zsh" "$env:programfiles\Git"
 
-& "$env:programfiles\Git\bin\bash.exe" -c "echo '[ -t 1 ] && exec zsh' > ~/.bashrc"
+# & "$env:programfiles\Git\bin\bash.exe" -c "echo '[ -t 1 ] && exec zsh' > ~/.bashrc"
 
 # -------------------------------------------------------------
 # wsl

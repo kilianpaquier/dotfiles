@@ -81,26 +81,26 @@ setup_git() {
 setup_go() {
     log_info "Installing golang ..."
     go=$(curl -fsSL "https://go.dev/dl/?mode=json" | jq -r '.[0].version')
-    rm -rf "${HOME}/.local/go" && mkdir -p "${HOME}/.local/go"
-    curl -fsSL "https://go.dev/dl/${go}.linux-amd64.tar.gz" | (cd "${HOME}/.local/go" && tar -xz --strip-components=1)
+    rm -rf "$HOME/.local/go" && mkdir -p "$HOME/.local/go"
+    curl -fsSL "https://go.dev/dl/$go.linux-amd64.tar.gz" | (cd "$HOME/.local/go" && tar -xz --strip-components=1)
     for item in "go" "gofmt"; do
-        chmod +x "${HOME}/.local/go/bin/${item}" && ln -sf "${HOME}/.local/go/bin/${item}" "${HOME}/.local/bin/${item}"
+        chmod +x "$HOME/.local/go/bin/$item" && ln -sf "$HOME/.local/go/bin/$item" "$HOME/.local/bin/$item"
     done
 
     log_info "Installing golangci-lint ..."
-    curl -fsSL "https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh" | sh -s -- -b "${HOME}/go/bin"
+    curl -fsSL "https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh" | sh -s -- -b "$HOME/go/bin"
 
     log_info "Installing hugo ..."
-    rm -rf "${HOME}/.local/hugo" && mkdir -p "${HOME}/.local/hugo"
+    rm -rf "$HOME/.local/hugo" && mkdir -p "$HOME/.local/hugo"
     hugo=$(curl -fsSL "https://api.github.com/repos/gohugoio/hugo/releases/latest" | jq -r '.tag_name')
-    curl -fsSL "https://github.com/gohugoio/hugo/releases/download/${hugo}/hugo_extended_${hugo#v*}_linux-amd64.tar.gz" | (cd "${HOME}/.local/hugo" && tar -xz)
-    chmod +x "${HOME}/.local/hugo/hugo" && ln -sf "${HOME}/.local/hugo/hugo" "${HOME}/.local/bin/hugo"
+    curl -fsSL "https://github.com/gohugoio/hugo/releases/download/$hugo/hugo_extended_${hugo#v*}_linux-amd64.tar.gz" | (cd "$HOME/.local/hugo" && tar -xz)
+    chmod +x "$HOME/.local/hugo/hugo" && ln -sf "$HOME/.local/hugo/hugo" "$HOME/.local/bin/hugo"
 
     log_info "Installing goreleaser ..."
-    rm -rf "${HOME}/.local/goreleaser" && mkdir -p "${HOME}/.local/goreleaser"
+    rm -rf "$HOME/.local/goreleaser" && mkdir -p "$HOME/.local/goreleaser"
     goreleaser=$(curl -fsSL "https://api.github.com/repos/goreleaser/goreleaser/releases/latest" | jq -r '.tag_name')
-    curl -fsSL "https://github.com/goreleaser/goreleaser/releases/download/${goreleaser}/goreleaser_Linux_x86_64.tar.gz" | (cd "${HOME}/.local/goreleaser" && tar -xz)
-    chmod +x "${HOME}/.local/goreleaser/goreleaser" && ln -sf "${HOME}/.local/goreleaser/goreleaser" "${HOME}/.local/bin/goreleaser"
+    curl -fsSL "https://github.com/goreleaser/goreleaser/releases/download/$goreleaser/goreleaser_Linux_x86_64.tar.gz" | (cd "$HOME/.local/goreleaser" && tar -xz)
+    chmod +x "$HOME/.local/goreleaser/goreleaser" && ln -sf "$HOME/.local/goreleaser/goreleaser" "$HOME/.local/bin/goreleaser"
 
     log_info "Installing govulncheck ..."
     go install golang.org/x/vuln/cmd/govulncheck@latest
@@ -109,16 +109,16 @@ setup_go() {
 setup_k8s() {
     log_info "Installing kubectl ..."
     kubectl=$(curl -fsSL "https://dl.k8s.io/release/stable.txt")
-    curl -fsSL "https://dl.k8s.io/release/${kubectl}/bin/linux/amd64/kubectl" -o "${HOME}/.local/bin/kubectl"
-    chmod +x "${HOME}/.local/bin/kubectl"
+    curl -fsSL "https://dl.k8s.io/release/$kubectl/bin/linux/amd64/kubectl" -o "$HOME/.local/bin/kubectl"
+    chmod +x "$HOME/.local/bin/kubectl"
 
     log_info "Installing helm 3 ..."
-    curl -fsSL "https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3" | HELM_INSTALL_DIR="${HOME}/.local/bin" USE_SUDO="false" bash
+    curl -fsSL "https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3" | HELM_INSTALL_DIR="$HOME/.local/bin" USE_SUDO="false" bash
 
     log_info "Installing k9s ..."
-    rm -rf "${HOME}/.local/k9s" && mkdir -p "${HOME}/.local/k9s"
-    curl -fsSL "https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_amd64.tar.gz" | (cd "${HOME}/.local/k9s" && tar -xz)
-    chmod +x "${HOME}/.local/k9s/k9s" && ln -sf "${HOME}/.local/k9s/k9s" "${HOME}/.local/bin/k9s"
+    rm -rf "$HOME/.local/k9s" && mkdir -p "$HOME/.local/k9s"
+    curl -fsSL "https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_amd64.tar.gz" | (cd "$HOME/.local/k9s" && tar -xz)
+    chmod +x "$HOME/.local/k9s/k9s" && ln -sf "$HOME/.local/k9s/k9s" "$HOME/.local/bin/k9s"
 }
 
 setup_nodejs() {
@@ -141,7 +141,7 @@ setup_bun() {
     git config --global diff.lockb.textconv bun
     git config --global diff.lockb.binary true
     git config --global core.attributesfile ~/.gitattributes
-    file_line '*.lockb binary diff=lockb' "${HOME}/.gitattributes"
+    file_line '*.lockb binary diff=lockb' "$HOME/.gitattributes"
 }
 
 setup_postgres() {
@@ -153,18 +153,18 @@ setup_postgres() {
 
 setup_shellcheck() {
     log_info "Installing shellcheck ..."
-    rm -rf "${HOME}/.local/shellcheck" && mkdir -p "${HOME}/.local/shellcheck"
+    rm -rf "$HOME/.local/shellcheck" && mkdir -p "$HOME/.local/shellcheck"
     shellcheck=$(curl -fsSL "https://api.github.com/repos/koalaman/shellcheck/releases/latest" | jq -r '.tag_name')
-    curl -fsSL "https://github.com/koalaman/shellcheck/releases/download/${shellcheck}/shellcheck-${shellcheck}.linux.x86_64.tar.xz" | (cd "${HOME}/.local/shellcheck" && tar -xJ --strip-components=1)
-    chmod +x "${HOME}/.local/shellcheck/shellcheck" && ln -sf "${HOME}/.local/shellcheck/shellcheck" "${HOME}/.local/bin/shellcheck"
+    curl -fsSL "https://github.com/koalaman/shellcheck/releases/download/$shellcheck/shellcheck-$shellcheck.linux.x86_64.tar.xz" | (cd "$HOME/.local/shellcheck" && tar -xJ --strip-components=1)
+    chmod +x "$HOME/.local/shellcheck/shellcheck" && ln -sf "$HOME/.local/shellcheck/shellcheck" "$HOME/.local/bin/shellcheck"
 }
 
 setup_trivy() {
     log_info "Installing trivy ..."
-    rm -rf "${HOME}/.local/trivy" && mkdir -p "${HOME}/.local/trivy"
+    rm -rf "$HOME/.local/trivy" && mkdir -p "$HOME/.local/trivy"
     trivy=$(curl -fsSL "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | jq -r '.tag_name')
-    curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/${trivy}/trivy_${trivy#v*}_Linux-64bit.tar.gz" | (cd "${HOME}/.local/trivy" && tar -xz)
-    chmod +x "${HOME}/.local/trivy/trivy" && ln -sf "${HOME}/.local/trivy/trivy" "${HOME}/.local/bin/trivy"
+    curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/$trivy/trivy_${trivy#v*}_Linux-64bit.tar.gz" | (cd "$HOME/.local/trivy" && tar -xz)
+    chmod +x "$HOME/.local/trivy/trivy" && ln -sf "$HOME/.local/trivy/trivy" "$HOME/.local/bin/trivy"
 }
 
 usage() {
@@ -184,7 +184,7 @@ Options:
     -v, --debug         Enable debug mode to log every step
 
 Notes:
-    All installation are done in ${HOME}/.local."
+    All installation are done in $HOME/.local."
 }
 
 PARAMS=""
@@ -214,7 +214,7 @@ eval set -- "$PARAMS"
 
 if [ "$(uname -o)" = "GNU/Linux" ]; then
     log_info "Installing workspace ..."
-    mkdir -p "${HOME}/.local/bin"
+    mkdir -p "$HOME/.local/bin"
 
     log_info "Upgrading current dependencies and distribution ..."
     sudo apt update -y && sudo apt dist-upgrade

@@ -10,7 +10,7 @@
 ---
 
 - [Windows](#windows)
-- [GNU Linux based](#gnu-linux-based)
+- [Debian](#debian)
   - [CLI](#cli)
 
 ## Windows
@@ -22,9 +22,9 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kilianpaquier/dotfiles
 wt powershell -ExecutionPolicy Bypass -File "$env:temp\install.ps1"
 ```
 
-## GNU Linux based
+## Debian
 
-In any terminal (windows git bash works too):
+In any terminal:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/kilianpaquier/dotfiles/main/install.sh -o /tmp/install.sh
@@ -50,5 +50,5 @@ Options:
     -v, --debug         Enable debug mode to log every step
 
 Notes:
-    All installation are done in ${HOME}/.local."
+    All installation are done in $HOME/.local."
 ```

@@ -33,7 +33,7 @@ log_info "Updating or cloning dotfiles project ..."
 if [ -d "$HOME/.dotfiles" ]; then
     (
         cd "$HOME/.dotfiles"
-        ([ "$(git status --porcelain | wc -l)" -eq 0 ] && git pull --recurse-submodules) || log_warn "Changes detected in $HOME/.dotfiles, not pulling project ..."
+        ([ "$(git status --porcelain | wc -l)" -eq 0 ] && git pull && git submodule update --recursive --remote) || log_warn "Changes detected in $HOME/.dotfiles, not pulling project ..."
     )
 elif [ "$(find ~/.ssh -name 'id_*.pub' | wc -l)" -eq 0 ]; then
     git clone --recurse-submodules https://github.com/kilianpaquier/dotfiles.git "$HOME/.dotfiles"

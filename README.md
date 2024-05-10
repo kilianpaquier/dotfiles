@@ -30,6 +30,13 @@ In any terminal:
 curl -fsSL https://raw.githubusercontent.com/kilianpaquier/dotfiles/main/install.sh | bash
 ```
 
+Available options:
+- `HTTP_CLONE`: When defined (no matter its value), all clones will be done with HTTP(s), otherwise it'll be if the following glob doesn't return any file `$HOME/.ssh/id_*`.
+
+```sh
+HTTP_CLONE=1 curl -fsSL https://raw.githubusercontent.com/kilianpaquier/dotfiles/main/install.sh | bash
+```
+
 ### CLI
 
 ```

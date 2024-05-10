@@ -27,8 +27,7 @@ wt powershell -ExecutionPolicy Bypass -File "$env:temp\install.ps1"
 In any terminal:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/kilianpaquier/dotfiles/main/install.sh -o /tmp/install.sh
-chmod +x /tmp/install.sh && /tmp/install.sh
+curl -fsSL https://raw.githubusercontent.com/kilianpaquier/dotfiles/main/install.sh | bash
 ```
 
 ### CLI

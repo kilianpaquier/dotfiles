@@ -44,8 +44,6 @@ else
     git clone --recurse-submodules git@github.com:kilianpaquier/dotfiles.git "$HOME/.dotfiles"
 fi
 
-"$HOME/.dotfiles/cli.sh" --git
-
 log_info "Updating or cloning pure prompt ..."
 mkdir -p "$HOME/.zsh" && mkdir -p "$HOME/.ssh"
 ([ -d "$HOME/.zsh/pure" ] && cd "$HOME/.zsh/pure" && git pull) || git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"

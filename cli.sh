@@ -181,7 +181,7 @@ Options:
     -n, --nodejs        Installs or upgrades nodejs, bun and semantic-release
     -s, --shellcheck    Installs or upgrades shellcheck
     -t, --trivy         Installs or upgrades trivy
-    -v, --debug         Enable debug mode to log every step
+    -v, --verbose       Enable verbose mode to log every step
 
 Notes:
     All installation are done in $HOME/.local."
@@ -200,7 +200,7 @@ while [ "$#" -ne 0 ]; do
     -n | --node*) NODEJS=0 && shift ;;
     -s | --shellcheck) SHELLCHECK=0 && shift ;;
     -t | --trivy) TRIVY=0 && shift ;;
-    -v | --debug) set -x && shift ;;
+    -v | --verbose) set -x && shift ;;
     -*) usage && log_error "Unsupported flag $1" >&2 && exit 1 ;; # unsupported flags
     # --*=) usage && log_error "Unsupported flag $1" >&2 && exit 1 ;; # unsupported flags
     *) PARAMS="$PARAMS $1" && shift ;; # preserve positional arguments

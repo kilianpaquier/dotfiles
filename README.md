@@ -53,7 +53,7 @@ Options:
     -n, --nodejs        Installs or upgrades nodejs, bun and semantic-release
     -s, --shellcheck    Installs or upgrades shellcheck
     -t, --trivy         Installs or upgrades trivy
-    -v, --debug         Enable debug mode to log every step
+    -v, --verbose       Enable verbose mode to log every step
 
 Notes:
     All installation are done in $HOME/.local."

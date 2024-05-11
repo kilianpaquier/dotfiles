@@ -18,8 +18,7 @@
 In a powershell terminal:
 
 ```ps1
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kilianpaquier/dotfiles/main/install.ps1" -OutFile "$env:temp\install.ps1"
-wt powershell -ExecutionPolicy Bypass -File "$env:temp\install.ps1"
+(New-Object System.Net.WebClient).DownloadString("https://raw.githubusercontent.com/kilianpaquier/dotfiles/main/install.ps1") | wt powershell -command -
 ```
 
 ## Debian

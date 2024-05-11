@@ -220,7 +220,7 @@ if [ "$(uname -o)" = "GNU/Linux" ]; then
     sudo apt update -y && sudo apt dist-upgrade
 
     log_info "Installing useful dependencies (git, curl, jq, vim, etc.) ..."
-    sudo apt install -y git ca-certificates curl gnupg jq software-properties-common file wget vim tree socat man gettext shc bash-completion unzip keychain make zsh uidmap rsync fonts-jetbrains-mono
+    sudo apt install -y autojump bash-completion ca-certificates curl file git gnupg jq keychain make man rsync tree uidmap unzip vim wget zsh
     # sudo apt install openjdk-17-jdk maven redis-server
 fi
 

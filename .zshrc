@@ -1,5 +1,6 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH="$PATH:$HOME/bin:/usr/local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -8,7 +9,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="pure"
+ZSH_THEME=""
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -24,12 +25,24 @@ CASE_SENSITIVE="true"
 # HYPHEN_INSENSITIVE="true"
 
 # Uncomment one of the following lines to change the auto-update behavior
-zstyle ':omz:update' mode disabled  # disable automatic updates
+zstyle ':omz:update' mode disabled # disable automatic updates
 # zstyle ':omz:update' mode auto      # update automatically without asking
 # zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
 # zstyle ':omz:update' frequency 1
+
+# Keychain plugin styling
+zstyle :omz:plugins:keychain options --quiet --ignore-missing
+zstyle :omz:plugins:keychain agents gpg,ssh
+zstyle :omz:plugins:keychain identities id_ed25519 id_rsa
+
+# Pure theme styling
+zmodload zsh/nearcolor
+zstyle :prompt:pure:git:stash show yes
+zstyle ':prompt:pure:user' color green
+zstyle ':prompt:pure:host' color green
+zstyle ':prompt:pure:path' color cyan
 
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
@@ -70,9 +83,16 @@ ZSH_CUSTOM="$HOME/.dotfiles"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(customization autojump docker keychain gitignore zsh-autosuggestions)
+plugins=(autojump docker keychain gitignore zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
+
+if [ "$ZSH_THEME" = "" ]; then
+    fpath+=($HOME/.zsh/pure)
+    autoload -U promptinit
+    promptinit
+    prompt pure
+fi
 
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -98,5 +118,23 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+alias g='git'
+alias h='helm'
+alias k='kubectl'
+
+# docker
+[ -f "$HOME/.docker/config.json" ] && [ "$(jq -r ".currentContext" <$HOME/.docker/config.json)" = "rootless" ] && export DOCKER_HOST="unix:///run/user/1000/docker.sock"
+
+# golang
+export GOBIN="$HOME/go/bin"
+export PATH="$PATH:$GOBIN"
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$PATH:$BUN_INSTALL/bin"
 
 [ -f "$HOME/.zshrc-sshdevserver" ] && source "$HOME/.zshrc-sshdevserver"

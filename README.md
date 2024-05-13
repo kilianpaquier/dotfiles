@@ -1,6 +1,6 @@
 <!-- This file is safe to edit. Once it exists it will not be overwritten. -->
 
-# workspace <!-- omit in toc -->
+# dotfiles <!-- omit in toc -->
 
 <p align="center">
   <img alt="GitHub Issues" src="https://img.shields.io/github/issues-raw/kilianpaquier/dotfiles?style=for-the-badge">

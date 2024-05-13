@@ -131,17 +131,14 @@ setup_nodejs() {
     NODE_MAJOR=20
     echo "deb [signed-by=$keyring] $url/node_$NODE_MAJOR.x nodistro main" | sudo tee $source
     sudo apt-get update && sudo apt-get install -y nodejs
+
+    log_info "Installing pnpm ..."
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
 }
 
 setup_bun() {
     log_info "Installing bun ..."
     curl -fsSL https://bun.sh/install | bash
-
-    echo "Setting up global git configuration for bun lockfile ..."
-    git config --global diff.lockb.textconv bun
-    git config --global diff.lockb.binary true
-    git config --global core.attributesfile ~/.gitattributes
-    file_line '*.lockb binary diff=lockb' "$HOME/.gitattributes"
 }
 
 setup_postgres() {
@@ -178,7 +175,7 @@ Options:
     -g, --git           Setup default git configuration
     -h, --help          Shows this help message
     -k, --k8s           Installs or upgrades kubectl with k alias, k9s and helm
-    -n, --nodejs        Installs or upgrades nodejs, bun and semantic-release
+    -n, --nodejs        Installs or upgrades nodejs and pnpm
     -s, --shellcheck    Installs or upgrades shellcheck
     -t, --trivy         Installs or upgrades trivy
     -v, --verbose       Enable verbose mode to log every step

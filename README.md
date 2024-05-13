@@ -49,7 +49,7 @@ Options:
     -g, --git           Setup default git configuration
     -h, --help          Shows this help message
     -k, --k8s           Installs or upgrades kubectl with k alias, k9s and helm
-    -n, --nodejs        Installs or upgrades nodejs, bun and semantic-release
+    -n, --nodejs        Installs or upgrades nodejs and pnpm
     -s, --shellcheck    Installs or upgrades shellcheck
     -t, --trivy         Installs or upgrades trivy
     -v, --verbose       Enable verbose mode to log every step

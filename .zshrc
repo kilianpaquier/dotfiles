@@ -137,4 +137,8 @@ export PATH="$PATH:$GOBIN"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$PATH:$BUN_INSTALL/bin"
 
+# pnpm
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export PATH="$PATH:$PNPM_HOME"
+
 [ -f "$HOME/.zshrc-sshdevserver" ] && source "$HOME/.zshrc-sshdevserver"

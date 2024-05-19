@@ -39,6 +39,7 @@ winget install --id=Adobe.Acrobat.Reader.64-bit -e -i
 # winget install --id=AgileBits.1Password -e -i
 winget install --id=Brave.Brave -e -i
 # winget install --id=Microsoft.Edge -e -i
+winget install --id=Microsoft.DotNet.DesktopRuntime.8 -e -i
 winget install --id=Microsoft.PowerShell -e -i
 winget install --id=Microsoft.WindowsTerminal -e -i
 winget install --id=Spotify.Spotify -e -i

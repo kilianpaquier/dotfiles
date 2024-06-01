@@ -94,6 +94,8 @@ if [ "$ZSH_THEME" = "" ]; then
     prompt pure
 fi
 
+OLD_PROMPT="$PROMPT"
+
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -119,7 +121,6 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-alias g='git'
 alias h='helm'
 alias k='kubectl'
 
@@ -142,3 +143,4 @@ export PNPM_HOME="$HOME/.local/share/pnpm"
 export PATH="$PATH:$PNPM_HOME"
 
 [ -f "$HOME/.zshrc-sshdevserver" ] && source "$HOME/.zshrc-sshdevserver"
+PROMPT="$OLD_PROMPT"

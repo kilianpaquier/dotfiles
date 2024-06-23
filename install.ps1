@@ -15,13 +15,13 @@ function sudo {
 # -------------------------------------------------------------
 # workspace softwares
 
-Install-Module -Name Microsoft.WinGet.Client
+# Install-Module -Name Microsoft.WinGet.Client
 
 # winget install --id Microsoft.PowerToys -e -i
 # winget install --id=dbeaver.dbeaver -e -i
 winget install --id=Microsoft.VisualStudioCode -e -i
 winget install --id=Git.Git -e -i
-# winget install --id=Microsoft.OpenSSH.Beta -e -i
+winget install --id=Microsoft.OpenSSH.Beta -e -i
 # winget install --id MSYS2.MSYS2 -e -i
 
 # winget install --id=IDRIX.VeraCrypt -e -i
@@ -35,13 +35,14 @@ winget install --id=Discord.Discord -e -i
 # winget install --id=WeMod.WeMod -e -i
 
 winget install --id=7zip.7zip -e -i
-winget install --id=Adobe.Acrobat.Reader.64-bit -e -i
+# winget install --id=Adobe.Acrobat.Reader.64-bit -e -i
 # winget install --id=AgileBits.1Password -e -i
 winget install --id=Brave.Brave -e -i
 # winget install --id=Microsoft.Edge -e -i
-winget install --id=Microsoft.DotNet.DesktopRuntime.8 -e -i
-winget install --id=Microsoft.PowerShell -e -i
-winget install --id=Microsoft.WindowsTerminal -e -i
+winget install --id=Microsoft.DotNet.DesktopRuntime.8 -e -i --architecture x86
+winget install --id=Microsoft.DotNet.Runtime.8 -e -i --architecture x86
+# winget install --id=Microsoft.PowerShell -e -i
+# winget install --id=Microsoft.WindowsTerminal -e -i
 winget install --id=Spotify.Spotify -e -i
 winget install --id=TheDocumentFoundation.LibreOffice -e -i
 # winget install --id=VideoLAN.VLC -e -i
@@ -50,7 +51,7 @@ winget install --id=TheDocumentFoundation.LibreOffice -e -i
 # yubikey minidriver
 
 [xml]$downloads = $(Invoke-WebRequest -Uri "https://downloads.yubico.com/")
-$minidriver = $($downloads.ListBucketResult.Contents.Key -match "YubiKey-Minidriver-.*-x64.msi" -notmatch ".*.msi_.sha256")
+$minidriver = $($downloads.ListBucketResult.Contents.Key -match "YubiKey-Minidriver-.*-x64.msi" -notmatch ".*.msi_.sha256") # FIXME returning multiple version ...
 
 Invoke-WebRequest -Uri "https://downloads.yubico.com/$minidriver" -OutFile "$env:temp\YubiKey-Minidriver-x64.msi"
 msiexec /I "$env:temp\YubiKey-Minidriver-x64.msi"

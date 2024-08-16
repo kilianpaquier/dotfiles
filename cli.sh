@@ -39,6 +39,32 @@ setup_docker() {
     dockerd-rootless-setuptool.sh install
 }
 
+install_github() {
+    owner="$1"
+    repo="$2"
+    asset="$3"
+
+    log_info "Checking ${repo} releases ..."
+    current_version=$("${repo}" version || echo "v0.0.0")
+    new_version=$(curl -fsSL "https://api.github.com/repos/${owner}/${repo}/releases/latest" | jq -r '.tag_name')
+    if echo "${current_version}" | grep -Eq "${new_version}"; then
+        log_info "Latest ${repo} version ${new_version} already installed"
+        return 0
+    fi
+    log_info "Installing ${repo} version ${new_version}"
+
+    # OS="linux" # change it depending on our case
+    # ARCH="amd64" # change it depending on our case
+
+    asset="$(echo "${asset}" | sed "s/{{with_version}}/${new_version#v*}/g")"
+    url="https://github.com/${owner}/${repo}/releases/download/${new_version}/${asset}"
+
+    curl -fsSL "$url" -o "/tmp/${asset}"
+    mkdir -p "/tmp/${repo}/${new_version}"
+    tar -xzf "/tmp/${asset}" -C "/tmp/${repo}/${new_version}"
+    cp "/tmp/${repo}/${new_version}/${repo}" "${HOME}/.local/bin/${repo}"
+}
+
 setup_git() {
     log_info "Setting up various git configuration globally ..."
     git config --global core.editor 'code --wait'
@@ -58,7 +84,7 @@ setup_git() {
     git config --global alias.alias '!git config --get-regexp ^alias\. | sed -e s/^alias\.// -e s/\ /\ =\ /'
     git config --global alias.amend 'commit --amend --no-edit'
     git config --global alias.branches "branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate"
-    git config --global alias.c 'commit'
+    git config --global alias.c 'commit -m'
     git config --global alias.cp 'cherry-pick'
     git config --global alias.current 'rev-parse --abbrev-ref HEAD'
     git config --global alias.last 'log -1 HEAD --stat'
@@ -79,11 +105,11 @@ setup_git() {
 }
 
 setup_go() {
-    log_info "Installing golang ..."
+    log_info "Checking go releases ..."
     current_go_version=$(go version || echo "go0.0.0")
     new_go_version=$(curl -fsSL "https://go.dev/dl/?mode=json" | jq -r '.[0].version')
     if echo "${current_go_version}" | grep -Eq "${new_go_version}"; then
-        log_info "Latest go version already installed"
+        log_info "Latest go version ${new_go_version} already installed"
     else
         rm -rf "${HOME}/.local/go" && mkdir -p "${HOME}/.local/go"
         curl -fsSL "https://go.dev/dl/${new_go_version}.linux-amd64.tar.gz" | (cd "${HOME}/.local/go" && tar -xz --strip-components=1)
@@ -92,30 +118,11 @@ setup_go() {
         done
     fi
 
-    log_info "Installing golangci-lint ..."
-    curl -fsSL "https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh" | sh -s -- -b "${HOME}/go/bin"
+    log_info "Checking golangci-lint releases ..."
+    curl -fsSL "https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh" | sh -s -- -b "${HOME}/.local/bin"
 
-    log_info "Installing hugo ..."
-    current_hugo_version=$(hugo version || echo "hugo v0.0.0")
-    new_hugo_version=$(curl -fsSL "https://api.github.com/repos/gohugoio/hugo/releases/latest" | jq -r '.tag_name')
-    if echo "${current_hugo_version}" | grep -Eq "${new_hugo_version}"; then
-        log_info "Latest hugo version already installed"
-    else
-        rm -rf "${HOME}/.local/hugo" && mkdir -p "${HOME}/.local/hugo"
-        curl -fsSL "https://github.com/gohugoio/hugo/releases/download/${new_hugo_version}/hugo_extended_${new_hugo_version#v*}_linux-amd64.tar.gz" | (cd "${HOME}/.local/hugo" && tar -xz)
-        chmod +x "${HOME}/.local/hugo/hugo" && ln -sf "${HOME}/.local/hugo/hugo" "${HOME}/.local/bin/hugo"
-    fi
-
-    log_info "Installing goreleaser ..."
-    current_goreleaser_version=$(goreleaser --version || echo "0.0.0")
-    new_goreleaser_version=$(curl -fsSL "https://api.github.com/repos/goreleaser/goreleaser/releases/latest" | jq -r '.tag_name')
-    if echo "${current_goreleaser_version}" | grep -Eq "${new_goreleaser_version#v*}"; then
-        log_info "Latest goreleaser version already installed"
-    else
-        rm -rf "${HOME}/.local/goreleaser" && mkdir -p "${HOME}/.local/goreleaser"
-        curl -fsSL "https://github.com/goreleaser/goreleaser/releases/download/${new_goreleaser_version}/goreleaser_Linux_x86_64.tar.gz" | (cd "${HOME}/.local/goreleaser" && tar -xz)
-        chmod +x "${HOME}/.local/goreleaser/goreleaser" && ln -sf "${HOME}/.local/goreleaser/goreleaser" "${HOME}/.local/bin/goreleaser"
-    fi
+    install_github "gohugoio" "hugo" "hugo_extended_{{with_version}}_linux-amd64.tar.gz"
+    install_github "goreleaser" "goreleaser" "goreleaser_Linux_x86_64.tar.gz"
 
     log_info "Installing govulncheck ..."
     go install golang.org/x/vuln/cmd/govulncheck@latest
@@ -135,10 +142,7 @@ setup_k8s() {
     log_info "Installing helm 3 ..."
     curl -fsSL "https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3" | HELM_INSTALL_DIR="${HOME}/.local/bin" USE_SUDO="false" bash
 
-    log_info "Installing k9s ..."
-    rm -rf "${HOME}/.local/k9s" && mkdir -p "${HOME}/.local/k9s"
-    curl -fsSL "https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_amd64.tar.gz" | (cd "${HOME}/.local/k9s" && tar -xz)
-    chmod +x "${HOME}/.local/k9s/k9s" && ln -sf "${HOME}/.local/k9s/k9s" "${HOME}/.local/bin/k9s"
+    install_github "derailed" "k9s" "k9s_Linux_amd64.tar.gz"
 }
 
 setup_nodejs() {
@@ -169,29 +173,11 @@ setup_postgres() {
 }
 
 setup_shellcheck() {
-    log_info "Installing shellcheck ..."
-    current_shellcheck_version=$(shellcheck --version || echo "0.0.0")
-    new_shellcheck_version=$(curl -fsSL "https://api.github.com/repos/koalaman/shellcheck/releases/latest" | jq -r '.tag_name')
-    if echo "${current_shellcheck_version}" | grep -Eq "${new_shellcheck_version#v*}"; then
-        log_info "Latest shellcheck version already installed"
-    else
-        rm -rf "${HOME}/.local/shellcheck" && mkdir -p "${HOME}/.local/shellcheck"
-        curl -fsSL "https://github.com/koalaman/shellcheck/releases/download/${new_shellcheck_version}/shellcheck-${new_shellcheck_version}.linux.x86_64.tar.xz" | (cd "${HOME}/.local/shellcheck" && tar -xJ --strip-components=1)
-        chmod +x "${HOME}/.local/shellcheck/shellcheck" && ln -sf "${HOME}/.local/shellcheck/shellcheck" "${HOME}/.local/bin/shellcheck"
-    fi
+    install_github "koalaman" "shellcheck" "shellcheck-{{with_version}}.linux.x86_64.tar.xz"
 }
 
 setup_trivy() {
-    log_info "Installing trivy ..."
-    current_trivy_version=$(trivy --version || echo "0.0.0")
-    new_trivy_version=$(curl -fsSL "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | jq -r '.tag_name')
-    if echo "${current_trivy_version}" | grep -Eq "${new_trivy_version#v*}"; then
-        log_info "Latest trivy version already installed"
-    else
-        rm -rf "${HOME}/.local/trivy" && mkdir -p "${HOME}/.local/trivy"
-        curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/${new_trivy_version}/trivy_${new_trivy_version#v*}_Linux-64bit.tar.gz" | (cd "${HOME}/.local/trivy" && tar -xz)
-        chmod +x "${HOME}/.local/trivy/trivy" && ln -sf "${HOME}/.local/trivy/trivy" "${HOME}/.local/bin/trivy"
-    fi
+    install_github "aquasecurity" "trivy" "trivy_{{with_version}}_Linux-64bit.tar.gz"
 }
 
 usage() {

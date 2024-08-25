@@ -191,16 +191,16 @@ usage() {
     echo "$(basename "$0") -- Easy setup of a codespace or remote debian / ubuntu machine
 
 Options:
-        --go            Installs or upgrades go, golangci-lint, hugo and goreleaser
-        --psql          Installs or upgrades postgresql
-    -b, --bun           Installs or upgrades bun
-    -d, --docker        Installs or upgrades docker (rootless)
+        --go            Install or upgrade go, golangci-lint, hugo and goreleaser
+        --psql          Install or upgrade postgresql
+    -b, --bun           Install or upgrade bun
+    -d, --docker        Install or upgrade docker (rootless)
     -g, --git           Setup default git configuration
-    -h, --help          Shows this help message
-    -k, --k8s           Installs or upgrades kubectl with k alias, k9s and helm
-    -n, --nodejs        Installs or upgrades nodejs and pnpm
-    -s, --shellcheck    Installs or upgrades shellcheck
-    -t, --trivy         Installs or upgrades trivy
+    -h, --help          Show this help message
+    -k, --k8s           Install or upgrade kubectl with k alias, k9s and helm
+    -n, --nodejs        Install or upgrade nodejs and pnpm
+    -s, --shellcheck    Install or upgrade shellcheck
+    -t, --trivy         Install or upgrade trivy
     -v, --verbose       Enable verbose mode to log every step
 
 Notes:
@@ -215,7 +215,7 @@ while [ "$#" -ne 0 ]; do
     -b | --bun) BUN=0 && shift ;;
     -d | --docker) DOCKER=0 && shift ;;
     -g | --git) GIT=0 && shift ;;
-    -h | --help) usage && exit 0 ;;
+    -h | --help) usage && exit 0 ;; # early return in case help is asked
     -k | --k8s) K8S=0 && shift ;;
     -n | --node*) NODEJS=0 && shift ;;
     -s | --shellcheck) SHELLCHECK=0 && shift ;;

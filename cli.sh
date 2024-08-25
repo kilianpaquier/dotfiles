@@ -96,7 +96,9 @@ setup_git() {
     git config --global alias.ll 'log --oneline'
     git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
     # shellcheck disable=SC2016
-    git config --global alias.mad '!f() { git reset --hard ${1-origin}/${2-$(git current)}; }; f'
+    # git config --global alias.mad '!f() { git reset --hard ${1-origin/$(git current)}; }; f'
+    # shellcheck disable=SC2016
+    git config --global alias.mad 'reset --hard'
     git config --global alias.n 'checkout -b'
     git config --global alias.p 'push'
     git config --global alias.pf 'push --force-with-lease'

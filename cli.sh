@@ -61,7 +61,12 @@ install_github() {
 
     curl -fsSL "$url" -o "/tmp/${asset}"
     mkdir -p "/tmp/${repo}/${new_version}"
-    tar -xzf "/tmp/${asset}" -C "/tmp/${repo}/${new_version}"
+
+    if [ "${asset##*.}" = "xz" ]; then
+        tar -xf "/tmp/${asset}" -C "/tmp/${repo}/${new_version}" --strip-components=1
+    else # we assume the else case is gz
+        tar -xzf "/tmp/${asset}" -C "/tmp/${repo}/${new_version}" --strip-components=1
+    fi
     cp "/tmp/${repo}/${new_version}/${repo}" "${HOME}/.local/bin/${repo}"
 }
 

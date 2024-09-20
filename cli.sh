@@ -75,14 +75,12 @@ setup_git() {
     git config --global core.editor 'code --wait'
     git config --global init.defaultbranch main
     git config --global push.autoSetupRemote true
-    git config --global commit.gpgsign true
-    git config --global gpg.format ssh
-    git config --global gpg.ssh.defaultKeyCommand 'ssh-add -L'
-    git config --global tag.gpgsign true
 
-    ##################################################################
-    ########### Some git aliases retrieved around the web ############
-    ##################################################################
+    log_warn "Execute the following commands to setup git commit and tagging signatures with SSH:
+git config --global commit.gpgsign true
+git config --global gpg.format ssh
+git config --global gpg.ssh.defaultKeyCommand 'ssh-add -L'
+git config --global tag.gpgsign true"
 
     git config --global --remove-section alias || true
 

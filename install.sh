@@ -1,5 +1,7 @@
 #!/bin/sh
 
+tty -s; ! $? && TERM=dumb
+
 log_success() {
     fg_green=$(tput setaf 2)
     reset=$(tput sgr0)

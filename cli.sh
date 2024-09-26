@@ -51,13 +51,13 @@ install_github() {
         log_info "Latest ${repo} version ${new_version} already installed"
         return 0
     fi
-    log_info "Installing ${repo} version ${new_version}"
 
     # OS="linux" # change it depending on our case
     # ARCH="amd64" # change it depending on our case
 
     asset="$(echo "${asset}" | sed "s/{{with_version}}/${new_version#v*}/g")"
     url="https://github.com/${owner}/${repo}/releases/download/${new_version}/${asset}"
+    log_info "Installing ${repo} version ${new_version} at ${url}"
 
     curl -fsSL "$url" -o "/tmp/${asset}"
     mkdir -p "/tmp/${repo}/${new_version}"
@@ -82,7 +82,7 @@ git config --global gpg.format ssh
 git config --global gpg.ssh.defaultKeyCommand 'ssh-add -L'
 git config --global tag.gpgsign true"
 
-    git config --global --remove-section alias || true
+    git config --global --remove-section alias > /dev/null 2>&1 || true
 
     git config --global alias.alias '!git config --get-regexp ^alias\. | sed -e s/^alias\.// -e s/\ /\ =\ /'
     git config --global alias.amend 'commit --amend --no-edit'
@@ -178,7 +178,7 @@ setup_postgres() {
 }
 
 setup_shellcheck() {
-    install_github "koalaman" "shellcheck" "shellcheck-{{with_version}}.linux.x86_64.tar.xz"
+    install_github "koalaman" "shellcheck" "shellcheck-v{{with_version}}.linux.x86_64.tar.xz"
 }
 
 setup_trivy() {

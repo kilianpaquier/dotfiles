@@ -7,27 +7,27 @@ file_line() {
 }
 
 log_success() {
-    fg_green=$(tput setaf 2)
-    reset=$(tput sgr0)
-    echo "${fg_green}$1${reset}"
+    fg="\033[0;32m"
+    reset="\033[0m"
+    echo "${fg}$1${reset}"
 }
 
 log_info() {
-    fg_blue=$(tput setaf 4)
-    reset=$(tput sgr0)
-    echo "${fg_blue}$1${reset}"
+    fg="\033[0;34m"
+    reset="\033[0m"
+    echo "${fg}$1${reset}"
 }
 
 log_warn() {
-    fg_yellow=$(tput setaf 3)
-    reset=$(tput sgr0)
-    echo "${fg_yellow}$1${reset}"
+    fg="\033[0;33m"
+    reset="\033[0m"
+    echo "${fg}$1${reset}"
 }
 
 log_error() {
-    fg_red=$(tput setaf 1)
-    reset=$(tput sgr0)
-    echo "${fg_red}$1${reset}"
+    fg="\033[0;31m"
+    reset="\033[0m"
+    echo "${fg}$1${reset}"
 }
 
 setup_docker() {

@@ -74,8 +74,10 @@ setup_git() {
     log_info "Setting up various git configuration globally ..."
     git config --global core.editor 'code --wait'
     git config --global init.defaultbranch main
-    git config --global pager.log false
     git config --global push.autoSetupRemote true
+
+    git config --global core.pager 'cat'
+    git config --global pager.diff 'less -FX'
 
     log_warn "Execute the following commands to setup git commit and tagging signatures with SSH:
 git config --global commit.gpgsign true

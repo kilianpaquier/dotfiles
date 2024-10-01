@@ -108,6 +108,8 @@ git config --global tag.gpgsign true"
     git config --global alias.search '!git rev-list --all | xargs git grep -F'
     git config --global alias.undo 'reset HEAD~1 --mixed'
     git config --global alias.unstage 'reset HEAD --'
+    # shellcheck disable=SC2016
+    git config --global alias.vc '!cat ${HOME}/.gitconfig'
 }
 
 setup_go() {

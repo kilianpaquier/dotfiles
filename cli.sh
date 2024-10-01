@@ -74,6 +74,7 @@ setup_git() {
     log_info "Setting up various git configuration globally ..."
     git config --global core.editor 'code --wait'
     git config --global init.defaultbranch main
+    git config --global pager.log false
     git config --global push.autoSetupRemote true
 
     log_warn "Execute the following commands to setup git commit and tagging signatures with SSH:
@@ -90,9 +91,9 @@ git config --global tag.gpgsign true"
     git config --global alias.c 'commit -m'
     git config --global alias.cp 'cherry-pick'
     git config --global alias.current 'rev-parse --abbrev-ref HEAD'
-    git config --global alias.last 'log -1 HEAD --stat'
-    git config --global alias.ll 'log --oneline'
-    git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+    git config --global alias.ls 'log --reverse'
+    git config --global alias.last 'ls -1 HEAD --stat'
+    git config --global alias.ll 'ls --oneline'
     # shellcheck disable=SC2016
     # git config --global alias.mad '!f() { git reset --hard ${1-origin/$(git current)}; }; f'
     # shellcheck disable=SC2016

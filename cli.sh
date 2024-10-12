@@ -63,11 +63,22 @@ install_github() {
     mkdir -p "/tmp/${repo}/${new_version}"
 
     if [ "${asset##*.}" = "xz" ]; then
-        tar -xf "/tmp/${asset}" -C "/tmp/${repo}/${new_version}" --strip-components=1
+        tar -xf "/tmp/${asset}" -C "/tmp/${repo}/${new_version}" --strip-components=1 # FIXME don't strip when there's no folder ...
     else # we assume the else case is gz
-        tar -xzf "/tmp/${asset}" -C "/tmp/${repo}/${new_version}" --strip-components=1
+        tar -xzf "/tmp/${asset}" -C "/tmp/${repo}/${new_version}" --strip-components=1 # FIXME don't strip when there's no folder ...
     fi
     cp "/tmp/${repo}/${new_version}/${repo}" "${HOME}/.local/bin/${repo}"
+}
+
+setup_gh() {
+    keyring=/etc/apt/keyrings/githubcli-archive-keyring.gpg
+    source=/etc/apt/sources.list.d/github-cli.list
+    url=https://cli.github.com/packages
+
+    log_info "Installing github CLI ..."
+    curl -fsSL ${url}/githubcli-archive-keyring.gpg | sudo gpg --dearmor --yes -o ${keyring}
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=${keyring}] ${url} stable main" | sudo tee ${source}
+    sudo apt-get update && sudo apt-get install -y gh
 }
 
 setup_git() {
@@ -194,6 +205,7 @@ usage() {
     echo "$(basename "$0") -- Easy setup of a codespace or remote debian / ubuntu machine
 
 Options:
+        --gh            Install or upgrade github CLI
         --go            Install or upgrade go, golangci-lint, hugo and goreleaser
         --psql          Install or upgrade postgresql
     -b, --bun           Install or upgrade bun
@@ -213,6 +225,7 @@ Notes:
 PARAMS=""
 while [ "$#" -ne 0 ]; do
     case "$1" in
+    --gh) GH=0 && shift ;;
     --go) GO=0 && shift ;;
     --psql) PSQL=0 && shift ;;
     -b | --bun) BUN=0 && shift ;;
@@ -249,6 +262,7 @@ fi
 
 [ "${BUN}" = 0 ] && setup_bun
 [ "${DOCKER}" = 0 ] && setup_docker
+[ "${GH}" = 0 ] && setup_gh
 [ "${GIT}" = 0 ] && setup_git
 [ "${GO}" = 0 ] && setup_go
 [ "${K8S}" = 0 ] && setup_k8s

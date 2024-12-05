@@ -42,8 +42,11 @@ mkdir -p "$HOME/.ssh"
 if [ -d "$HOME/.dotfiles" ]; then
     (
         cd "$HOME/.dotfiles"
-        ([ "$(git status --porcelain | wc -l)" -eq 0 ] && git pull && git submodule update --recursive --remote) || log_warn "Changes detected in $HOME/.dotfiles, not pulling project ..."
+        ([ "$(git status --porcelain | wc -l)" -eq 0 ] && git pull) || log_warn "Changes detected in $HOME/.dotfiles, not pulling project ..."
     )
+
+    log_info "Updating oh-my-zsh plugins ..."
+    git submodule update --recursive --remote
 elif [ -n "$HTTP_CLONE" ] || [ "$(find "$HOME/.ssh" -maxdepth 1 ! -name '*.*' -name 'id_*' | wc -l)" -eq 0 ]; then
     git clone --recurse-submodules https://github.com/kilianpaquier/dotfiles.git "$HOME/.dotfiles"
 else

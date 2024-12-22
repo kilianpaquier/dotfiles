@@ -23,17 +23,14 @@ In a powershell terminal:
 
 ## Debian
 
-In any terminal:
+In any terminal (SSH or HTTPS depending on your needs):
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/kilianpaquier/dotfiles/main/install.sh | bash
+git clone --recurse-submodules git@github.com:kilianpaquier/dotfiles.git "$HOME/.dotfiles" && (cd "$HOME/.dotfiles" && ./install.sh)
 ```
 
-Available options:
-- `HTTP_CLONE`: When defined (no matter its value), all clones will be done with HTTP(s), otherwise it'll be if the following glob doesn't return any file `$HOME/.ssh/id_*`.
-
 ```sh
-HTTP_CLONE=1 curl -fsSL https://raw.githubusercontent.com/kilianpaquier/dotfiles/main/install.sh | bash
+git clone --recurse-submodules https://github.com/kilianpaquier/dotfiles.git "$HOME/.dotfiles" && (cd "$HOME/.dotfiles" && ./install.sh)
 ```
 
 ### CLI
@@ -42,19 +39,21 @@ HTTP_CLONE=1 curl -fsSL https://raw.githubusercontent.com/kilianpaquier/dotfiles
 cli.sh -- Easy setup of a codespace or remote debian / ubuntu machine
 
 Options:
-        --gh            Install or upgrade github CLI
-        --go            Install or upgrade go, golangci-lint, hugo and goreleaser
-        --psql          Install or upgrade postgresql
-    -b, --bun           Install or upgrade bun
-    -d, --docker        Install or upgrade docker (rootless)
-    -g, --git           Setup default git configuration
+    -d, --dir           Set the installation directory (default: /home/debian/.local), does not apply for tools installed with apt
     -h, --help          Show this help message
-    -k, --k8s           Install or upgrade kubectl with k alias, k9s and helm
-    -n, --nodejs        Install or upgrade nodejs and pnpm
-    -s, --shellcheck    Install or upgrade shellcheck
-    -t, --trivy         Install or upgrade trivy
-    -v, --verbose       Enable verbose mode to log every step
+    -v, --verbose       Enable verbose mode (set -x) to log every step
+
+        --bun           Install or upgrade bun
+        --docker        Install or upgrade docker (rootless)
+        --git           Setup default git configuration
+        --go            Install or upgrade go, golangci-lint, hugo and goreleaser
+        --k8s           Install or upgrade kubectl with k alias, k9s and helm
+        --node          Install or upgrade node (install with apt)
+        --pnpm          Install or upgrade pnpm
+        --psql          Install or upgrade postgresql (install with apt)
+        --shellcheck    Install or upgrade shellcheck
+        --trivy         Install or upgrade trivy
 
 Notes:
-    All installation are done in /home/debian/.local.
+    All installation are done by default in /home/debian/.local. It may be overridden by -d or --dir.
 ```

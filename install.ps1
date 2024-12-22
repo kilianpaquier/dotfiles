@@ -35,7 +35,6 @@ winget install --id=Discord.Discord -e -i
 # winget install --id=WeMod.WeMod -e -i
 
 winget install --id=7zip.7zip -e -i
-# winget install --id=Adobe.Acrobat.Reader.64-bit -e -i
 # winget install --id=AgileBits.1Password -e -i
 winget install --id=Brave.Brave -e -i
 # winget install --id=Microsoft.Edge -e -i

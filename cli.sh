@@ -11,7 +11,7 @@ done
 
 [ -n "$INSTALL_DIR" ] || INSTALL_DIR="$HOME/.local" # default installation directory, may be overridden by -d or --dir
 
-tools="bun docker go golangci-lint gorelease helm hugo jfrog k9s kubectl node pnpm psql shellcheck trivy"
+tools="bun docker go golangci-lint goreleaser helm hugo jfrog k9s kubectl node pnpm psql shellcheck trivy"
 
 usage() {
     cat<<USAGE

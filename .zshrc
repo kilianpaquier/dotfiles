@@ -121,7 +121,7 @@ OLD_PROMPT="$PROMPT"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-alias h='helm'
+alias jfrog='jf'
 alias k='kubectl'
 alias cli="$HOME/.dotfiles/cli.sh"
 alias install="$HOME/.dotfiles/install.sh"

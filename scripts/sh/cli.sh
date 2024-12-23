@@ -11,7 +11,7 @@ install_bun() {
         log_info "Upgrading bun ..."
         bun upgrade
     elif ! has bash; then
-        log_error "bash is required to install Bun."
+        log_error "Bash is required to install Bun."
         return 1
     else
         log_info "Installing bun ..."
@@ -25,7 +25,7 @@ install_bun() {
 
 install_docker() {
     if has "docker"; then
-        log_info "docker is already installed."
+        log_info "Docker is already installed."
         return 0
     fi
 
@@ -143,7 +143,7 @@ install_helm() {
     check_install_dir
 
     if ! has bash; then
-        log_error "bash is required to install helm."
+        log_error "Bash is required to install helm."
         exit 1
     fi
 
@@ -180,7 +180,7 @@ install_node() {
 
     NODE_MAJOR=22
     if node --version | grep -Eq "v$NODE_MAJOR"; then
-        log_warning "Node is already installed."
+        log_info "Node v$NODE_MAJOR is already installed."
         return 0
     fi
 
@@ -205,8 +205,13 @@ install_pnpm() {
 
 install_postgres() {
     if ! has apt; then
-        log_error "apt is required to install PostgreSQL."
+        log_error "Apt is required to install PostgreSQL."
         return 1
+    fi
+
+    if has psql; then
+        log_info "PostgreSQL is already installed."
+        return 0
     fi
 
     log_info "Installing PostgreSQL ..."
@@ -225,4 +230,18 @@ install_shellcheck() {
 
 install_trivy() {
     install_from_github "aquasecurity/trivy" "$(trivy version || echo v0.0.0)" "trivy_{{version}}_Linux-64bit.tar.gz"
+}
+
+install_jfrog() {
+    check_install_dir
+
+    if has jf; then
+        log_info "JFrog CLI is already installed."
+        return 0
+    fi
+
+    log_info "Installing JFrog CLI ..."
+    download "https://releases.jfrog.io/artifactory/jfrog-cli/v2-jf/\[RELEASE\]/jfrog-cli-linux-amd64/jf" > "$INSTALL_DIR/bin/jf" && \
+        chmod +x "$INSTALL_DIR/bin/jf" && \
+        jf intro
 }

@@ -203,7 +203,7 @@ install_pnpm() {
 # PostgreSQL
 #########################################################
 
-install_postgres() {
+install_psql() {
     if ! has apt; then
         log_error "Apt is required to install PostgreSQL."
         return 1

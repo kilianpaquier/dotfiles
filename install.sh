@@ -8,6 +8,11 @@ SCRIPT_DIR="$(dirname "$0")"
 # shellcheck disable=SC1090
 for file in "$SCRIPT_DIR"/scripts/sh/*.sh; do . "$file"; done
 
+if ! has apt; then
+    log_error "Apt is required for .dotfiles to work properly."
+    exit 2
+fi
+
 if has apt; then
     log_info "Upgrading current dependencies and distribution ..."
     sudo apt update -y && sudo apt dist-upgrade -y
@@ -54,7 +59,7 @@ ln -sf "$HOME/.dotfiles/.zshrc" "$HOME/.zshrc"
 if ! has mise; then
     log_info "Installing mise ..."
     check_install_dir
-    curl https://mise.run | MISE_INSTALL_PATH="$INSTALL_DIR/bin/mise" sh
+    download https://mise.run | MISE_INSTALL_PATH="$INSTALL_DIR/bin/mise" sh
 else
     log_info "Updating mise dependencies ..."
     mise upgrade

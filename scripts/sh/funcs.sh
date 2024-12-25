@@ -20,47 +20,51 @@ check_install_dir() {
     fi
 }
 
-auto_remove() {
-    has apt || return 0
-    log_info "Auto uninstalling unnecessary dependencies ..." && sudo apt autoremove -y
-}
-
-default_apt() {
-    has apt || return 0
-
-    log_info "Upgrading current dependencies and distribution ..."
-    sudo apt update -y && sudo apt dist-upgrade -y
-
-    log_info "Installing useful dependencies (git, curl, jq, vim, etc.) ..."
-    sudo apt install -y autojump bash-completion ca-certificates curl file git gnupg jq keychain make man rsync tree uidmap unzip vim wget zsh
-    # sudo apt install openjdk-17-jdk maven redis-server
-}
-
-install_from_github() {
-    check_install_dir
-
-    repository="$1"
-    current_version="$2"
-    asset="$3"
-    tar_opts="$([ -n "$4" ] && echo "$4" || echo -xz)"
-
-    log_info "Checking $repository releases ..."
-
-    name=$(basename "$repository")
-    new_version=$(download "https://api.github.com/repos/$repository/releases/latest" | jq -r '.tag_name') # FIXME authentication to avoid rate limit
-    download_dir="/tmp/$repository/$new_version"
-
-    if echo "$current_version" | grep -Eq "${new_version#v*}"; then
-        log_info "Latest $repository version $new_version already installed"
-        return 0
+git_config() {
+    if ! has git > /dev/null 2>&1; then
+        log_error "Git is required to setup git configuration."
+        return 1
     fi
-    final_asset=$(echo "$asset" | sed "s/{{version}}/${new_version#v*}/g")
-    url="https://github.com/$repository/releases/download/$new_version/$final_asset"
 
-    log_info "Installing $repository version $new_version from $url"
+    log_info "Setting up various git configuration globally ..."
+    git config --global core.editor 'code --wait'
+    git config --global init.defaultbranch main
+    git config --global push.autoSetupRemote true
 
-    rm -rf "$download_dir" && mkdir -p "$download_dir"
-    # shellcheck disable=SC2086
-    download "$url" | (cd "$download_dir" && tar $tar_opts)
-    chmod +x "$download_dir/$name" && cp "$download_dir/$name" "$INSTALL_DIR/bin/$name"
+    git config --global core.pager 'cat'
+    git config --global pager.diff 'less -FX'
+
+    log_warn "Execute the following commands to setup git commit and tagging signatures with SSH:
+git config --global commit.gpgsign true
+git config --global gpg.format ssh
+git config --global gpg.ssh.defaultKeyCommand 'ssh-add -L'
+git config --global tag.gpgsign true"
+
+    git config --global --remove-section alias > /dev/null 2>&1 || true
+
+    git config --global alias.alias '!git config --get-regexp ^alias\. | sed -e s/^alias\.// -e s/\ /\ =\ /'
+    git config --global alias.amend 'commit --amend --no-edit'
+    git config --global alias.branches "branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate"
+    git config --global alias.c 'commit -m'
+    git config --global alias.cp 'cherry-pick'
+    git config --global alias.current 'rev-parse --abbrev-ref HEAD'
+    git config --global alias.ls 'log --reverse'
+    git config --global alias.last 'ls -1 HEAD --stat'
+    git config --global alias.ll 'ls --oneline'
+    # shellcheck disable=SC2016
+    # git config --global alias.mad '!f() { git reset --hard ${1-origin/$(git current)}; }; f'
+    # shellcheck disable=SC2016
+    git config --global alias.mad 'reset --hard'
+    git config --global alias.n 'checkout -b'
+    git config --global alias.p 'push'
+    git config --global alias.pf 'push --force-with-lease'
+    # shellcheck disable=SC2016
+    git config --global alias.purge '!git fetch -p && for branch in $(git for-each-ref --format '\''%(refname) %(upstream:track)'\'' refs/heads | awk '\''$2 == "[gone]" {sub("refs/heads/", "", $1); print $1}'\''); do git branch -D $branch; done'
+    git config --global alias.r '!git fetch --all && git rebase'
+    git config --global alias.rename 'commit --amend'
+    git config --global alias.search '!git rev-list --all | xargs git grep -F'
+    git config --global alias.undo 'reset HEAD~1 --mixed'
+    git config --global alias.unstage 'reset HEAD --'
+    # shellcheck disable=SC2016
+    git config --global alias.vc '!cat ${HOME}/.gitconfig'
 }

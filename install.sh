@@ -2,14 +2,23 @@
 
 set -e
 
+: "${INSTALL_DIR:="$HOME/.local"}"
+
 SCRIPT_DIR="$(dirname "$0")"
+# shellcheck disable=SC1090
+for file in "$SCRIPT_DIR"/scripts/sh/*.sh; do . "$file"; done
 
-for file in "$SCRIPT_DIR"/scripts/sh/*.sh; do
-    # shellcheck disable=SC1090
-    . "$file"
-done
+if has apt; then
+    log_info "Upgrading current dependencies and distribution ..."
+    sudo apt update -y && sudo apt dist-upgrade -y
 
-default_apt && auto_remove
+    log_info "Installing useful dependencies (git, curl, jq, vim, etc.) ..."
+    sudo apt install -y bash-completion ca-certificates curl file git gnupg jq keychain make man rsync tree uidmap unzip vim wget zsh
+    # sudo apt install openjdk-17-jdk maven redis-server
+
+    log_info "Auto uninstalling unnecessary dependencies ..."
+    sudo apt autoremove -y
+fi
 
 log_info "Updating dotfiles ..."
 mkdir -p "$HOME/.ssh"
@@ -41,3 +50,23 @@ fi
 
 log_info "Setting up .zshrc symbolic link ..."
 ln -sf "$HOME/.dotfiles/.zshrc" "$HOME/.zshrc"
+
+if ! has mise; then
+    log_info "Installing mise ..."
+    check_install_dir
+    curl https://mise.run | MISE_INSTALL_PATH="$INSTALL_DIR/bin/mise" sh
+else
+    log_info "Updating mise dependencies ..."
+    mise upgrade
+fi
+
+if ! has docker; then
+    log_info "Installing docker ..."
+    download https://get.docker.com | sh
+
+    # rootless configuration
+    log_info "Setting up docker rootless ..."
+    dockerd-rootless-setuptool.sh install
+fi
+
+git_config

@@ -62,7 +62,7 @@ if ! has mise; then
     download https://mise.run | MISE_INSTALL_PATH="$INSTALL_DIR/bin/mise" sh
 else
     log_info "Updating mise dependencies ..."
-    mise upgrade
+    mise self-update && mise upgrade
 fi
 
 if ! has docker; then

@@ -5,8 +5,8 @@ set -e
 : "${INSTALL_DIR:="$HOME/.local"}"
 
 SCRIPT_DIR="$(dirname "$0")"
-# shellcheck disable=SC1090
-for file in "$SCRIPT_DIR"/scripts/sh/*.sh; do . "$file"; done
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/scripts/sh/funcs.sh"
 
 if ! has apt; then
     log_error "Apt is required for .dotfiles to work properly."

@@ -94,7 +94,6 @@ if [ "$ZSH_THEME" = "" ]; then
   promptinit
   prompt pure
 fi
-
 OLD_PROMPT="$PROMPT"
 
 # User configuration
@@ -123,7 +122,8 @@ OLD_PROMPT="$PROMPT"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 [ -f "$HOME/.zshrc-sshdevserver" ] && source "$HOME/.zshrc-sshdevserver"
-PROMPT="$OLD_PROMPT"
+
+[ -f "$HOME/workspaces/github.com/kilianpaquier/craft/craft" ] && alias craft="$HOME/workspaces/github.com/kilianpaquier/craft/craft"
 
 which mise &>/dev/null && eval "$(mise activate zsh)"
 which kubectl &>/dev/null && alias k='kubectl'
@@ -136,3 +136,7 @@ alias install="$ZSH_CUSTOM/install.sh"
 # golang
 export GOBIN="$HOME/go/bin"
 export PATH="$PATH:$GOBIN"
+
+# set back initial prompt in case it was overriden (specifically sshdevserver)
+PROMPT="$OLD_PROMPT"
+unset OLD_PROMPT

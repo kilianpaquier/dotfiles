@@ -1,7 +1,5 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH="$PATH:$HOME/bin:/usr/local/bin"
-export INSTALL_DIR="$HOME/.local"
-export PATH="$PATH:$INSTALL_DIR/bin"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -88,14 +86,6 @@ plugins=(keychain zsh-autosuggestions)
 
 source "$ZSH/oh-my-zsh.sh"
 
-if [ "$ZSH_THEME" = "" ]; then
-  fpath+=($HOME/.zsh/pure)
-  autoload -U promptinit
-  promptinit
-  prompt pure
-fi
-OLD_PROMPT="$PROMPT"
-
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -121,22 +111,32 @@ OLD_PROMPT="$PROMPT"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-[ -f "$HOME/.zshrc-sshdevserver" ] && source "$HOME/.zshrc-sshdevserver"
+# Setup pure (https://github.com/sindresorhus/pure)
+if [ "$ZSH_THEME" = "" ]; then
+  fpath+=($HOME/.zsh/pure)
+  autoload -U promptinit
+  promptinit
+  prompt pure
+fi
 
-[ -f "$HOME/workspaces/github.com/kilianpaquier/craft/craft" ] && alias craft="$HOME/workspaces/github.com/kilianpaquier/craft/craft"
+# Export some useful environment variables
+export INSTALL_DIR="$HOME/.local"
+export PATH="$PATH:$INSTALL_DIR/bin"
 
+# Mise eval
+export MISE_PARANOID=1 # force HTTPS
+export MISE_DISABLE_BACKENDS="asdf"
 which mise &>/dev/null && eval "$(mise activate zsh)"
-which kubectl &>/dev/null && alias k='kubectl'
 
-alias install="$ZSH_CUSTOM/install.sh"
-
-# docker
+# Docker rootless socket
 [ -f "$HOME/.docker/config.json" ] && [ "$(jq -r ".currentContext" <$HOME/.docker/config.json)" = "rootless" ] && export DOCKER_HOST="unix:///run/user/1000/docker.sock"
 
-# golang
-export GOBIN="$HOME/go/bin"
-export PATH="$PATH:$GOBIN"
+# Export useful aliases
+alias install="$ZSH_CUSTOM/install.sh"
+which kubectl &>/dev/null && alias k='kubectl'
 
-# set back initial prompt in case it was overriden (specifically sshdevserver)
-PROMPT="$OLD_PROMPT"
-unset OLD_PROMPT
+# Wrap useful binaries with local build if present
+craft() {
+  local craft_bin="$HOME/workspaces/github.com/kilianpaquier/craft/craft"
+  if [ -f "$craft_bin" ]; then "$craft_bin" $@; else command craft $@; fi
+}

@@ -1,54 +1,7 @@
 #!/bin/sh
 
-log_success() {
-    fg="\033[0;32m"
-    reset="\033[0m"
-    echo "${fg}$1${reset}"
-}
-
-log_info() {
-    fg="\033[0;34m"
-    reset="\033[0m"
-    echo "${fg}$1${reset}"
-}
-
-log_warn() {
-    fg="\033[0;33m"
-    reset="\033[0m"
-    echo "${fg}$1${reset}" >&2
-}
-
-log_error() {
-    fg="\033[0;31m"
-    reset="\033[0m"
-    echo "${fg}$1${reset}" >&2
-}
-
-has() {
-    which "$1" > /dev/null 2>&1
-}
-
-download() {
-    if has curl; then
-        curl -fsSL "$1"
-    else
-        wget -qO- "$1"
-    fi
-}
-
-check_install_dir() {
-    if [ -n "$INSTALL_DIR" ]; then
-        [ -d "$INSTALL_DIR/bin" ] || mkdir -p "$INSTALL_DIR/bin"
-    else
-        log_error "Installation dir is undefined." && return 1
-    fi
-}
-
 git_config() {
-    if ! has git > /dev/null 2>&1; then
-        log_error "Git is required to setup git configuration."
-        return 1
-    fi
+    has git || return 0
 
     log_info "Setting up various git configuration globally ..."
     git config --global core.editor 'code --wait'
@@ -58,11 +11,18 @@ git_config() {
     git config --global core.pager 'cat'
     git config --global pager.diff 'less -FX'
 
-    log_warn "Execute the following commands to setup git commit and tagging signatures with SSH:
-git config --global commit.gpgsign true
+    log_success "Execute the following commands to setup signing with SSH:"
+    log "git config --global commit.gpgsign true
+git config --global tag.gpgsign true
 git config --global gpg.format ssh
-git config --global gpg.ssh.defaultKeyCommand 'ssh-add -L'
-git config --global tag.gpgsign true"
+git config --global gpg.ssh.defaultKeyCommand 'ssh-add -L'"
+
+    log_success "Execute the following commands to setup signing with GPG:"
+    log "git config --global commit.gpgsign true
+git config --global tag.gpgsign true
+git config --global --unset gpg.format
+gpg --list-secret-keys --keyid-format=long
+git config --global user.signingkey <GPG KEY ID>"
 
     git config --global --remove-section alias > /dev/null 2>&1 || true
 
@@ -90,5 +50,7 @@ git config --global tag.gpgsign true"
     git config --global alias.undo 'reset HEAD~1 --mixed'
     git config --global alias.unstage 'reset HEAD --'
     # shellcheck disable=SC2016
-    git config --global alias.vc '!cat ${HOME}/.gitconfig'
+    git config --global alias.vc '!cat $HOME/.gitconfig'
 }
+
+git_config

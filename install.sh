@@ -42,11 +42,7 @@ dotfiles_dir="$(realpath "$(dirname "$0")")"
 log_info "Updating dotfiles ..."
 (
   cd "$dotfiles_dir" || exit 1
-  if [ "$(git status --porcelain | wc -l)" -eq 0 ]; then
-    git pull
-  else
-    log_warn "Changes detected in $(pwd) not pulling dotfiles ..."
-  fi
+  if [ "$(git status --porcelain | wc -l)" -eq 0 ]; then git pull; else log_warn "Changes detected in $(pwd) not pulling dotfiles ..."; fi
   log_info "Updating oh-my-zsh plugins ..."
   git submodule update --recursive --remote
 )
@@ -90,32 +86,24 @@ unset dotfiles_dir
 # ZSH_CUSTOMS comes from $dotfiles_dir/.env
 # shellcheck disable=SC2153
 for custom in $ZSH_CUSTOMS; do
-  log_info "Creating link of custom zsh $custom ..."
+  log_info "Creating symbolic links for $custom ..."
   [ -d "$custom" ] || continue
 
-  # custom plugins
-  for dir in "$custom/plugins"/*; do
-    [ -d "$dir" ] || continue
-
-    target="$ZSH_CUSTOM/plugins/$(basename "$dir")"
-    if [ ! -d "$target" ]; then
-      log_info "Setting up $dir symbolic link with $ZSH_CUSTOM/plugins ..."
-      ln -s "$dir" "$ZSH_CUSTOM/plugins"
-    else
-      log "Skipping $dir symbolic link since it already exists"
+  for item in "$custom"/*; do
+    # handle symbolic links between subdirs
+    if [ -d "$item" ]; then
+      for subitem in "$item"/*; do
+        target="$ZSH_CUSTOM/$(basename "$item")/$(basename "$subitem")"
+        log "Setting up $subitem symbolic link with $target ..."
+        ln -sf "$subitem" "$target"
+      done
     fi
-  done
 
-  # custom themes
-  for file in "$custom/themes"/*; do
-    [ -f "$file" ] || continue
-
-    target="$ZSH_CUSTOM/themes/$(basename "$file")"
-    if [ ! -f "$target" ]; then
-      log_info "Setting up $file symbolic link with $target ..."
-      ln -s "$file" "$target"
-    else
-      log "Skipping $file symbolic link since it already exists"
+    # handle symbolic links between files
+    if [ -f "$item" ]; then
+      target="$ZSH_CUSTOM/$(basename "$item")"
+      log "Setting up $item symbolic link with $target ..."
+      ln -sf "$item" "$ZSH_CUSTOM/$(basename "$item")"
     fi
   done
 done

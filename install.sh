@@ -85,6 +85,7 @@ for install in $INSTALLS; do
   # shellcheck disable=SC1090
   [ -f "$target" ] && . "$target"
 done
+unset dotfiles_dir
 
 # ZSH_CUSTOMS comes from $dotfiles_dir/.env
 # shellcheck disable=SC2153

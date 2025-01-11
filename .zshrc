@@ -1,7 +1,11 @@
 export MISE_PARANOID=1 # force HTTPS
 # export MISE_DISABLE_BACKENDS="asdf"
 
-export INSTALL_DIR="$HOME/.local"
+dotfiles_dir="$(dirname $(readlink -f "$0"))"
+source "$dotfiles_dir/.env"
+unset dotfiles_dir
+
+: "${INSTALL_DIR:="$HOME/.local"}"
 export PATH="$PATH:$INSTALL_DIR/bin"
 
 export ZSH="$HOME/.oh-my-zsh"

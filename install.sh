@@ -95,7 +95,7 @@ for custom in $ZSH_CUSTOMS; do
       for subitem in "$item"/*; do
         target="$ZSH_CUSTOM/$(basename "$item")/$(basename "$subitem")"
         log "Setting up $subitem symbolic link with $target ..."
-        ln -sf "$subitem" "$target"
+        rm "$target" && ln -s "$subitem" "$target"
       done
     fi
 

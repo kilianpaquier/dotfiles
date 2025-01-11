@@ -1,0 +1,4 @@
+[alias]
+craft = "ubi:kilianpaquier/craft"
+gitlab-storage-cleaner = "ubi:kilianpaquier/gitlab-storage-cleaner"
+go-builder-generator = "ubi:kilianpaquier/go-builder-generator"

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+bin="$HOME/workspaces/github.com/kilianpaquier/craft/craft"
+if [ -x "$bin" ]; then "$bin" "$@"; else command craft "$@"; fi

@@ -1,28 +1,11 @@
-export MISE_PARANOID=1 # force HTTPS
-# export MISE_DISABLE_BACKENDS="asdf"
-
-dotfiles_dir="$(dirname $(readlink -f "$0"))"
-source "$dotfiles_dir/.env"
-unset dotfiles_dir
-
-: "${INSTALL_DIR:="$HOME/.local"}"
-export PATH="$PATH:$INSTALL_DIR/bin"
-
 export ZSH="$HOME/.oh-my-zsh"
 
-CASE_SENSITIVE="true"
-DISABLE_AUTO_TITLE="true"
+ZSH_THEME="robbyrussell"
+plugins=()
 
-zstyle ':omz:update' mode reminder
-
-zstyle ':omz:plugins:ssh-agent' identities id_ed25519 id_rsa
-zstyle ':omz:plugins:ssh-agent' quiet yes
-
-fpath+=($HOME/.zsh/pure)
-autoload -U promptinit; promptinit
-prompt pure
-
-plugins=(mise ssh-agent zsh-autosuggestions)
-# plugins+=(bun gpg-agent jfrog)
+dir="$(dirname $(readlink -f "$HOME/.zshrc"))"
+ZSH_CUSTOM="$dir/custom"
+source $dir/.user.zshrc
+unset dir
 
 source $ZSH/oh-my-zsh.sh

@@ -89,7 +89,7 @@ alias k="kubectl"
 read zenv < <(readlink -f "$0")
 read dir < <(dirname "$zenv")
 
-plugins=(evalcache mise docker-rootless)
+plugins=(evalcache mise craft go-builder-generator gitlab-storage-cleaner docker-rootless)
 for plugin in $plugins; do
   z4h load "$dir/custom/plugins/$plugin"
 done

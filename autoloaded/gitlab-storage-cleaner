@@ -1,4 +1,0 @@
-#!/bin/sh
-
-bin="$HOME/workspaces/github.com/kilianpaquier/gitlab-storage-cleaner/gitlab-storage-cleaner"
-if [ -x "$bin" ]; then "$bin" "$@"; else command gitlab-storage-cleaner "$@"; fi

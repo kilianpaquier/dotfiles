@@ -56,7 +56,7 @@ log_info "Updating dotfiles ..."
 ##############################################
 
 # shellcheck disable=SC1091
-[ -f "$dir/env" ] && . "$dir/.env"
+[ -f "$dir/.env" ] && . "$dir/.env"
 : "${INSTALL_DIR:="$HOME/.local/bin"}"
 : "${INSTALL_SCRIPTS:="apt docker-rootless git-config.dotfiles mise"}"
 

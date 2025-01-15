@@ -1,10 +1,3 @@
 if (( ! $+commands[mise] )); then return; fi
-eval "$(mise activate zsh)"
-
-if [[ ! -f "$ZSH_CACHE_DIR/completions/_mise" ]]; then
-  typeset -g -A _comps
-  autoload -Uz _mise
-  _comps[mise]=_mise
-fi
-
-mise completion zsh >! "$ZSH_CACHE_DIR/completions/_mise" &|
+_evalcache mise activate zsh
+_evalcache mise completion zsh

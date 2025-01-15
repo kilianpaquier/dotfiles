@@ -1,3 +1,3 @@
-[submodule "custom/plugins/zsh-autosuggestions"]
-	path = custom/plugins/zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule "custom/plugins/evalcache"]
+	path = custom/plugins/evalcache
+	url = git@github.com:mroth/evalcache.git

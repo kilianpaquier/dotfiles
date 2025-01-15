@@ -1,4 +1,0 @@
-#!/bin/sh
-
-bin="$HOME/workspaces/github.com/kilianpaquier/go-builder-generator/go-builder-generator"
-if [ -x "$bin" ]; then "$bin" "$@"; else command go-builder-generator "$@"; fi

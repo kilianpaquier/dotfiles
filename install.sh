@@ -55,34 +55,52 @@ log_info "Updating dotfiles ..."
 # Set up default .env file and source it
 ##############################################
 
-if [ ! -f "$dir/.env" ]; then
-  log_info "Setting up default dotfiles config in $dir/.env ..."
-  cp "$dir/default.env" "$dir/.env"
-fi
-log_success "Using following dotfiles configuration:"
-log "$(cat "$dir/.env")"
 # shellcheck disable=SC1091
-. "$dir/.env"
+[ -f "$dir/env" ] && . "$dir/.env"
+: "${INSTALL_DIR:="$HOME/.local/bin"}"
+: "${INSTALL_SCRIPTS:="apt docker-rootless git-config.dotfiles mise"}"
+
+log_success "Using following dotfiles configuration:"
+log "INSTALL_DIR=$INSTALL_DIR"
+log "INSTALL_SCRIPTS=$INSTALL_SCRIPTS"
+
+cat << EOF > "$dir/.env"
+INSTALL_DIR="$INSTALL_DIR"
+INSTALL_SCRIPTS="$INSTALL_SCRIPTS"
+EOF
 
 ##############################################
-# Set up Oh My Zsh
+# Set up Z4H
 ##############################################
 
-ZSH="$HOME/.oh-my-zsh"
-if [ ! -d "$ZSH" ]; then
-  log_info "Installing oh-my-zsh ..."
-  download https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | ZSH="$ZSH" sh
+if [ -n "$Z4H" ]; then
+  download https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install | sh
 fi
 
-log_info "Updating default .zshrc templates ..."
-download https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/refs/heads/master/templates/zshrc.zsh-template >"$dir/templates/.zshrc"
-download https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/refs/heads/master/templates/minimal.zshrc >"$dir/templates/minimal.zshrc"
+if [ ! -f "$dir/.env.zsh" ]; then
+cat << 'EOF' > "$dir/.env.zsh"
+# some more ls aliases
+alias ll='ls -l'
+alias lla='ls -lart'
+alias l='ls -CF'
 
-##############################################
-# Set up symbolic link between .zshrc
-##############################################
+alias k="kubectl"
 
-[ -L "$dir/.zshrc" ] || (log_info "Setting up .zshrc symbolic link ..." && ln -sf "$dir/.zshrc" "$HOME/.zshrc")
+read zenv < <(readlink -f "$0")
+read dir < <(dirname "$zenv")
+
+plugins=(evalcache mise docker-rootless)
+for plugin in $plugins; do
+  z4h load "$dir/custom/plugins/$plugin"
+done
+
+plugins=(ssh-agent)
+for plugin in $plugins; do
+  z4h load "ohmyzsh/ohmyzsh/plugins/$plugin"
+done
+EOF
+fi
+ln -sf "$dir/.env.zsh" "$HOME/.env.zsh"
 
 ##############################################
 # Iterate over installation scripts
@@ -98,5 +116,5 @@ for install in $INSTALL_SCRIPTS; do
   [ -f "$target" ] && . "$target"
 done
 
-log_success "Installation done, close your terminal and reload it or run 'omz reload'"
+log_success "Installation done, close your terminal and reload it with zsh"
 unset dir

@@ -77,6 +77,10 @@ if [ -n "$Z4H" ]; then
   download https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install | sh
 fi
 
+##############################################
+# Set up default .env.zsh file and source it
+##############################################
+
 if [ ! -f "$dir/.env.zsh" ]; then
 cat << 'EOF' > "$dir/.env.zsh"
 # some more ls aliases

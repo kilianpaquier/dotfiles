@@ -89,28 +89,33 @@ log "INSTALL_SCRIPTS=$INSTALL_SCRIPTS"
 
 if [ ! -f "$dir/.env.zsh" ]; then
 cat << 'EOF' > "$dir/.env.zsh"
+read me < <(readlink -f "$0")
+read dir < <(dirname "$me")
+
+fpath+=($dir/custom/autoloaded)
+
+plugins=(evalcache mise goenv craft go-builder-generator gitlab-storage-cleaner docker-rootless)
+for plugin in $plugins; do z4h load "$dir/custom/plugins/$plugin"; done
+
+plugins=(ssh-agent)
+for plugin in $plugins; do z4h load "ohmyzsh/ohmyzsh/plugins/$plugin"; done
+
+(( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[autodirectory]="fg=green" # remove underline
+ZSH_HIGHLIGHT_STYLES[path]=none # remove underline
+ZSH_HIGHLIGHT_STYLES[precommand]="fg=green" # remove underline
+ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=green" # remove underline
+
 # some more ls aliases
 alias ll='ls -l'
 alias lla='ls -lart'
 alias l='ls -CF'
 
-alias k="kubectl"
-
-read zenv < <(readlink -f "$0")
-read dir < <(dirname "$zenv")
-
-plugins=(evalcache mise goenv craft go-builder-generator gitlab-storage-cleaner docker-rootless)
-for plugin in $plugins; do
-  z4h load "$dir/custom/plugins/$plugin"
-done
-
-plugins=(ssh-agent)
-for plugin in $plugins; do
-  z4h load "ohmyzsh/ohmyzsh/plugins/$plugin"
-done
+alias k='kubectl'
 EOF
 fi
 ln -sf "$dir/.env.zsh" "$HOME/.env.zsh"
+ln -sf "$HOME/.zshrc" "$dir/.zshrc"
 
 ##############################################
 # Iterate over installation scripts

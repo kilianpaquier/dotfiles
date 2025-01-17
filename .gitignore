@@ -1,2 +1,4 @@
 .env
 .env.zsh
+.zshrc
+**/*.ignore.*

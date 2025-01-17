@@ -1,12 +1,6 @@
 export GOPATH="$HOME/.cache/go"
-export PATH="$PATH:$GOPATH/bin"
-
-export GOLANGCI_LINT_CACHE="$HOME/.cache/golangci-lint"
-
-if (( ! $+commands[go] )); then return; fi
-read GOCACHE < <(go env GOCACHE)
-export GOCACHE
-
-read GOBIN < <(go env GOBIN)
-export GOBIN
+export GOBIN="$GOPATH/bin"
 export PATH="$PATH:$GOBIN"
+
+export GOCACHE="$HOME/.cache/go-build"
+export GOLANGCI_LINT_CACHE="$HOME/.cache/golangci-lint"

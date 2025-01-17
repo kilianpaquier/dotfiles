@@ -36,6 +36,19 @@ download() {
   if has curl; then curl -fsSL "$1"; else wget -qO- "$1"; fi
 }
 
+install_gum() {
+  if [ -z "$BIN_DIR" ]; then
+    log_warn "Environment variable 'BIN_DIR' isn't defined, skipping gum installation"
+    return
+  fi
+
+  current="$(gum -v)"
+  latest="$(curl -s https://api.github.com/repos/charmbracelet/gum/releases/latest | jq -r '.tag_name')"
+  echo "$current" | grep -Eq "$latest" && return
+
+  download "https://github.com/charmbracelet/gum/releases/download/$latest/gum_${latest}_$(uname -a)_$(uname -m).tar.gz" | tar -C "$(dirname "$BIN_DIR")" -xzf -
+}
+
 set -e
 dir="$(realpath "$(dirname "$0")")"
 
@@ -131,5 +144,14 @@ for install in $INSTALL_SCRIPTS; do
   [ -f "$target" ] && . "$target"
 done
 
-log_success "Installation done, close your terminal and reload it with zsh"
+##############################################
+# Set up Z4H
+##############################################
+
+if [ ! -d "$HOME/.cache/zsh4humans/v5" ]; then
+  sh -c "$(download https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
+fi
+
+log_success "Installation done, reloading terminal with zsh"
 unset dir
+exec zsh

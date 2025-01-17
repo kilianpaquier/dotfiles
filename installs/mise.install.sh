@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -z "$INSTALL_DIR" ]; then
-  log_warn "Environment variable 'INSTALL_DIR' isn't defined, skipping mise installation"
+if [ -z "$BIN_DIR" ]; then
+  log_warn "Environment variable 'BIN_DIR' isn't defined, skipping mise installation"
   return
 fi
 
@@ -12,7 +12,7 @@ ln -sf "$dir/installs/config/mise.dotfiles.toml" "$mise_confd/mise.dotfiles.toml
 
 if ! has mise; then
   log_info "Installing mise ..."
-  download https://mise.run | MISE_INSTALL_PATH="$INSTALL_DIR/mise" sh
+  download https://mise.run | MISE_INSTALL_PATH="$BIN_DIR/mise" sh
 else
   log_info "Updating mise dependencies ..."
   mise self-update && mise upgrade

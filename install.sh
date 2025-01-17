@@ -40,13 +40,23 @@ set -e
 dir="$(realpath "$(dirname "$0")")"
 
 ##############################################
-# Updating dotfiles
+# Updating
 ##############################################
 
-log_info "Updating dotfiles ..."
+log_info "Updating ..."
 (
   cd "$dir" || exit 1
-  if [ "$(git status --porcelain | wc -l)" -eq 0 ]; then git pull; else log_warn "Changes detected in $(pwd) not pulling dotfiles ..."; fi
+  if [ "$(git status --porcelain | wc -l)" -eq 0 ]; then
+    sha=$(git rev-parse HEAD)
+    git pull
+    if [ "$(git rev-parse HEAD)" != "$sha" ]; then
+      log_warn "Changes were pulled, rerunning script"
+      $0 "$@"
+      exit $?
+    fi
+  else
+    log_warn "Changes detected in $(pwd) not pulling dotfiles ..."
+  fi
   log_info "Updating submodules ..."
   git submodule update --init --recursive --remote
 )

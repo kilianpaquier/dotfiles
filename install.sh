@@ -65,27 +65,23 @@ log_info "Updating ..."
 # Set up default .env file and source it
 ##############################################
 
+log_info "Loading .env ..."
+
 # shellcheck disable=SC1091
-[ -f "$dir/.env" ] && . "$dir/.env"
-: "${INSTALL_DIR:="$HOME/.local/bin"}"
-: "${INSTALL_SCRIPTS:="apt docker-rootless git-config.dotfiles mise"}"
+[ -f "$dir/.env" ] && . "$dir/.env" && rm "$dir/.env"
 
-log_success "Using following dotfiles configuration:"
-log "INSTALL_DIR=$INSTALL_DIR"
-log "INSTALL_SCRIPTS=$INSTALL_SCRIPTS"
+if [ -z "$BIN_DIR" ]; then BIN_DIR="$HOME/.local/bin"; else echo "BIN_DIR=\"$BIN_DIR\"" >> "$dir/.env"; fi
+log "BIN_DIR=$BIN_DIR"
 
-cat << EOF > "$dir/.env"
-INSTALL_DIR="$INSTALL_DIR"
-INSTALL_SCRIPTS="$INSTALL_SCRIPTS"
-EOF
-
-##############################################
-# Set up Z4H
-##############################################
-
-if [ -n "$Z4H" ]; then
-  download https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install | sh
+if [ -z "$INSTALL_SCRIPTS" ]; then
+  echo "$dir/installs/"*.install.sh
+  for script in "$dir/installs/"*.install.sh; do
+    INSTALL_SCRIPTS="$INSTALL_SCRIPTS $(basename "$script" .install.sh)"
+  done
+else
+  echo "INSTALL_SCRIPTS=\"$INSTALL_SCRIPTS\"" >> "$dir/.env"
 fi
+log "INSTALL_SCRIPTS=$INSTALL_SCRIPTS"
 
 ##############################################
 # Set up default .env.zsh file and source it

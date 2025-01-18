@@ -1,31 +1,31 @@
 #!/bin/sh
 
 log() {
-  echo "$1"
+  echo "$1" 2>&1 | tee -a "$log_file"
 }
 
 log_success() {
   fg="\033[0;32m"
   reset="\033[0m"
-  echo "${fg}$1${reset}"
+  echo "${fg}$1${reset}" 2>&1 | tee -a "$log_file"
 }
 
 log_info() {
   fg="\033[0;34m"
   reset="\033[0m"
-  echo "${fg}$1${reset}"
+  echo "${fg}$1${reset}" 2>&1 | tee -a "$log_file"
 }
 
 log_warn() {
   fg="\033[0;33m"
   reset="\033[0m"
-  echo "${fg}$1${reset}" >&2
+  echo "${fg}$1${reset}" 2>&1 | tee -a "$log_file"
 }
 
 log_error() {
   fg="\033[0;31m"
   reset="\033[0m"
-  echo "${fg}$1${reset}" >&2
+  echo "${fg}$1${reset}" 2>&1 | tee -a "$log_file"
 }
 
 has() {
@@ -33,24 +33,22 @@ has() {
 }
 
 download() {
-  if has curl; then curl -fsSL "$1"; else wget -qO- "$1"; fi
+  if has curl; then curl -sSL "$1"; else wget -qO- "$1"; fi
 }
 
-install_gum() {
-  if [ -z "$BIN_DIR" ]; then
-    log_warn "Environment variable 'BIN_DIR' isn't defined, skipping gum installation"
-    return
-  fi
-
-  current="$(gum -v)"
-  latest="$(curl -s https://api.github.com/repos/charmbracelet/gum/releases/latest | jq -r '.tag_name')"
-  echo "$current" | grep -Eq "$latest" && return
-
-  download "https://github.com/charmbracelet/gum/releases/download/$latest/gum_${latest}_$(uname -a)_$(uname -m).tar.gz" | tar -C "$(dirname "$BIN_DIR")" -xzf -
+skip() {
+  [ -n "$last_run" ] && [ "$last_run" -le "3600" ]
 }
 
 set -e
+
 dir="$(realpath "$(dirname "$0")")"
+mkdir -p "$dir/logs"
+
+previous_log_file="$(find "$dir/logs" -type f -exec ls -tr1 {} + | tail -1)"
+[ -f "$previous_log_file" ] && last_run="$(($(date "+%s")-$(date -r "$previous_log_file" "+%s")))"
+
+log_file="$dir/logs/run_$(date +'%Y-%m-%dT%H.%M.%S').log"
 
 ##############################################
 # Updating
@@ -87,7 +85,6 @@ if [ -z "$BIN_DIR" ]; then BIN_DIR="$HOME/.local/bin"; else echo "BIN_DIR=\"$BIN
 log "BIN_DIR=$BIN_DIR"
 
 if [ -z "$INSTALL_SCRIPTS" ]; then
-  echo "$dir/installs/"*.install.sh
   for script in "$dir/installs/"*.install.sh; do
     INSTALL_SCRIPTS="$INSTALL_SCRIPTS $(basename "$script" .install.sh)"
   done
@@ -152,6 +149,5 @@ if [ ! -d "$HOME/.cache/zsh4humans/v5" ]; then
   sh -c "$(download https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
 fi
 
-log_success "Installation done, reloading terminal with zsh"
+log_success "Installation done, please reload your terminal with zsh"
 unset dir
-exec zsh

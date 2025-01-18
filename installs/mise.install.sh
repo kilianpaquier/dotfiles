@@ -13,7 +13,10 @@ ln -sf "$dir/installs/config/mise.dotfiles.toml" "$mise_confd/mise.dotfiles.toml
 if ! has mise; then
   log_info "Installing mise ..."
   download https://mise.run | MISE_INSTALL_PATH="$BIN_DIR/mise" sh
+elif skip; then
+  # shellcheck disable=SC2154
+  log_warn "Skipping mise update and its dependencies (last run was $last_run seconds ago)"
 else
   log_info "Updating mise dependencies ..."
-  mise self-update && mise upgrade
+  mise self-update --silent && mise upgrade
 fi

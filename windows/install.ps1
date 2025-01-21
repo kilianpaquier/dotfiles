@@ -67,10 +67,10 @@ sudo "[Environment]::SetEnvironmentVariable('PATH', [Environment]::GetEnvironmen
 # -------------------------------------------------------------
 # git with ssh signing windows
 
-sudo "Set-Service ssh-agent -StartupType Automatic; Start-Service ssh-agent; Get-Service ssh-agent"
+# sudo "Set-Service ssh-agent -StartupType Automatic; Start-Service ssh-agent; Get-Service ssh-agent"
 
-git config --global core.sshCommand "'$env:programfiles\OpenSSH\ssh.exe'"
-git config --global gpg.ssh.program "$env:programfiles\OpenSSH\ssh-keygen.exe"
+# git config --global core.sshCommand "'$env:programfiles\OpenSSH\ssh.exe'"
+# git config --global gpg.ssh.program "$env:programfiles\OpenSSH\ssh-keygen.exe"
 
 # -------------------------------------------------------------
 # zsh

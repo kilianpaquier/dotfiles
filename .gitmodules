@@ -1,3 +1,0 @@
-[submodule "custom/plugins/evalcache"]
-	path = custom/plugins/evalcache
-	url = git@github.com:mroth/evalcache.git

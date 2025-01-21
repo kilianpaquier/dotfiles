@@ -2,7 +2,6 @@
 
 # Download required plugins repositories before z4h initialization
 repos=(
-  belak/zsh-utils
   kilianpaquier/zsh-plugins
   mroth/evalcache
   ohmyzsh/ohmyzsh
@@ -28,7 +27,6 @@ z4h init || return
 
 # Load plugins asynchronously after z4h initialization
 plugins=(
-  belak/zsh-utils/completion
   mroth/evalcache
 
   kilianpaquier/zsh-plugins/bash-aliases

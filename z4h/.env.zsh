@@ -30,7 +30,7 @@ plugins=(
   mroth/evalcache
 
   kilianpaquier/zsh-plugins/bash-aliases
-  kilianpaquier/zsh-plugins/git-alias
+  kilianpaquier/zsh-plugins/git-aliases
   kilianpaquier/zsh-plugins/goenv
   kilianpaquier/zsh-plugins/highlight-styles
   kilianpaquier/zsh-plugins/misenv

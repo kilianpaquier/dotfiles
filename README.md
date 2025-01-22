@@ -98,7 +98,7 @@ read me < <(readlink -f "$HOME/.zshrc")
 read dir < <(dirname "$me")
 
 source "$dir/.profile"
-source "$dir/antidote.lite/p10k.zshrc" # OR "$dir/antidote.lite/omz.zshrc"
+source "$dir/antidote.lite/p10k.zshrc"
 EOF
 ```
 

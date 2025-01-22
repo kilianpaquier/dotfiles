@@ -22,7 +22,6 @@
 # Download required plugins repositories before z4h initialization
 repos=(
   kilianpaquier/zsh-plugins
-  mroth/evalcache
   ohmyzsh/ohmyzsh
 )
 for repo in $repos; do z4h install "$repo"; done
@@ -46,8 +45,6 @@ z4h init || return
 
 # Load plugins asynchronously after z4h initialization
 plugins=(
-  mroth/evalcache
-
   kilianpaquier/zsh-plugins/bash-aliases
   kilianpaquier/zsh-plugins/git-aliases
   kilianpaquier/zsh-plugins/goenv

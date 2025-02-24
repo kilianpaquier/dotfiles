@@ -1,4 +1,5 @@
-# .env.zsh (for z4h)
+#!/bin/zsh
+# shellcheck disable=SC1071
 
 # Make sure to disable p10k to play with PS1
 # zstyle ':z4h:powerlevel10k' channel 'none'

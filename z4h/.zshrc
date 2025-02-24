@@ -1,3 +1,6 @@
+#!/bin/zsh
+# shellcheck disable=SC1071
+
 # Personal Zsh configuration file. It is strongly recommended to keep all
 # shell customization and configuration (including exported environment
 # variables such as PATH) in this file or in files sourced from it.

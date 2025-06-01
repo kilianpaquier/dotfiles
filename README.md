@@ -26,7 +26,7 @@ Some useful (and for some required) dependencies, additionally it also updates t
 ```sh
 sudo apt -y update
 sudo apt -y dist-upgrade
-sudo apt -y install bash-completion ca-certificates curl file git gnupg jq make man rsync tree uidmap unzip vim wget zsh
+sudo apt -y install bash-completion ca-certificates curl file git gnupg jq make man rsync slirp4netns tree uidmap unzip vim wget zsh
 sudo apt -y autoremove
 ```
 
@@ -122,9 +122,6 @@ EOF
 git config --global core.editor 'code --wait'
 git config --global init.defaultbranch main
 git config --global push.autoSetupRemote true
-
-git config --global core.pager 'cat'
-git config --global pager.diff 'less -FX'
 ```
 
 ### Signing commits
@@ -133,15 +130,15 @@ With SSH or GPG:
 
 ```sh
 git config --global commit.gpgsign true
-git config --global tag.gpgsign true
 git config --global gpg.format ssh
 git config --global gpg.ssh.defaultKeyCommand 'ssh-add -L'
+git config --global tag.gpgsign true
 ```
 
 ```sh
+git config --global --unset gpg.format
 git config --global commit.gpgsign true
 git config --global tag.gpgsign true
-git config --global --unset gpg.format
-gpg --list-secret-keys --keyid-format=long
 git config --global user.signingkey '<GPG KEY ID>'
+gpg --list-secret-keys --keyid-format=long
 ```

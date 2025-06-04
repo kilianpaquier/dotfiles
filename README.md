@@ -26,7 +26,7 @@ Some useful (and for some required) dependencies, additionally it also updates t
 ```sh
 sudo apt -y update
 sudo apt -y dist-upgrade
-sudo apt -y install bash-completion ca-certificates curl file git gnupg jq make man rsync slirp4netns tree uidmap unzip vim wget zsh
+sudo apt -y install bash-completion ca-certificates curl file git gnupg imagemagick jq make man rsync slirp4netns tree uidmap unzip vim wget zsh
 sudo apt -y autoremove
 ```
 

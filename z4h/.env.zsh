@@ -47,6 +47,7 @@ z4h init || return
 # Load plugins asynchronously after z4h initialization
 plugins=(
   kilianpaquier/zsh-plugins/bash-aliases
+  kilianpaquier/zsh-plugins/bunenv
   kilianpaquier/zsh-plugins/git-aliases
   kilianpaquier/zsh-plugins/goenv
   kilianpaquier/zsh-plugins/highlight-styles

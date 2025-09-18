@@ -53,6 +53,7 @@ plugins=(
   kilianpaquier/zsh-plugins/highlight-styles
   kilianpaquier/zsh-plugins/mise-completion
   kilianpaquier/zsh-plugins/mise-shims
+  kilianpaquier/zsh-plugins/terraform
 )
 for plugin in $plugins; do z4h load "$plugin"; done
 unset plugin plugins

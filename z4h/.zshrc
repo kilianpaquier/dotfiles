@@ -41,6 +41,7 @@ path=(~/bin $path)
 
 # Export environment variables.
 export GPG_TTY=$TTY
+export HISTORY_IGNORE="(export)*"
 
 # Autoload functions.
 autoload -Uz zmv

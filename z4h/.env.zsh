@@ -1,25 +1,6 @@
 #!/bin/zsh
 # shellcheck disable=SC1071
 
-# Make sure to disable p10k to play with PS1
-# zstyle ':z4h:powerlevel10k' channel 'none'
-# RPS1="" # remove "z4h recovery mode"
-
-# See all substitution with zsh at https://linux.die.net/man/1/zshmisc
-
-# Default PS1
-# PS1="%B%F{2}%n@%m%f %F{4}%~%f
-# %F{%(?.2.1)}%#%f%b "
-
-# %B%F{2}%n@%m%f = name@host (green)
-
-# %F{4}%~%f = ~pwd (blue)
-# %F{4}%3~%f = ~pwd (last three dirs) (blue)
-
-# %F{%(?.2.1)}%#%f%b = % or # (shell sudo or not) (green or red depending on previous command result)
-
-# PS1="%F{2}%n@%m%f %F{4}%3~%f %F{%(?.2.1)}%(!.#.$)%f "
-
 # Download required plugins repositories before z4h initialization
 repos=(
   kilianpaquier/zsh-plugins
@@ -32,8 +13,9 @@ unset repo repos
 plugins=(
   ohmyzsh/ohmyzsh/plugins/ssh-agent
 
-  kilianpaquier/zsh-plugins/mise
   kilianpaquier/zsh-plugins/docker-rootless
+  kilianpaquier/zsh-plugins/history
+  kilianpaquier/zsh-plugins/mise
 )
 for plugin in $plugins; do z4h load "$plugin"; done
 unset plugin plugins

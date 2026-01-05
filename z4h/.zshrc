@@ -41,14 +41,6 @@ path=(~/bin $path)
 
 # Export environment variables.
 export GPG_TTY=$TTY
-export HISTORY_IGNORE="(export)*"
-
-# Autoload functions.
-autoload -Uz zmv
-
-# Define functions and completions.
-function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
-compdef _directories md
 
 # Define named directories: ~w <=> Windows home directory on WSL.
 [[ -z $z4h_win_home ]] || hash -d w=$z4h_win_home

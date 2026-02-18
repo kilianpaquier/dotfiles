@@ -13,7 +13,6 @@ unset repo repos
 plugins=(
   ohmyzsh/ohmyzsh/plugins/ssh-agent
 
-  kilianpaquier/zsh-plugins/docker-rootless
   kilianpaquier/zsh-plugins/history
   kilianpaquier/zsh-plugins/mise
 )
@@ -35,6 +34,7 @@ plugins=(
   kilianpaquier/zsh-plugins/highlight-styles
   kilianpaquier/zsh-plugins/mise-completion
   kilianpaquier/zsh-plugins/mise-shims
+  kilianpaquier/zsh-plugins/release-sync
   kilianpaquier/zsh-plugins/terraform
 )
 for plugin in $plugins; do z4h load "$plugin"; done

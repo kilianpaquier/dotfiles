@@ -35,12 +35,12 @@ sudo apt -y autoremove
 In any terminal (SSH or HTTPS depending on your needs):
 
 ```sh
-git clone --recurse-submodules git@github.com:kilianpaquier/dotfiles.git "$HOME/.dotfiles"
+git clone --recurse-submodules git@gitlab.com:kilianpaquier/dotfiles.git "$HOME/.dotfiles"
 "$HOME/.dotfiles/link.sh"
 ```
 
 ```sh
-git clone --recurse-submodules https://github.com/kilianpaquier/dotfiles.git "$HOME/.dotfiles"
+git clone --recurse-submodules https://gitlab.com/kilianpaquier/dotfiles.git "$HOME/.dotfiles"
 "$HOME/.dotfiles/link.sh"
 ```
 

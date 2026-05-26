@@ -15,7 +15,10 @@ zstyle ':z4h:' auto-update 'no'
 zstyle ':z4h:bindkey' keyboard 'pc'
 
 # Don't start tmux.
-zstyle ':z4h:' start-tmux no
+# zstyle ':z4h:' start-tmux no
+
+# Move prompt to the bottom when zsh starts and on Ctrl+L.
+zstyle ':z4h:' prompt-at-bottom 'no'
 
 # Mark up shell's output with semantic information.
 zstyle ':z4h:' term-shell-integration 'yes'
@@ -25,7 +28,7 @@ zstyle ':z4h:' term-shell-integration 'yes'
 zstyle ':z4h:autosuggestions' forward-char 'accept'
 
 # Recursively traverse directories when TAB-completing files.
-zstyle ':z4h:fzf-complete' recurse-dirs 'no'
+zstyle ':z4h:fzf-complete' recurse-dirs 'yes'
 
 # Enable direnv to automatically source .envrc files.
 zstyle ':z4h:direnv' enable 'no'

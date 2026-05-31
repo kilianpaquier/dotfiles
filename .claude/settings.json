@@ -62,6 +62,8 @@
     "defaultMode": "default",
     "disableBypassPermissionsMode": "disable",
     "additionalDirectories": [
+      "~/.claude/plugins",
+      "~/.copilot/installed-plugins",
       "~/workspaces"
     ]
   },

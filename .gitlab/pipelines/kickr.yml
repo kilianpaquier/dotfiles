@@ -2,7 +2,7 @@
 
 ---
 kickr:
-  image: docker.io/library/alpine:latest
+  image: $KICKR_IMAGE
   stage: test
   needs: []
   rules:
@@ -50,7 +50,9 @@ kickr:
       git checkout -b $MERGE_SOURCE_BRANCH
       git add .
       git commit -am "$COMMIT_MESSAGE" --signoff || {
-        echo "No changes detected with $MERGE_TARGET_BRANCH" && exit 0
+        echo "No changes detected with $MERGE_TARGET_BRANCH"
+        glab mr close $MERGE_SOURCE_BRANCH || true
+        exit 0
       }
       git push https://oauth2:$GITLAB_TOKEN@$CI_SERVER_FQDN/$CI_PROJECT_PATH.git $MERGE_SOURCE_BRANCH --force
 

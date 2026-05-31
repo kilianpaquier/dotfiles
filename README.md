@@ -9,19 +9,16 @@
 
 ---
 
-- [Debian](#debian)
-  - [Prerequisites](#prerequisites)
-  - [Link dotfiles](#link-dotfiles)
-  - [Plugin Managers](#plugin-managers)
+- [Prerequisites](#prerequisites)
+- [Linking](#linking)
+- [AI](#ai)
 - [Additional configurations](#additional-configurations)
   - [Various git configurations](#various-git-configurations)
   - [Signing commits](#signing-commits)
 
-## Debian
+## Prerequisites
 
-### Prerequisites
-
-Some useful (and for some required) dependencies, additionally it also updates the current machine:
+Before being able to correctly use my dotfiles repository, basic utilities must be installed on your Linux OS.
 
 ```sh
 sudo apt -y update
@@ -30,9 +27,20 @@ sudo apt -y install bash-completion ca-certificates curl file git gnupg jq make 
 sudo apt -y autoremove
 ```
 
-### Link dotfiles
+Since my dotfiles is using [**`z4h`**](https://github.com/romkatv/zsh4humans),
+this ZSH framework must also be installed before being able to use my dotfiles.
 
-In any terminal (SSH or HTTPS depending on your needs):
+```sh
+if command -v curl >/dev/null 2>&1; then
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
+else
+  sh -c "$(wget -O- https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
+fi
+```
+
+## Linking
+
+Once all prerequisites are installed, time to clone the dotfiles repository and link 'rc' files.
 
 ```sh
 git clone --recurse-submodules git@gitlab.com:kilianpaquier/dotfiles.git "$HOME/.dotfiles"
@@ -44,75 +52,18 @@ git clone --recurse-submodules https://gitlab.com/kilianpaquier/dotfiles.git "$H
 "$HOME/.dotfiles/link.sh"
 ```
 
-### Plugin Managers
+## AI
 
-#### Z4H
+Since AI seems to be the go-to nowadays, you may want to follow at least some basic practices regarding how it will develop on your projects.
+For that I setup'ed my own global instructions based on my own way of developing.
 
-To use dotfiles with `z4h`, the zsh plugin must be installed **before linking `.zshrc`**, nothing to do in `.zshrc` since it's cloned with `z4h` defined:
-
-```sh
-if command -v curl >/dev/null 2>&1; then
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
-else
-  sh -c "$(wget -O- https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
-fi
-```
-
-#### Antidote
-
-Antidote is cloned if needed in `.zshrc`, as such, the only thing to do is replace `.zshrc` with either `p10k` or `omz` prompting:
+Same as linking the dotfiles, a specific link script can be executed to add symlinks in `$HOME/.claude` and `$HOME/.copilot`.
 
 ```sh
-cat << 'EOF' > "$HOME/.zshrc"
-# .zshrc
-
-read me < <(readlink -f "$HOME/.zshrc")
-read dir < <(dirname "$me")
-
-source "$dir/.profile"
-source "$dir/antidote/p10k.zshrc"
-EOF
+"$HOME/.dotfiles/link.ai.sh"
 ```
 
-```sh
-cat << 'EOF' > "$HOME/.zshrc"
-# .zshrc
-
-read me < <(readlink -f "$HOME/.zshrc")
-read dir < <(dirname "$me")
-
-source "$dir/.profile"
-source "$dir/antidote/omz.zshrc"
-EOF
-```
-
-#### Antidote lite
-
-Antidote lite is curl'ed if needed in `.zshrc`, as such, the only thing to do is replace `.zshrc` with either `p10k` or `omz` prompting:
-
-```sh
-cat << 'EOF' > "$HOME/.zshrc"
-# .zshrc
-
-read me < <(readlink -f "$HOME/.zshrc")
-read dir < <(dirname "$me")
-
-source "$dir/.profile"
-source "$dir/antidote.lite/p10k.zshrc"
-EOF
-```
-
-```sh
-cat << 'EOF' > "$HOME/.zshrc"
-# .zshrc
-
-read me < <(readlink -f "$HOME/.zshrc")
-read dir < <(dirname "$me")
-
-source "$dir/.profile"
-source "$dir/antidote.lite/omz.zshrc"
-EOF
-```
+Note: Those instructions are likely to evolve and enriched throughout what **Claude** will miss on my own projects.
 
 ## Additional configurations
 

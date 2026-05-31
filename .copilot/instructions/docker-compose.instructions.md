@@ -1,0 +1,1 @@
+../../.claude/rules/docker-compose.md

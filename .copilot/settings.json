@@ -1,0 +1,7 @@
+{
+    "askUser": true,
+    "effortLevel": "high",
+    "logLevel": "info",
+    "remoteExport": false,
+    "respectGitignore": true
+}

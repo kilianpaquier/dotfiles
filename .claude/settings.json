@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "respectGitignore": true,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "Agent",
+      "Bash(docker buildx imagetools inspect *)",
+      "Bash(docker manifest inspect *)",
+      "Bash(go *)",
+      "Bash(mvn *)",
+      "mcp__plugin_codegraph_codegraph__codegraph_callees",
+      "mcp__plugin_codegraph_codegraph__codegraph_callers",
+      "mcp__plugin_codegraph_codegraph__codegraph_context",
+      "mcp__plugin_codegraph_codegraph__codegraph_explore",
+      "mcp__plugin_codegraph_codegraph__codegraph_files",
+      "mcp__plugin_codegraph_codegraph__codegraph_impact",
+      "mcp__plugin_codegraph_codegraph__codegraph_node",
+      "mcp__plugin_codegraph_codegraph__codegraph_search",
+      "mcp__plugin_codegraph_codegraph__codegraph_status",
+      "mcp__plugin_codegraph_codegraph__codegraph_trace",
+      "mcp__plugin_context7_context7__query-docs",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_gitlab_gitlab__create_issue",
+      "mcp__plugin_gitlab_gitlab__create_merge_request",
+      "mcp__plugin_gitlab_gitlab__create_workitem_note",
+      "mcp__plugin_gitlab_gitlab__get_issue",
+      "mcp__plugin_gitlab_gitlab__get_mcp_server_version",
+      "mcp__plugin_gitlab_gitlab__get_merge_request_commits",
+      "mcp__plugin_gitlab_gitlab__get_merge_request_conflicts",
+      "mcp__plugin_gitlab_gitlab__get_merge_request_diffs",
+      "mcp__plugin_gitlab_gitlab__get_merge_request_pipelines",
+      "mcp__plugin_gitlab_gitlab__get_merge_request",
+      "mcp__plugin_gitlab_gitlab__get_pipeline_jobs",
+      "mcp__plugin_gitlab_gitlab__get_saved_view_work_items",
+      "mcp__plugin_gitlab_gitlab__get_workitem_notes",
+      "mcp__plugin_gitlab_gitlab__link_work_items",
+      "mcp__plugin_gitlab_gitlab__search_labels",
+      "mcp__plugin_gitlab_gitlab__search",
+      "mcp__plugin_gitlab_gitlab__semantic_code_search",
+      "mcp__plugin_opentofu_opentofu__get-datasource-docs",
+      "mcp__plugin_opentofu_opentofu__get-module-details",
+      "mcp__plugin_opentofu_opentofu__get-provider-details",
+      "mcp__plugin_opentofu_opentofu__get-resource-docs",
+      "mcp__plugin_opentofu_opentofu__search-opentofu-registry",
+      "Read"
+    ],
+    "deny": [
+      "Bash(chmod *)",
+      "Bash(mv *)",
+      "Bash(sudo *)",
+      "Read(.netrc)",
+      "Read(.pem)",
+      "Read(.ssh/*)",
+      "Read(*.env)",
+      "Read(*.key)",
+      "Read(mise.toml)"
+    ],
+    "defaultMode": "default",
+    "disableBypassPermissionsMode": "disable",
+    "additionalDirectories": [
+      "~/workspaces"
+    ]
+  },
+  "worktree": {
+    "baseRef": "head",
+    "bgIsolation": "worktree"
+  },
+  "enabledPlugins": {
+    "claude-code-setup@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "codegraph@bunch-of": true,
+    "commit-commands@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "gitlab@claude-plugins-official": true,
+    "gopls@bunch-of": true,
+    "opentofu@bunch-of": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "remember@claude-plugins-official": true,
+    "schema-converter@bunch-of": true,
+    "security-guidance@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "bunch-of": {
+      "source": {
+        "source": "git",
+        "url": "https://gitlab.com/kilianpaquier/ai-marketplace.git"
+      }
+    }
+  },
+  "viewMode": "focus",
+  "syntaxHighlightingDisabled": false,
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
+  "autoCompactWindow": 180000,
+  "tui": "fullscreen",
+  "autoMemoryEnabled": true,
+  "theme": "dark-ansi",
+  "verbose": false,
+  "preferredNotifChannel": "auto",
+  "autoCompactEnabled": true,
+  "fileCheckpointingEnabled": true,
+  "showTurnDuration": true,
+  "showMessageTimestamps": true,
+  "todoFeatureEnabled": true,
+  "autoUploadSessions": false,
+  "inputNeededNotifEnabled": true,
+  "defaultView": "chat"
+}

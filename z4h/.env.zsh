@@ -14,7 +14,6 @@ plugins=(
   ohmyzsh/ohmyzsh/plugins/ssh-agent
 
   kilianpaquier/zsh-plugins/history
-  kilianpaquier/zsh-plugins/mise
 )
 for plugin in $plugins; do z4h load "$plugin"; done
 unset plugin plugins

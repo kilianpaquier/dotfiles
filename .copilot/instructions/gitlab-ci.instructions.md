@@ -1,0 +1,1 @@
+../../.claude/rules/gitlab-ci.md

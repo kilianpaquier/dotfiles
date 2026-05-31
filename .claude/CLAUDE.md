@@ -20,8 +20,8 @@
 ### Process
 
 - Follow instructions (projects, files specifics, global) to the letter.
-- Always verify assumptions with official documentation (framework docs, library references, online tool documentation).
-- Use Context7 or MCP tools whenever possible.
+- Always verify assumptions before stating them: use Context7 first, then MCP tools, then web search.
+- Never assert a capability or compatibility claim about any external tool, framework, library, or service without prior verification.
 - Ask before acting when the request or implementation plan is ambiguous, introduces refactoring or anything structural.
 
 ## Code review

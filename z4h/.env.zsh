@@ -35,6 +35,7 @@ plugins=(
   kilianpaquier/zsh-plugins/mise-shims
   kilianpaquier/zsh-plugins/release-sync
   kilianpaquier/zsh-plugins/terraform
+  kilianpaquier/zsh-plugins/no-proxy
 )
 for plugin in $plugins; do z4h load "$plugin"; done
 unset plugin plugins

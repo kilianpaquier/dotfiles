@@ -59,4 +59,6 @@
 - Test behavior, not implementation details.
 - Don't add tests for trivial or unreachable code paths.
 - Keep tests minimal and focused - one behavior per test.
-- Mark test phases with `// Arrange`, `// Act`, `// Assert` comments.
+- Mark test phases with `// Arrange`, `// Act`, `// Assert` comments (ignore the comment when ther're no steps in given test phase).
+
+@RTK.md

@@ -60,7 +60,7 @@ For that I setup'ed my own global instructions based on my own way of developing
 Same as linking the dotfiles, a specific link script can be executed to add symlinks in `$HOME/.claude` and `$HOME/.copilot`.
 
 ```sh
-"$HOME/.dotfiles/link.ai.sh"
+"$HOME/.dotfiles/patch.ai.sh"
 ```
 
 Note: Those instructions are likely to evolve and enriched throughout what **Claude** will miss on my own projects.

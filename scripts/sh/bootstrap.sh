@@ -10,12 +10,16 @@ fi
 # install various tools
 sudo apt -y update
 sudo apt -y dist-upgrade
-sudo apt -y install bash-completion ca-certificates curl file git gnupg imagemagick jq make man rsync slirp4netns tree uidmap unzip vim wget zsh
+sudo apt -y install bash-completion ca-certificates curl file git gnupg jq make man tree unzip vim wget zsh
 sudo apt -y autoremove
 
-# if [ ! -d "$HOME/.dotfiles" ]; then
-#   git clone https://gitlab.com/kilianpaquier/dotfiles.git "$HOME/.dotfiles"
-# fi
+if ! command -v mise >/dev/null 2>&1; then
+  curl -fSL https://mise.run | sh
+fi
+
+if find "$HOME" -name "dotfiles" -type d -exec false {} +; then
+  git clone https://gitlab.com/kilianpaquier/dotfiles.git "$HOME/.dotfiles"
+fi
 
 # setup default git configuration
 git config --global core.editor 'code --wait'
@@ -28,11 +32,8 @@ git config --global gpg.format ssh
 git config --global gpg.ssh.defaultKeyCommand 'ssh-add -L'
 git config --global tag.gpgsign true
 
-# install z4h
-if command -v curl >/dev/null 2>&1; then
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
-else
-  sh -c "$(wget -O- https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
+if [ ! -d "$HOME/.cache/zsh4humans/v5" ]; then
+  sh -c "$(curl -fSL https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
 fi
 
 # mkdir -p "$HOME/workspaces/gitlab.com/kilianpaquier"

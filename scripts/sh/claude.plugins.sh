@@ -9,6 +9,9 @@ fi
 installed_marketplaces=$(claude plugin marketplace list)
 installed_plugins=$(claude plugin list)
 
+if ! echo "$installed_marketplaces" | grep -q anthropics/claude-plugins-official; then
+  claude plugin marketplace add anthropics/claude-plugins-official
+fi
 if ! echo "$installed_marketplaces" | grep -q https://gitlab.com/kilianpaquier/ai-marketplace.git; then
   claude plugin marketplace add https://gitlab.com/kilianpaquier/ai-marketplace.git
 fi

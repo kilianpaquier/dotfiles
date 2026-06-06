@@ -4,11 +4,13 @@ set -e
 
 dir="$(realpath "$(dirname "$0")")"
 
+mkdir -p "$HOME/.claude"
 files=".claude/CLAUDE.md .claude/rules"
 for file in $files; do ln -sfT "$dir/$file" "$HOME/$file"; done
 unset file files
 
 # Copilot can read .claude
+mkdir -p "$HOME/.copilot"
 # files=".copilot/copilot-instructions.md .copilot/instructions"
 # for file in $files; do ln -sfT "$dir/$file" "$HOME/$file"; done
 # unset file files

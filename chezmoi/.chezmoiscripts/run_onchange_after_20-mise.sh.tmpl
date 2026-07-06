@@ -1,0 +1,19 @@
+#!/bin/sh
+# week number {{ output "date" "+%V" | trim }}
+
+set -e
+
+if ! command -v mise >/dev/null 2>&1; then
+  curl -fSL https://mise.run | MISE_INSTALL_PATH=$HOME/.local/bin/mise sh
+fi
+
+(
+  cd "$HOME/.config/mise"
+
+  mise self-update
+  mise install
+  mise upgrade
+  mise prune -y
+
+  touch config.toml
+)

@@ -3,6 +3,7 @@
 version: 1
 exclude:
   - makefile
+  - shell
 gitlab:
   options:
     - kickr

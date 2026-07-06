@@ -1,0 +1,57 @@
+#!/bin/sh
+
+set -e
+
+if ! command -v claude >/dev/null 2>&1; then
+  exit 0
+fi
+
+installed_marketplaces=$(claude plugin marketplace list)
+installed_plugins=$(claude plugin list)
+
+if ! echo "$installed_marketplaces" | grep -q anthropics/claude-plugins-official; then
+  claude plugin marketplace add anthropics/claude-plugins-official
+fi
+{{- if eq .profile "home" }}
+if ! echo "$installed_marketplaces" | grep -q https://gitlab.com/kilianpaquier/ai-marketplace.git; then
+  claude plugin marketplace add https://gitlab.com/kilianpaquier/ai-marketplace.git
+fi
+{{- end }}
+claude plugin marketplace update
+
+{{- if eq .profile "home" }}
+
+for plugin in claude-5h-window-spread codebase-memory-mcp codegraph mempalace opentofu schema-converter; do
+  if echo "$installed_plugins" | grep -q $plugin@bunch-of; then
+    claude plugin update $plugin@bunch-of
+  else
+    claude plugin install $plugin@bunch-of
+  fi
+done
+{{- end }}
+
+for plugin in \
+  claude-code-setup \
+  claude-md-management \
+  feature-dev \
+  gopls-lsp \
+  pr-review-toolkit \
+  security-guidance \
+  skill-creator; do
+  if echo "$installed_plugins" | grep -q $plugin@claude-plugins-official; then
+    claude plugin update $plugin@claude-plugins-official
+  else
+    claude plugin install $plugin@claude-plugins-official
+  fi
+done
+
+{{- if eq .profile "home" }}
+
+for plugin in context7 github gitlab; do
+  if echo "$installed_plugins" | grep -q $plugin@claude-plugins-official; then
+    claude plugin update $plugin@claude-plugins-official
+  else
+    claude plugin install $plugin@claude-plugins-official
+  fi
+done
+{{- end }}

@@ -1,0 +1,51 @@
+function Test-WingetInstalled {
+  param([Parameter(Mandatory)][string]$Id)
+
+  winget list --id $Id -e --accept-source-agreements | Out-Null
+  return $LASTEXITCODE -eq 0
+}
+
+function Install-WingetPackages {
+  param([Parameter(Mandatory)][string[]]$Ids)
+
+  $missing = $Ids | Where-Object { -not (Test-WingetInstalled $_) }
+  if ($missing) {
+    winget install -e -i @missing
+  }
+}
+
+winget upgrade --all
+
+{{- if has "vscode" .ide }}
+Install-WingetPackages Microsoft.VisualStudioCode
+{{- end }}
+
+{{- if has "intellij" .ide }}
+Install-WingetPackages JetBrains.IntelliJIDEA.Ultimate
+{{- end }}
+
+{{- if has "zed" .ide }}
+Install-WingetPackages ZedIndustries.Zed
+{{- end }}
+
+Install-WingetPackages Spotify.Spotify, 7zip.7zip
+
+{{- if eq .profile "home" }}
+
+Install-WingetPackages Brave.Brave, Discord.Discord, FilenCloud.FilenSync, Nextcloud.NextcloudDesktop, TheDocumentFoundation.LibreOffice
+Install-WingetPackages Microsoft.DotNet.DesktopRuntime.10, Microsoft.DotNet.DesktopRuntime.8
+Install-WingetPackages IDRIX.VeraCrypt, Logitech.GHUB
+Install-WingetPackages Yubico.Authenticator, Yubico.YubiKeyManagerCLI, Yubico.YubiKeySmartCardMinidriver
+{{- end }}
+
+{{- if .gaming }}
+
+Install-WingetPackages CPUID.CPU-Z, OCBase.OCCT.Personal, REALiX.HWiNFO
+Install-WingetPackages Guru3D.Afterburner, Guru3D.RTSS
+Install-WingetPackages ElectronicArts.EADesktop, EpicGames.EpicGamesLauncher, Ubisoft.Connect, Valve.Steam, WeMod.WeMod
+{{- end }}
+
+{{- if eq .profile "soprasteria" }}
+
+Install-WingetPackages Microsoft.Office, Microsoft.Teams, Microsoft.WSL, Obsidian.Obsidian
+{{- end }}

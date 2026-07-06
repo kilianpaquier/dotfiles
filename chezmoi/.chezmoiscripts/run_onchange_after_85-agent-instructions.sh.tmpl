@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+if ! command -v rtk >/dev/null 2>&1; then
+  exit 0
+fi
+
+{{- if has "claude" .agents }}
+rtk init -g --auto-patch
+{{- end }}
+{{- if has "copilot" .agents }}
+rtk init -g --copilot --auto-patch
+{{- end }}

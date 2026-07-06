@@ -1,0 +1,79 @@
+{
+    "$schema": "https://json.schemastore.org/claude-code-settings.json",
+    "respectGitignore": true,
+    "attribution": {
+        "commit": "",
+        "pr": ""
+    },
+    "permissions": {
+        "allow": [
+            "Agent",
+            "Bash(apm*)",
+            "Bash(awk*)",
+            "Bash(chezmoi*)",
+            "Bash(mempalace*)",
+            "Bash(rtk*)",
+            "Edit(./**)",
+            "mcp__plugin_codebase-memory-mcp_codebase-memory-mcp__*",
+            "mcp__plugin_codegraph_codegraph__*",
+            "mcp__plugin_context7_context7__*",
+            "mcp__plugin_gitlab_gitlab__*",
+            "mcp__plugin_mempalace_mempalace__*",
+            "mcp__plugin_opentofu_opentofu__*",
+            "Read(~/.local/share/chezmoi)",
+            "Read(~/workspaces)",
+            "Skill",
+            "WebFetch(domain:docs.claude.com)",
+            "WebFetch(domain:docs.github.com)",
+            "WebFetch(domain:linuxcontainers.org)",
+            "WebFetch(domain:microsoft.github.io)",
+            "WebFetch(domain:schemastore.org)",
+            "Write(./**)"
+        ],
+        "ask": [
+            "mcp__plugin_codebase-memory-mcp_codebase-memory-mcp__delete_project",
+            "mcp__plugin_mempalace_mempalace__mempalace_delete_by_source",
+            "mcp__plugin_mempalace_mempalace__mempalace_delete_drawer",
+            "mcp__plugin_mempalace_mempalace__mempalace_delete_hallway",
+            "mcp__plugin_mempalace_mempalace__mempalace_delete_tunnel",
+            "mcp__plugin_mempalace_mempalace__mempalace_kg_invalidate"
+        ],
+        "deny": [
+            "Bash(chezmoi apply*)"
+        ],
+        "defaultMode": "default",
+        "disableBypassPermissionsMode": "disable",
+        "additionalDirectories": [
+            "~/.local/share/chezmoi",
+            "~/workspaces"
+        ]
+    },
+    "sandbox": {
+        "allowUnsandboxedCommands": false,
+        "autoAllowBashIfSandboxed": true,
+        "enabled": false,
+        "failIfUnavailable": true
+    },
+    "worktree": {
+        "baseRef": "head",
+        "bgIsolation": "worktree"
+    },
+    "viewMode": "focus",
+    "syntaxHighlightingDisabled": false,
+    "alwaysThinkingEnabled": true,
+    "effortLevel": "high",
+    "autoCompactWindow": 180000,
+    "tui": "fullscreen",
+    "autoMemoryEnabled": true,
+    "theme": "dark-ansi",
+    "verbose": false,
+    "preferredNotifChannel": "auto",
+    "autoCompactEnabled": true,
+    "fileCheckpointingEnabled": true,
+    "showTurnDuration": true,
+    "showMessageTimestamps": true,
+    "todoFeatureEnabled": true,
+    "autoUploadSessions": false,
+    "inputNeededNotifEnabled": true,
+    "defaultView": "chat"
+}

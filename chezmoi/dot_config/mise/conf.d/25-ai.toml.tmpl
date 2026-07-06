@@ -1,0 +1,11 @@
+[tools]
+"github:colbymchenry/codegraph" = "latest"
+"github:DeusData/codebase-memory-mcp" = "latest"
+"github:microsoft/apm" = "latest"
+{{- if has "claude" .agents }}
+claude = "latest"
+{{- end }}
+{{- if has "copilot" .agents }}
+copilot = "latest"
+{{- end }}
+rtk = "latest"

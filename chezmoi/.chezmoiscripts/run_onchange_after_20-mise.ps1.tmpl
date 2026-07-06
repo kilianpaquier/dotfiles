@@ -1,0 +1,20 @@
+# week number {{ output "date" "+%V" | trim }}
+
+$ErrorActionPreference = "Stop"
+
+if (-not (Get-Command mise -ErrorAction SilentlyContinue)) {
+  winget install -e -i jdx.mise
+}
+
+Push-Location "$HOME/.config/mise"
+
+try {
+  mise self-update
+  mise install
+  mise upgrade
+  mise prune -y
+
+  New-Item -ItemType File -Force config.toml | Out-Null
+} finally {
+  Pop-Location
+}

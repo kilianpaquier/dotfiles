@@ -1,0 +1,76 @@
+#!/bin/sh
+
+set -e
+
+TMPDIR=$(mktemp -d)
+
+sudo apt update
+sudo apt -y full-upgrade
+
+sudo apt -y install curl libreoffice
+{{- if eq .profile "home" }}
+sudo apt -y install nextcloud-desktop pcscd
+{{- end }}
+
+sudo apt -y autoremove
+
+{{- if has "vscode" .ide }}
+
+# Code
+if ! command -v code >/dev/null 2>&1; then
+  curl -fsSL "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64" -o "$TMPDIR/code.deb"
+  sudo apt -y install "$TMPDIR/code.deb"
+fi
+{{- end }}
+
+{{- if has "zed" .ide }}
+
+# Zed
+if ! command -v zed >/dev/null 2>&1; then
+  curl -fsSL https://zed.dev/install.sh | sh
+fi
+{{- end }}
+
+# Spotify
+if ! command -v spotify >/dev/null 2>&1; then
+  curl -fsSL https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.asc | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
+  echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+  sudo apt update
+  sudo apt -y install spotify-client
+fi
+
+# Wayland Scroll Factor
+# renovate datasource=github-tags packageName=daniel-g-carrasco/wayland-scroll-factor depName=wayland-scroll-factor
+wayland_version=0.3.5
+if ! command -v wsf >/dev/null 2>&1 || [ "$(wsf version)" != "wayland-scroll-factor $wayland_version" ]; then
+  curl -fsSL "https://github.com/daniel-g-carrasco/wayland-scroll-factor/releases/download/v${wayland_version}/wayland-scroll-factor_${wayland_version}-1_amd64.deb" \
+    -o "$TMPDIR/wayland-scroll.deb"
+  sudo apt -y install "$TMPDIR/wayland-scroll.deb"
+  unset wayland_version
+
+  wsf set --scroll-vertical 0.10 --scroll-horizontal 0.10
+fi
+
+{{- if eq .profile "home" }}
+
+# Brave
+if ! command -v brave-browser >/dev/null 2>&1; then
+  curl -fsSL https://dl.brave.com/install.sh | sh
+fi
+
+# Discord
+if ! command -v discord >/dev/null 2>&1; then
+  curl -fsSL https://discord.com/api/download?platform=linux -o "$TMPDIR/discord.deb"
+  sudo apt install "$TMPDIR/discord.deb"
+fi
+
+# NetBird
+if ! command -v netbird >/dev/null 2>&1; then
+  curl -fsSL https://pkgs.netbird.io/install.sh | sh
+fi
+
+# Yubico Authenticator (always install / update)
+rm -rf "$HOME/.local/share/yubico-authenticator" && mkdir -p "$HOME/.local/share/yubico-authenticator"
+curl -fsSL https://developers.yubico.com/yubioath-flutter/Releases/yubico-authenticator-latest-linux.tar.gz | tar xzf - -C "$HOME/.local/share/yubico-authenticator" --strip-components=1
+"$HOME/.local/share/yubico-authenticator/desktop_integration.sh" --install
+{{- end }}

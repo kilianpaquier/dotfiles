@@ -1,0 +1,85 @@
+{{- if eq .chezmoi.os "windows" }}
+**/*.sh
+.config/environment.d
+{{- else }}
+**/*.ps1
+{{- end }}
+
+{{- if or (not .dev) (not .mise) }}
+.chezmoiscripts/20-mise.sh
+.chezmoiscripts/20-mise.ps1
+.config/mise
+{{- end }}
+
+{{- if not .ssh.generate }}
+.chezmoiscripts/90-ssh.sh
+.chezmoiscripts/90-ssh.ps1
+{{- end }}
+
+{{- if .dev }}
+.chezmoiscripts/10-computer.sh
+.chezmoiscripts/10-computer.ps1
+{{- end }}
+
+{{- if ne .profile "home" }}
+.config/mise/conf.d/30-home.toml
+{{- end }}
+
+{{- if ne .profile "soprasteria" }}
+.config/mise/conf.d/40-soprasteria.toml
+{{- end }}
+
+{{- if eq (len .agents) 0 }}
+.chezmoiscripts/85-agent-instructions.sh
+.chezmoiscripts/85-agent-instructions.ps1
+.config/rtk
+.config/mise/conf.d/25-ai.toml
+{{- end }}
+
+{{- if not (has "claude" .agents) }}
+.chezmoiscripts/80-claude.sh
+.chezmoiscripts/80-claude.ps1
+.claude
+{{- end }}
+
+{{- if not (has "copilot" .agents) }}
+.copilot
+{{- end }}
+
+{{- if or (not .dev) (not (has "vscode" .ide)) }}
+.vscode-server
+{{- end }}
+
+{{- if eq .chezmoi.os "windows" }}
+.config/environment.d/bash.conf
+.bash_aliases
+.bash_logout
+.bashenv
+.bashrc
+.profile
+{{- end }}
+
+{{- if ne .shell "bash" }}
+.chezmoiscripts/00-bash.sh
+# still symlink bash with zsh for non-interactive environments
+{{- end }}
+
+{{- if ne .shell "zsh" }}
+.chezmoiscripts/00-zsh.sh
+.env.zsh
+.zlogout
+.zprofile
+.zshenv
+.zshrc
+{{- end }}
+
+# partials
+.claude/settings.partial.json
+.copilot/settings.partial.json
+.vscode-server/data/Machine/settings.*.partial.json
+
+# symlinks
+symlinks
+
+# generated
+.zshenv

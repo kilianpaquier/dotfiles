@@ -1,1 +1,0 @@
-../../.claude/rules/go-test.md

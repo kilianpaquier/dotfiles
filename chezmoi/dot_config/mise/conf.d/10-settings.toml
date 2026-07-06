@@ -1,0 +1,6 @@
+[settings]
+disable_backends = ["asdf", "conda", "npm", "pkgx", "spm", "s3", "ubi", "vfox"]
+disable_default_registry = true
+lockfile = true
+minimum_release_age = "5d"
+trusted_config_paths = ["~/workspaces", "~/.local/share/chezmoi", "~/.local/share/chezmoi.worktrees"]

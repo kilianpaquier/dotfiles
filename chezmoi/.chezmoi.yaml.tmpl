@@ -1,0 +1,66 @@
+{{- $dev := false -}}
+{{- if ne .chezmoi.os "windows" -}}
+  {{- $dev = promptBoolOnce . "dev" "Is this a development machine (full tooling, git, etc.)" -}}
+{{- end -}}
+
+{{- $profile := promptChoiceOnce . "profile" "Which profile should apply to this machine" (list "home" "soprasteria") -}}
+
+{{- $gaming := false -}}
+{{- if and (eq $profile "home") (eq .chezmoi.os "windows") -}}
+  {{- $gaming = promptBoolOnce . "gaming" "Is this a gaming machine" -}}
+{{- end -}}
+
+{{- $shell := "powershell" -}}
+{{- if ne .chezmoi.os "windows" -}}
+  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") "bash" -}}
+{{- end -}}
+
+{{- $ide := promptMultichoiceOnce . "ide" "What IDE are you using to develop" (list "intellij" "vscode" "zed") (list "vscode") -}}
+
+{{- $ssh_generate := promptBoolOnce . "ssh.generate" "Would you like to generate an SSH key" -}}
+
+{{- $computer_name := "" -}}
+{{- if $ssh_generate -}}
+  {{- $computer_name = promptStringOnce . "computer_name" "What is this computer's name" .chezmoi.hostname -}}
+{{- end -}}
+
+{{- $email := "" -}}
+{{- $username := "" -}}
+{{- if or $dev $ssh_generate -}}
+  {{- $username = promptStringOnce . "user.username" "What is your comitter username" -}}
+  {{- $email = promptStringOnce . "user.email" "What is your committer email" -}}
+{{- end -}}
+
+{{- $git_ssh := false -}}
+{{- $agents := list -}}
+{{- $mise := false -}}
+{{- if $dev -}}
+  {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" -}}
+  {{- $agents = promptMultichoiceOnce . "agents" "Which AI agent(s) will you be using" (list "claude" "copilot") -}}
+  {{- $mise = promptBoolOnce . "mise" "Would you like to use mise to manage your tools" -}}
+{{- end -}}
+
+umask: 0o22
+
+data:
+  agents:{{ if eq (len $agents) 0 }} []{{ end }}
+{{- range $agents }}
+    - {{ . }}
+{{- end }}
+  computer_name: {{ $computer_name }}
+  dev: {{ $dev }}
+  gaming: {{ $gaming }}
+  git:
+    ssh: {{ $git_ssh }}
+  ssh:
+    generate: {{ $ssh_generate }}
+  user:
+    email: {{ $email }}
+    username: {{ $username }}
+  ide:{{ if eq (len $ide) 0 }} []{{ end }}
+{{- range $ide }}
+    - {{ . }}
+{{- end }}
+  mise: {{ $mise }}
+  profile: {{ $profile }}
+  shell: {{ $shell }}

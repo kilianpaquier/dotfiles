@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -- "$CHEZMOI_SOURCE_DIR/dot_vscode-server/data/Machine/settings.base.partial.json"
+{{- if and (not (has "copilot" .agents)) (has "vscode" .ide) }}
+set -- "$@" "$CHEZMOI_SOURCE_DIR/dot_vscode-server/data/Machine/settings.copilot.partial.json"
+{{- end }}
+
+jq -s 'reduce .[] as $x ({}; . * $x)' - "$@"

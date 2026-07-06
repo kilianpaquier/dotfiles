@@ -9,87 +9,36 @@
 
 ---
 
-- [Prerequisites](#prerequisites)
-- [Linking](#linking)
-- [AI](#ai)
-- [Additional configurations](#additional-configurations)
-  - [Various git configurations](#various-git-configurations)
-  - [Signing commits](#signing-commits)
-
-## Prerequisites
-
-Before being able to correctly use my dotfiles repository, basic utilities must be installed on your Linux OS.
+## Install
 
 ```sh
-sudo apt -y update
-sudo apt -y dist-upgrade
-sudo apt -y install bash-completion ca-certificates curl file git gnupg jq make man tree unzip vim wget zsh
-sudo apt -y autoremove
+umask 022
+sh -c "$(curl -fsSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch feat/chezmoi --apply https://gitlab.com/kilianpaquier/dotfiles.git
 ```
 
-Since my dotfiles is using [**`z4h`**](https://github.com/romkatv/zsh4humans),
-this ZSH framework must also be installed before being able to use my dotfiles.
+```ps1
+iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '~/.local/bin' -- init --branch 'feat/chezmoi' --apply 'https://gitlab.com/kilianpaquier/dotfiles.git'"
+```
+
+In case you'd want to change your initial responses to prompts:
 
 ```sh
-if command -v curl >/dev/null 2>&1; then
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
-else
-  sh -c "$(wget -O- https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
-fi
+chezmoi init --prompt
 ```
 
-## Linking
+## Prompts
 
-Once all prerequisites are installed, time to clone the dotfiles repository and link 'rc' files.
-
-```sh
-git clone --recurse-submodules git@gitlab.com:kilianpaquier/dotfiles.git "$HOME/.dotfiles"
-"$HOME/.dotfiles/link.sh"
-```
-
-```sh
-git clone --recurse-submodules https://gitlab.com/kilianpaquier/dotfiles.git "$HOME/.dotfiles"
-"$HOME/.dotfiles/link.sh"
-```
-
-## AI
-
-Since AI seems to be the go-to nowadays, you may want to follow at least some basic practices regarding how it will develop on your projects.
-For that I setup'ed my own global instructions based on my own way of developing.
-
-Same as linking the dotfiles, a specific link script can be executed to add symlinks in `$HOME/.claude` and `$HOME/.copilot`.
-
-```sh
-"$HOME/.dotfiles/patch.ai.sh"
-```
-
-Note: Those instructions are likely to evolve and enriched throughout what **Claude** will miss on my own projects.
-
-## Additional configurations
-
-### Various git configurations
-
-```sh
-git config --global core.editor 'code --wait'
-git config --global init.defaultbranch main
-git config --global push.autoSetupRemote true
-```
-
-### Signing commits
-
-With SSH or GPG:
-
-```sh
-git config --global commit.gpgsign true
-git config --global gpg.format ssh
-git config --global gpg.ssh.defaultKeyCommand 'ssh-add -L'
-git config --global tag.gpgsign true
-```
-
-```sh
-git config --global --unset gpg.format
-git config --global commit.gpgsign true
-git config --global tag.gpgsign true
-git config --global user.signingkey '<GPG KEY ID>'
-gpg --list-secret-keys --keyid-format=long
-```
+| Key             | Type        | OS          | Default  | When                    | Description                                           |
+| --------------- | ----------- | ----------- | -------- | ----------------------- | ----------------------------------------------------- |
+| `dev`           | bool        | non-windows | `false`  |                         | Development machine (enables git, mise, agents, IDE)  |
+| `profile`       | choice      | all         |          |                         | Work profile: `home` or `soprasteria`                 |
+| `gaming`        | bool        | windows     | `false`  | `profile` == `home`     | Gaming machine (installs EA, Epic, Steam, Ubisoft...) |
+| `shell`         | choice      | non-windows | `bash`   |                         | Shell to configure: `bash` or `zsh`                   |
+| `ide`           | multichoice | all         | `vscode` |                         | IDEs in use: `intellij`, `vscode`, `zed`              |
+| `ssh.generate`  | bool        | all         | `false`  |                         | Generate an SSH key (`id_ed25519`)                    |
+| `computer_name` | string      | all         | hostname | `ssh.generate`          | Computer name (used in the SSH key comment)           |
+| `user.email`    | string      | all         |          | `dev` or `ssh.generate` | Committer email address                               |
+| `user.username` | string      | all         |          | `dev` or `ssh.generate` | Username                                              |
+| `git.ssh`       | bool        | all         | `false`  | `dev`                   | Sign commits with SSH key                             |
+| `agents`        | multichoice | all         |          | `dev`                   | AI agents to configure: `claude`, `copilot`           |
+| `mise`          | bool        | all         | `false`  | `dev`                   | Use mise to manage tools                              |

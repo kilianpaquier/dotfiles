@@ -1,0 +1,5 @@
+[tools]
+"github:lxc/incus" = { version = "latest", exe = "incus" }
+bun = "latest"
+gh = "latest"
+pre-commit = "latest"

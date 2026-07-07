@@ -4,7 +4,6 @@ description: TypeScript / JavaScript conventions
 globs: ["**/*.ts", "**/*.tsx", "**/*.js"]
 paths: ["**/*.ts", "**/*.tsx", "**/*.js"]
 ---
-
 # TypeScript / JavaScript
 
 ## Functions & exports
@@ -21,7 +20,13 @@ paths: ["**/*.ts", "**/*.tsx", "**/*.js"]
 
 ## Errors
 
-- Always throw errors, never return them as values.
+- Always throw errors, never return as values.
+
+## Style
+
+- No semicolons (enforced by ESLint/Prettier `semi: false`).
+- Always braces `{ }` for `if`/`else`/`for`/`while`/etc bodies - never single-statement inline without braces.
+- Never labeled statements (`label:`), labeled `break`/`continue`, or `goto`-style control flow.
 
 ## Imports
 
@@ -30,7 +35,7 @@ paths: ["**/*.ts", "**/*.tsx", "**/*.js"]
 
 ## Comments
 
-- Add JSDoc to every exported function (parameters, return type, thrown errors).
+- Add JSDoc to every exported function (parameters, return type, thrown errors, etc).
 
 ### Example
 
@@ -50,7 +55,7 @@ export const functionName = (param1: string, param2: number): string => { ... }
 
 ## Tests
 
-- Framework: match the project (Bun test, Jest, Vitest, etc.).
+- Framework: match project (Bun test, Jest, Vitest, etc).
 - File pattern: `*.test.ts`.
 - Structure: `describe` + `test`.
 - Mocks: `spyOn` + framework teardown in `afterEach` (e.g. `mock.restore()` for Bun, `jest.restoreAllMocks()` for Jest, `vi.restoreAllMocks()` for Vitest).

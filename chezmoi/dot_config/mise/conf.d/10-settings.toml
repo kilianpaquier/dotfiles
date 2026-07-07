@@ -1,5 +1,5 @@
 [settings]
-disable_backends = ["asdf", "conda", "npm", "pkgx", "spm", "s3", "ubi", "vfox"]
+disable_backends = ["asdf", "conda", "pkgx", "spm", "s3", "ubi", "vfox"]
 disable_default_registry = true
 lockfile = true
 minimum_release_age = "5d"

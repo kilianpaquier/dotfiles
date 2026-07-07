@@ -1,17 +1,15 @@
 # chezmoi
 
-A chezmoi repository contains dotfiles (either as symlink or raw files),
-scripts and other elements from [**chezmoi**](https://www.chezmoi.io/).
+chezmoi repo hold dotfiles (symlink or raw file), scripts, other elements from [**chezmoi**](https://www.chezmoi.io/).
 
-The whole purpose of those repositories is to share computers setup
-with automation and shared configurations.
+Purpose: share computer setup via automation + shared config.
 
 ## Specificities
 
-- Use `chezmoi` subfolder for chezmoi elements (per `.chezmoiroot` configuration)
-- Update `README.md` prompts table when adding a new init prompt in `.chezmoi.yaml.tmpl`
-- Update `.ps1` and `.sh` equivalent scripts when adding a new script element
-- Never use `chezmoi` CLI, don't bother with trivial verifications of prompts, scripts, etc.
+- Use `chezmoi` subfolder for chezmoi elements (per `.chezmoiroot` config)
+- Update `README.md` prompts table when add new init prompt in `.chezmoi.yaml.tmpl`
+- Update `.ps1` + `.sh` equivalent scripts when add new script element
+- Never use `chezmoi` CLI, skip trivial verification of prompts, scripts, etc.
 
 ## Third-party
 

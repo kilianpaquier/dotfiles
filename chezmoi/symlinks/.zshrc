@@ -22,21 +22,12 @@ zstyle ':z4h:' auto-update 'no'
 # Keyboard type: 'mac' or 'pc'.
 zstyle ':z4h:bindkey' keyboard 'pc'
 
-# Don't start tmux.
-# zstyle ':z4h:' start-tmux 'no'
-
-# Move prompt to the bottom when zsh starts and on Ctrl+L.
-zstyle ':z4h:' prompt-at-bottom 'no'
-
 # Mark up shell's output with semantic information.
 zstyle ':z4h:' term-shell-integration 'yes'
 
 # Right-arrow key accepts one character ('partial-accept') from
 # command autosuggestions or the whole thing ('accept')?
 zstyle ':z4h:autosuggestions' forward-char 'accept'
-
-# Recursively traverse directories when TAB-completing files.
-zstyle ':z4h:fzf-complete' recurse-dirs 'yes'
 
 # Enable direnv to automatically source .envrc files.
 zstyle ':z4h:direnv' enable 'no'
@@ -48,7 +39,9 @@ zstyle ':z4h:ssh:*' enable 'no'
 z4h source "$HOME/.env.zsh"
 
 # Extend environment (aliases and PATH).
-path=(~/bin $path)
+# path=(~/bin $path)
+[ -z "$PROFILE_SOURCED" ] && [ -f "$HOME/.zprofile" ] && . "$HOME/.zprofile"
+[ -f "$HOME/.bash_aliases" ] && . "$HOME/.bash_aliases"
 
 # Export environment variables.
 export GPG_TTY=$TTY

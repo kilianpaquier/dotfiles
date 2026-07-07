@@ -4,28 +4,27 @@ description: Go test file conventions
 globs: ["**/*_test.go"]
 paths: ["**/*_test.go"]
 ---
-
 # Go tests
 
 ## Package naming
 
-- Always use the external test package: `package foo_test`.
-- Use `package foo` only when the project already does so (check existing test files first).
-- When a directory has both styles, match the file being extended; for new standalone test files default to `package foo_test`.
+- Always use external test package: `package foo_test`.
+- Use `package foo` only when project already does so (check existing test files first).
+- Directory has both styles → match file being extended; new standalone test files default `package foo_test`.
 
 ## Structure
 
-- Use `t.Run("description", func(t *testing.T) { ... })` subtests for each test case.
-- No table-driven tests (struct slice + range) unless explicitly asked.
-- Use `t.Cleanup(fn)` for teardown and state restoration; prefer it over `defer` in subtests.
-- Use `t.TempDir()` for file I/O - it is cleaned up automatically.
-- Mark test helpers with `t.Helper()` as their first statement.
+- Use `t.Run("description", func(t *testing.T) { ... })` subtests each test case.
+- No table-driven tests (struct slice + range) unless explicit ask.
+- Use `t.Cleanup(fn)` teardown, state restore; prefer over `defer` in subtests.
+- Use `t.TempDir()` file I/O - cleaned up auto.
+- Mark test helpers `t.Helper()` first statement.
 
 ## Assertions
 
-- Match the project's existing test library.
-- If no library is present, use stdlib `testing` only.
-- Use `require.` (or equivalent failing-fast assertions) for preconditions; `assert.` for the actual assertions.
+- Match project's existing test library.
+- No library present → stdlib `testing` only.
+- Use `require.` (or equivalent fail-fast assertions) preconditions; `assert.` actual assertions.
 
 ## Stdlib example
 

@@ -51,3 +51,6 @@ if command -v go >/dev/null 2>&1; then
 fi
 
 unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
+
+# shellcheck disable=SC2034
+PROFILE_SOURCED=1

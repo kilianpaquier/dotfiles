@@ -1,6 +1,15 @@
 #!/bin/zsh
 # shellcheck disable=SC1071
 
+# Don't start tmux.
+# zstyle ':z4h:' start-tmux 'no'
+
+# Move prompt to the bottom when zsh starts and on Ctrl+L.
+zstyle ':z4h:' prompt-at-bottom 'no'
+
+# Recursively traverse directories when TAB-completing files.
+zstyle ':z4h:fzf-complete' recurse-dirs 'no'
+
 # Download required plugins repositories before z4h initialization
 repos=(
   kilianpaquier/zsh-plugins
@@ -31,5 +40,3 @@ plugins=(
 )
 for plugin in $plugins; do z4h load "$plugin"; done
 unset plugin plugins
-
-[ -f "$HOME/.bash_aliases" ] && . "$HOME/.bash_aliases"

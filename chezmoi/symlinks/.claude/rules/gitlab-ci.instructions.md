@@ -4,12 +4,11 @@ description: GitLab CI conventions
 globs: ["**/.gitlab-ci.{yml,yaml}", "**/.gitlab/**/*.{yml,yaml}"]
 paths: ["**/.gitlab-ci.{yml,yaml}", "**/.gitlab/**/*.{yml,yaml}"]
 ---
-
 # GitLab CI
 
 ## To Be Continuous
 
-Use [To Be Continuous](https://gitlab.com/to-be-continuous) components whenever a supported tool or workflow is needed. Each component's available `inputs` are defined in its template file.
+Use [To Be Continuous](https://gitlab.com/to-be-continuous) components whenever supported tool or workflow needed. Each component's available `inputs` defined in its template file.
 
 Template URL pattern: `https://gitlab.com/to-be-continuous/{component}/-/raw/main/templates/gitlab-ci-{component}.yml`
 
@@ -19,19 +18,19 @@ Available components: `ansible`, `aws`, `azure`, `bash`, `docker`, `gcloud`, `go
 
 ## Includes
 
-- Use `include: - component:` for all external templates. Prefer it over `project:`, `remote:`, and `template:`.
-- Use `inputs:` to pass parameters to a component.
-- Pin component references to a tag:
-  ```yaml
-  - component: gitlab.com/org/template/job@1.5.0
-    inputs:
-      some-input: value
-  ```
-- Use `include: - local:` only for referencing local pipeline files within the same repo.
+- Use `include: - component:` for all external templates. Prefer over `project:`, `remote:`, `template:`.
+- Use `inputs:` to pass parameters to component.
+- Pin component refs to tag:
+```yaml
+- component: gitlab.com/org/template/job@1.5.0
+  inputs:
+    some-input: value
+```
+- Use `include: - local:` only for local pipeline files within same repo.
 
 ## Job key ordering
 
-Order job keys as follows (omit keys that are not needed):
+Order job keys (omit unneeded):
 
 1. `extends`
 2. `stage`
@@ -51,9 +50,9 @@ Order job keys as follows (omit keys that are not needed):
 
 ## Jobs
 
-- Names: `kebab-case`. Use `:` as a namespace separator (e.g., `semantic-release:dry-run`).
-- Set `needs: []` for jobs that must run immediately without waiting on prior stages.
-- Set `interruptible: true` globally via `default:` block; override with `interruptible: false` for release jobs.
+- Names: `kebab-case`. Use `:` as namespace separator (e.g., `semantic-release:dry-run`).
+- Set `needs: []` for jobs must run immediately, no waiting prior stages.
+- Set `interruptible: true` globally via `default:` block; override `interruptible: false` for release jobs.
 
 ## Variables
 
@@ -62,11 +61,11 @@ Order job keys as follows (omit keys that are not needed):
 ## Rules
 
 - Use `rules:` with `if/when` pairs. Prefer `rules:` over `only:/except:`.
-- Prefer conditions with explicit `when: never` to block cases; end with `when: on_success` as the fallback:
+- Prefer conditions with explicit `when: never` to block cases; end with `when: on_success` as fallback:
 
-  ```yaml
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
-    - when: on_success
-  ```
+```yaml
+rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    when: never
+  - when: on_success
+```

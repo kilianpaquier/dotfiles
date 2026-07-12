@@ -1,3 +1,53 @@
 {
-    "chat.disableAIFeatures": true
+    "chat.hookFilesLocations": {
+        ".claude/settings.json": true,
+        ".claude/settings.local.json": true,
+        ".github/hooks": true,
+        "~/.claude/settings.json": true,
+        "~/.copilot/hooks": true
+    },
+    "chat.promptFilesLocations": {
+        ".github/prompts": true,
+        "~/.copilot/prompts": true
+    },
+    "chat.tools.terminal.autoApprove": {
+        "/^git clone\\b/": false,
+        "/^npm install\\b/": false,
+        "apm": true,
+        "awk": true,
+        "chezmoi": false,
+        "curl": false,
+        "find": true,
+        "grep": true,
+        "kickr": true,
+        "ls": true,
+        "npx": false,
+        "rg": true,
+        "rtk": true,
+        "which": true
+    },
+    "chat.tools.urls.autoApprove": {
+        "https://cli.netlify.com": true,
+        "https://code.visualstudio.com": true,
+        "https://cursor.com": true,
+        "https://developer.atlassian.com": true,
+        "https://developers.openai.com": true,
+        "https://docs.claude.com": true,
+        "https://docs.github.com": true,
+        "https://docs.gitlab.com": true,
+        "https://docs.mistral.ai": true,
+        "https://learn.chatgpt.com": true,
+        "https://linuxcontainers.org": true,
+        "https://microsoft.github.io": true,
+        "https://oauth2-proxy.github.io": true,
+        "https://open-api.netlify.com": true,
+        "https://open-plugins.com": true,
+        "https://registry.npmjs.org": true,
+        "https://schemastore.org": true
+    },
+    "github.copilot.enable": {
+        "dotenv": false,
+        "http": false,
+        "markdown": true
+    }
 }

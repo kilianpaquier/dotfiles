@@ -10,6 +10,7 @@ Purpose: share computer setup via automation + shared config.
 - Update `README.md` prompts table when add new init prompt in `.chezmoi.yaml.tmpl`
 - Update `.ps1` + `.sh` equivalent scripts when add new script element
 - Never use `chezmoi` CLI, skip trivial verification of prompts, scripts, etc.
+- Mirror permissions between `settings.copilot.partial.json` and `dot_claude/settings.partial.json`.
 
 ## Third-party
 

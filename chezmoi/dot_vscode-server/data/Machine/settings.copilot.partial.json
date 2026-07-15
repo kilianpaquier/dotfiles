@@ -27,6 +27,7 @@
         "which": true
     },
     "chat.tools.urls.autoApprove": {
+        "https://aaif.io": true,
         "https://cli.netlify.com": true,
         "https://code.visualstudio.com": true,
         "https://cursor.com": true,

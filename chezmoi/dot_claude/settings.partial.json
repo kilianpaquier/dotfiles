@@ -8,14 +8,14 @@
     "permissions": {
         "allow": [
             "Agent",
-            "Bash(*ls*)",
-            "Bash(apm*)",
-            "Bash(awk*)",
-            "Bash(find*)",
-            "Bash(git ls-remote*)",
-            "Bash(kickr*)",
-            "Bash(rtk*)",
-            "Bash(which*)",
+            "Bash(* ls *)",
+            "Bash(apm *)",
+            "Bash(awk *)",
+            "Bash(find *)",
+            "Bash(git ls-remote *)",
+            "Bash(kickr *)",
+            "Bash(rtk *)",
+            "Bash(which *)",
             "Edit(./**)",
             "mcp__plugin_cavemem_cavemem__*",
             "mcp__plugin_codebase-memory-mcp_codebase-memory-mcp__*",
@@ -27,7 +27,9 @@
             "Read(~/.local/share/chezmoi/**)",
             "Read(~/workspaces/**)",
             "Skill",
+            "WebFetch(domain:aaif.io)",
             "WebFetch(domain:cli.netlify.com)",
+            "WebFetch(domain:code.visualstudio.com)",
             "WebFetch(domain:cursor.com)",
             "WebFetch(domain:developer.atlassian.com)",
             "WebFetch(domain:developers.openai.com)",
@@ -43,8 +45,7 @@
             "WebFetch(domain:open-plugins.com)",
             "WebFetch(domain:registry.npmjs.org)",
             "WebFetch(domain:schemastore.org)",
-            "WebSearch",
-            "Write(./**)"
+            "WebSearch"
         ],
         "ask": [
             "mcp__plugin_codebase-memory-mcp_codebase-memory-mcp__delete_project",

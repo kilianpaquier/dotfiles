@@ -8,8 +8,8 @@ function Test-WingetInstalled {
 function Install-WingetPackages {
   param([Parameter(Mandatory)][string[]]$Ids)
 
-  $missing = $Ids | Where-Object { -not (Test-WingetInstalled $_) }
-  if ($missing) {
+  $missing = @($Ids | Where-Object { -not (Test-WingetInstalled $_) })
+  if ($missing.Count -gt 0) {
     winget install -e -i @missing
   }
 }

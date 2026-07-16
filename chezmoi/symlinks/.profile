@@ -39,15 +39,15 @@ command -v mise >/dev/null 2>&1 && eval "$(mise env | grep -v 'PATH=')"
 
 # set go cache variables
 if command -v go >/dev/null 2>&1; then
-  GOPATH="$HOME/.cache/go"
-  GOBIN="$GOPATH/bin"
+  export GOPATH="$HOME/.cache/go"
+  export GOBIN="$GOPATH/bin"
   # set PATH so it includes go global installations
   PATH="$GOBIN:$PATH"
 
   # shellcheck disable=SC2034
-  GOCACHE="$HOME/.cache/go-build"
+  export GOCACHE="$HOME/.cache/go-build"
   # shellcheck disable=SC2034
-  GOLANGCI_LINT_CACHE="$HOME/.cache/golangci-lint"
+  export GOLANGCI_LINT_CACHE="$HOME/.cache/golangci-lint"
 fi
 
 unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy

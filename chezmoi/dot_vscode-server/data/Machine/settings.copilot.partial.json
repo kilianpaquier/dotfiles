@@ -10,6 +10,12 @@
         ".github/prompts": true,
         "~/.copilot/prompts": true
     },
+    "chat.instructionsFilesLocations": {
+        ".claude/rules": true,
+        ".github/instructions": true,
+        "~/.claude/rules": true,
+        "~/.copilot/instructions": true
+    },
     "chat.tools.terminal.autoApprove": {
         "/^git clone\\b/": false,
         "/^npm install\\b/": false,
@@ -28,6 +34,7 @@
     },
     "chat.tools.urls.autoApprove": {
         "https://aaif.io": true,
+        "https://ai.kilianpaquier.dev": true,
         "https://cli.netlify.com": true,
         "https://code.visualstudio.com": true,
         "https://cursor.com": true,
@@ -37,6 +44,7 @@
         "https://docs.github.com": true,
         "https://docs.gitlab.com": true,
         "https://docs.mistral.ai": true,
+        "https://imfing.github.io": true,
         "https://learn.chatgpt.com": true,
         "https://linuxcontainers.org": true,
         "https://microsoft.github.io": true,

@@ -3,11 +3,11 @@
 set -e
 
 if command -v rtk >/dev/null 2>&1; then
-  {{- if has "claude" .agents }}
-  rtk init -g --auto-patch
-  {{- end }}
   {{- if has "copilot" .agents }}
   rtk init -g --copilot --auto-patch
+  {{- end }}
+  {{- if has "claude" .agents }}
+  rtk init -g --auto-patch
   {{- end }}
 fi
 

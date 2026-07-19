@@ -1,6 +1,6 @@
 {
     "askUser": true,
-    "effortLevel": "high",
+    "effortLevel": "medium",
     "logLevel": "info",
     "remoteExport": false,
     "respectGitignore": true

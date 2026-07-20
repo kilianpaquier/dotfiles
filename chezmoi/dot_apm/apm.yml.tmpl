@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://microsoft.github.io/apm/specs/schemas/manifest-v0.1.schema.json
+
+name: {{ .user.username }}
+version: 1.0.0
+
+author: {{ .user.username }}
+description: APM project for {{ .user.username }}
+
+dependencies:
+  apm:
+    - anthropics/claude-plugins-official/plugins/code-simplifier
+    - anthropics/claude-plugins-official/plugins/feature-dev
+    - kilianpaquier/agent-rules
+    - kilianpaquier/ai-integration/plugins/hooks/caveman-autostart
+    - kilianpaquier/ai-integration/plugins/hooks/protected-paths
+    - kilianpaquier/ai-integration/plugins/skills/schema-converter
+  mcp: []
+
+includes: auto
+targets:
+{{- range .agents }}
+  - {{ . }}
+{{- end }}

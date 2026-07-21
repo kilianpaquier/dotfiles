@@ -30,16 +30,14 @@
 {{- end }}
 
 {{- if eq (len .agents) 0 }}
-.chezmoiscripts/85-agent-instructions.sh
-.chezmoiscripts/85-agent-instructions.ps1
+.chezmoiscripts/85-ai.sh
+.chezmoiscripts/85-ai.ps1
 .apm
 .config/rtk
 .config/mise/conf.d/25-ai.toml
 {{- end }}
 
 {{- if not (has "claude" .agents) }}
-.chezmoiscripts/80-claude.sh
-.chezmoiscripts/80-claude.ps1
 .claude
 {{- end }}
 

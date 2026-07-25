@@ -1,0 +1,59 @@
+#!/bin/sh
+
+set -e
+
+for requirement in node npm corepack; do
+  if ! command -v $requirement >/dev/null 2>&1; then
+    echo "error: '$requirement' requires 'brew' or 'mise' as tools_mmanagement to be installed and used to install other tools" >&2
+    exit 1
+  fi
+done
+
+corepack {{ has "pnpm" .tools.node | ternary "enable" "disable" }} pnpm
+corepack {{ has "yarn" .tools.node | ternary "enable" "disable" }} yarn
+
+{{- if has "bun" .tools.node }}
+
+# renovate: datasource=npm packageName=bun
+bun_version=1.3.14
+npm install -g bun@$bun_version
+{{- end }}
+
+{{- if has "cavemem" .tools.node }}
+
+# renovate: datasource=npm packageName=node-gyp
+nodegyp_version=13.0.1
+# renovate: datasource=npm packageName=cavemem
+cavemem_version=0.2.1
+npm install -g node-gyp@$nodegyp_version cavemem@$cavemem_version
+{{- end }}
+
+{{- if has "codebase-memory-mcp" .tools.node }}
+
+# renovate: datasource=npm packageName=codebase-memory-mcp
+codebasememorymcp_version=0.9.0
+npm install -g codebase-memory-mcp@$codebasememorymcp_version
+{{- end }}
+
+{{- if has "hugo" .tools.node }}
+
+# renovate: datasource=npm packageName=sass
+dartsass_version=1.102.0
+npm install -g sass@$dartsass_version
+{{- end }}
+
+{{- if has "shell" .tools.node }}
+
+# renovate: datasource=npm packageName=bash-language-server
+bashls_version=5.6.0
+npm install -g bash-language-server@$bashls_version
+{{- end }}
+
+{{- if has "typescript" .tools.node }}
+
+# renovate: datasource=npm packageName=typescript
+typescript_version=7.0.2
+# renovate: datasource=npm packageName=typescript-language-server
+typescriptls_version=5.3.0
+npm install -g typescript@$typescript_version typescript-language-server@$typescriptls_version
+{{- end }}

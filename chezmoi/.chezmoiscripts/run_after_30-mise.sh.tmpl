@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+{{- if has "rtk" .tools.mise }}
+{{- if has "copilot" .agents }}
+rtk init -g --copilot --auto-patch
+{{- end }}
+{{- if has "claude" .agents }}
+rtk init -g --auto-patch
+{{- end }}
+{{- end }}
+
+mise upgrade
+mise reshim --force

@@ -5,36 +5,34 @@
 **/*.ps1
 {{- end }}
 
-{{- if or (not .dev) (not .mise) }}
-.chezmoiscripts/20-mise.sh
-.chezmoiscripts/20-mise.ps1
+{{- if not .dev }}
+.chezmoiscripts/*-tools.sh
+{{- end }}
+
+{{- range list "brew" "mise" "node" }}
+{{- if not (has . $.tools_management) }}
+.chezmoiscripts/*-{{ . }}.sh
+{{- end }}
+{{- end }}
+
+{{- if not (has "mise" .tools_management) }}
 .config/mise
 {{- end }}
 
 {{- if not .ssh.generate }}
-.chezmoiscripts/90-ssh.sh
-.chezmoiscripts/90-ssh.ps1
+.chezmoiscripts/*-ssh.sh
+.chezmoiscripts/*-ssh.ps1
 {{- end }}
 
 {{- if .dev }}
-.chezmoiscripts/10-computer.sh
-.chezmoiscripts/10-computer.ps1
-{{- end }}
-
-{{- if ne .profile "home" }}
-.config/mise/conf.d/30-home.toml
-{{- end }}
-
-{{- if ne .profile "soprasteria" }}
-.config/mise/conf.d/40-soprasteria.toml
+.chezmoiscripts/*-computer.sh
+.chezmoiscripts/*-computer.ps1
 {{- end }}
 
 {{- if eq (len .agents) 0 }}
-.chezmoiscripts/85-ai.sh
-.chezmoiscripts/85-ai.ps1
 .apm
+.chezmoiscripts/*-apm.sh
 .config/rtk
-.config/mise/conf.d/25-ai.toml
 {{- end }}
 
 {{- if not (has "claude" .agents) }}
@@ -59,12 +57,12 @@
 {{- end }}
 
 {{- if ne .shell "bash" }}
-.chezmoiscripts/00-bash.sh
+.chezmoiscripts/*-bash.sh
 # still symlink bash with zsh for non-interactive environments
 {{- end }}
 
 {{- if ne .shell "zsh" }}
-.chezmoiscripts/00-zsh.sh
+.chezmoiscripts/*-zsh.sh
 .env.zsh
 .zlogout
 .zprofile

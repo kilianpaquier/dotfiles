@@ -1,9 +1,6 @@
 {
     "chat.hookFilesLocations": {
-        ".claude/settings.json": true,
-        ".claude/settings.local.json": true,
         ".github/hooks": true,
-        "~/.claude/settings.json": true,
         "~/.copilot/hooks": true
     },
     "chat.promptFilesLocations": {
@@ -11,9 +8,7 @@
         "~/.copilot/prompts": true
     },
     "chat.instructionsFilesLocations": {
-        ".claude/rules": true,
         ".github/instructions": true,
-        "~/.claude/rules": true,
         "~/.copilot/instructions": true
     },
     "chat.tools.terminal.autoApprove": {
@@ -40,17 +35,21 @@
         "https://cursor.com": true,
         "https://developer.atlassian.com": true,
         "https://developers.openai.com": true,
+        "https://docs.brew.sh": true,
         "https://docs.claude.com": true,
         "https://docs.github.com": true,
         "https://docs.gitlab.com": true,
         "https://docs.mistral.ai": true,
+        "https://formulae.brew.sh": true,
         "https://imfing.github.io": true,
         "https://learn.chatgpt.com": true,
         "https://linuxcontainers.org": true,
         "https://microsoft.github.io": true,
+        "https://mise.jdx.dev": true,
         "https://oauth2-proxy.github.io": true,
         "https://open-api.netlify.com": true,
         "https://open-plugins.com": true,
+        "https://packages.debian.org": true,
         "https://registry.npmjs.org": true,
         "https://schemastore.org": true
     },

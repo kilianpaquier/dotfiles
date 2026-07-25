@@ -28,17 +28,45 @@ chezmoi init --prompt
 
 ## Prompts
 
-| Key             | Type        | OS          | Default  | When                    | Description                                           |
-| --------------- | ----------- | ----------- | -------- | ----------------------- | ----------------------------------------------------- |
-| `dev`           | bool        | non-windows | `false`  |                         | Development machine (enables git, mise, agents, IDE)  |
-| `profile`       | choice      | all         |          |                         | Work profile: `home` or `soprasteria`                 |
-| `gaming`        | bool        | windows     | `false`  | `profile` == `home`     | Gaming machine (installs EA, Epic, Steam, Ubisoft...) |
-| `shell`         | choice      | non-windows | `bash`   |                         | Shell to configure: `bash` or `zsh`                   |
-| `ide`           | multichoice | all         | `vscode` |                         | IDEs in use: `intellij`, `vscode`, `zed`              |
-| `ssh.generate`  | bool        | all         | `false`  |                         | Generate an SSH key (`id_ed25519`)                    |
-| `computer_name` | string      | all         | hostname | `ssh.generate`          | Computer name (used in the SSH key comment)           |
-| `user.email`    | string      | all         |          | `dev` or `ssh.generate` | Committer email address                               |
-| `user.username` | string      | all         |          | `dev` or `ssh.generate` | Username                                              |
-| `git.ssh`       | bool        | all         | `false`  | `dev`                   | Sign commits with SSH key                             |
-| `agents`        | multichoice | all         |          | `dev`                   | AI agents to configure: `claude`, `copilot`           |
-| `mise`          | bool        | all         | `false`  | `dev`                   | Use mise to manage tools                              |
+| Key                | Type        | OS          | Default                 | When                          | Description                                                                   |
+| ------------------ | ----------- | ----------- | ----------------------- | ----------------------------- | ----------------------------------------------------------------------------- |
+| `dev`              | bool        | non-windows | `false`                 |                               | Development machine (enables git, mise, agents, IDE)                          |
+| `profile`          | choice      | all         |                         |                               | Work profile: `home` or `soprasteria`                                         |
+| `gaming`           | bool        | windows     | `false`                 | `profile` == `home`           | Gaming machine (installs EA, Epic, Steam, Ubisoft...)                         |
+| `shell`            | choice      | non-windows | `bash`                  |                               | Shell to configure: `bash` or `zsh`                                           |
+| `ide`              | multichoice | all         | `vscode`                |                               | IDEs in use: `intellij`, `vscode`, `zed`                                      |
+| `ssh.generate`     | bool        | all         | `false`                 |                               | Generate an SSH key (`id_ed25519`)                                            |
+| `computer_name`    | string      | all         | hostname                | `ssh.generate`                | Computer name (used in the SSH key comment)                                   |
+| `user.email`       | string      | all         |                         | `dev` or `ssh.generate`       | Committer email address                                                       |
+| `user.username`    | string      | all         |                         | `dev` or `ssh.generate`       | Username                                                                      |
+| `git.ssh`          | bool        | all         | `false`                 | `dev`                         | Sign commits with SSH key                                                     |
+| `agents`           | multichoice | all         |                         | `dev`                         | AI agents to configure: `claude`, `copilot`                                   |
+| `tools_management` | multichoice | all         | `mise`, `node`          | `dev`                         | Tool manager(s) to use: `brew`, `mise`, `node`. See [Tooling](#tooling) below |
+| `tools.brew`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `brew` | Tools to install with brew. See [Tooling](#tooling) below                     |
+| `tools.mise`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `mise` | Tools to install with mise. See [Tooling](#tooling) below                     |
+| `tools.node`       | multichoice | all         | (empty)                 | `tools_management` has `node` | Tools to install with node (npm). See [Tooling](#tooling) below               |
+
+## Tooling
+
+Dev tools are installed through one or more managers, selected via `tools_management`: `brew`, `mise`, `node`.
+- `apm` (AI agent tooling) is automatic whenever `agents` is non-empty, no manager choice needed.
+- `node` as a manager needs `brew` or `mise` to actually provide the `node` binary, so pick at least one of those alongside it.
+
+### Cross-manager exclusivity
+
+Managers are prompted in order: `mise`, then `brew`, then `node`.
+Once a tool is picked under an earlier manager, it's removed from the choices offered to the later ones, so the same tool never installs twice.
+
+### Defaults
+
+- Common defaults, `git-tools`, `go`, `hugo`, `rtk`, `shell`, `uv`, go to `tools.mise` if `mise` is selected, otherwise to `tools.brew` if `brew` is selected.
+- On top of those, chosen `profile` adds more: `home` adds `bun`, `incus`, `opentofu`; `soprasteria` adds `java`, `k6`, `k8s`, `terraform`.
+- `tools.node` never gets defaults, node-managed tools must always be picked explicitly.
+
+### Available tools per manager
+
+| Manager | Available tools                                                                                                                                                             |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| brew    | `bun`, `git-tools`, `go`, `hugo`, `incus`, `java`, `k6`, `k8s`, `opentofu`, `rtk`, `shell`, `terraform`, `typescript`, `uv`                                                 |
+| mise    | `bun`, `codebase-memory-mcp`, `codegraph`, `git-tools`, `go`, `graphify`, `hugo`, `incus`, `java`, `k6`, `k8s`, `opentofu`, `rtk`, `shell`, `terraform`, `typescript`, `uv` |
+| node    | `bun`, `cavemem`, `codebase-memory-mcp`, `hugo`, `pnpm`, `shell`, `typescript`, `yarn`                                                                                      |

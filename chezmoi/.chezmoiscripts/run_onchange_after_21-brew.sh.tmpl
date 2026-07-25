@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -e
+
+brew install age sops
+
+{{- if and (has "node" .tools_management) (not (has "mise" .tools_management)) }}
+brew install node@24
+{{- end }}
+
+brew {{ has "bun" .tools.brew | ternary "install" "uninstall" }} bun || true
+brew {{ has "git-tools" .tools.brew | ternary "install" "uninstall" }} gh glab pre-commit || true
+brew {{ has "go" .tools.brew | ternary "install" "uninstall" }} go golangci-lint || true
+brew {{ has "hugo" .tools.brew | ternary "install" "uninstall" }} hugo dart-sass || true
+brew {{ has "incus" .tools.brew | ternary "install" "uninstall" }} incus || true
+brew {{ has "java" .tools.brew | ternary "install" "uninstall" }} openjdk jdtls || true
+brew {{ has "k6" .tools.brew | ternary "install" "uninstall" }} k6 || true
+brew {{ has "k8s" .tools.brew | ternary "install" "uninstall" }} helm chart-testing kubernetes-cli kustomize || true
+brew {{ has "opentofu" .tools.brew | ternary "install" "uninstall" }} opentofu tofu-ls || true
+brew {{ has "shell" .tools.brew | ternary "install" "uninstall" }} shellcheck bash-language-server || true
+brew {{ has "terraform" .tools.brew | ternary "install" "uninstall" }} terraform-ls || true
+brew {{ has "typescript" .tools.brew | ternary "install" "uninstall" }} typescript-language-server || true
+brew {{ has "uv" .tools.brew | ternary "install" "uninstall" }} uv || true
+brew {{ has "rtk" .tools.brew | ternary "install" "uninstall" }} rtk || true

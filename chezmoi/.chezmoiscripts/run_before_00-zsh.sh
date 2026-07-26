@@ -12,3 +12,7 @@ fi
 if [ ! -d "$HOME/.cache/zsh4humans/v5" ]; then
   sh -c "$(curl -fSL https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
 fi
+
+if command -v z4h >/dev/null 2>&1; then
+  z4h update
+fi

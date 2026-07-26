@@ -12,18 +12,9 @@
         "~/.copilot/instructions": true
     },
     "chat.tools.terminal.autoApprove": {
-        "/^git clone\\b/": false,
-        "/^npm install\\b/": false,
-        "apm": true,
-        "awk": true,
-        "chezmoi": false,
-        "curl": false,
-        "find": true,
-        "grep": true,
+        "git ls-remote": true,
         "kickr": true,
         "ls": true,
-        "npx": false,
-        "rg": true,
         "rtk": true,
         "which": true
     },

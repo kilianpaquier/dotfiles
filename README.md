@@ -13,7 +13,7 @@
 
 ```sh
 umask 022
-sh -c "$(curl -fsSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch feat/chezmoi --apply https://gitlab.com/kilianpaquier/dotfiles.git
+sh -c "$(curl -sSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch feat/chezmoi --apply https://gitlab.com/kilianpaquier/dotfiles.git
 ```
 
 ```ps1

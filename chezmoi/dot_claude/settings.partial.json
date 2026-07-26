@@ -144,7 +144,7 @@
     "viewMode": "focus",
     "syntaxHighlightingDisabled": false,
     "alwaysThinkingEnabled": true,
-    "effortLevel": "high",
+    "effortLevel": "medium",
     "autoCompactWindow": 180000,
     "tui": "fullscreen",
     "autoMemoryEnabled": true,

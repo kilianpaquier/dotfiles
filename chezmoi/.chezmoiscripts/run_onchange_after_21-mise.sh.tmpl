@@ -20,12 +20,24 @@ mise {{ has "k6" .tools.mise | ternary "use" "unuse" }} -g k6
 mise {{ has "k8s" .tools.mise | ternary "use" "unuse" }} -g helm helm-ct kubectl kustomize
 mise {{ has "kotlin" .tools.mise | ternary "use" "unuse" }} -g kotlin 'github:Kotlin/kotlin-lsp'
 mise {{ has "opentofu" .tools.mise | ternary "use" "unuse" }} -g opentofu 'github:opentofu/tofu-ls'
-mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g shellcheck 'npm:bash-language-server'
+mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g shellcheck
 mise {{ has "terraform" .tools.mise | ternary "use" "unuse" }} -g terraform terraform-ls
 mise {{ or (has "terraform" .tools.mise) (has "opentofu" .tools.mise) | ternary "use" "unuse" }} -g tflint
-mise {{ has "typescript" .tools.mise | ternary "use" "unuse" }} -g 'npm:typescript' 'npm:typescript-language-server'
 mise {{ has "uv" .tools.mise | ternary "use" "unuse" }} -g uv
 mise {{ has "codebase-memory-mcp" .tools.mise | ternary "use" "unuse" }} -g 'github:DeusData/codebase-memory-mcp'
 mise {{ has "codegraph" .tools.mise | ternary "use" "unuse" }} -g 'github:colbymchenry/codegraph'
-mise {{ has "graphify" .tools.mise | ternary "use" "unuse" }} -g 'pipx:graphifyy'
 mise {{ has "rtk" .tools.mise | ternary "use" "unuse" }} -g rtk
+
+if command -v npm >/dev/null 2>&1; then
+  mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g 'npm:bash-language-server'
+  mise {{ has "typescript" .tools.mise | ternary "use" "unuse" }} -g 'npm:typescript' 'npm:typescript-language-server'
+else
+  echo "'npm' is required for 'bash-language-server', 'typescript', 'typescript-language-server' entries in mise, install 'node' via 'brew' or 'mise' tools_management" >&2
+fi
+
+if command -v uv >/dev/null 2>&1 || command -v pipx >/dev/null 2>&1; then
+  mise {{ has "graphify" .tools.mise | ternary "use" "unuse" }} -g 'pipx:graphifyy'
+  mise {{ has "mempalace" .tools.mise | ternary "use" "unuse" }} -g 'pipx:mempalace'
+else
+  echo "'uv' or 'pipx' is required for 'graphify', 'mempalace' entries in mise, install 'uv' via 'brew' or 'mise' tools_management" >&2
+fi

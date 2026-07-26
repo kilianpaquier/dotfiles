@@ -35,7 +35,7 @@
 {{- $agents_available := list "claude" "copilot" -}}
 
 {{- $tools_management := list -}}
-{{- $tools_management_available := list "brew" "mise" "node" -}}
+{{- $tools_management_available := list "brew" "mise" "node" "uv" -}}
 {{- $tools_management_default := list "mise" "node" -}}
 
 {{- $profile_extra_tools := list -}}
@@ -50,22 +50,26 @@
 {{- $tools_brew_available := list "bun" "git-tools" "go" "hugo" "incus" "java" "k6" "k8s" "kotlin" "opentofu" "rtk" "shell" "terraform" "typescript" "uv" -}}
 {{- $tools_brew_default := list -}}
 
-{{- $tools_mise_available := list "bun" "codebase-memory-mcp" "codegraph" "git-tools" "go" "graphify" "hugo" "incus" "java" "k6" "k8s" "kotlin" "opentofu" "rtk" "shell" "terraform" "typescript" "uv" -}}
+{{- $tools_mise_available := list "bun" "codebase-memory-mcp" "codegraph" "git-tools" "go" "graphify" "hugo" "incus" "java" "k6" "k8s" "kotlin" "mempalace" "opentofu" "rtk" "shell" "terraform" "typescript" "uv" -}}
 {{- $tools_mise_default := list -}}
 
 {{- $tools_node_available := list "bun" "cavemem" "codebase-memory-mcp" "hugo" "pnpm" "shell" "typescript" "yarn" -}}
 {{- $tools_node_default := list -}}
 
-{{- $tools := dict "brew" (list) "mise" (list) "node" (list) -}}
+{{- $tools_uv_available := list "graphify" "mempalace" -}}
+{{- $tools_uv_default := list -}}
+
+{{- $tools := dict "brew" (list) "mise" (list) "node" (list) "uv" (list) -}}
 {{- $git_ssh := false -}}
 {{- if $dev -}}
   {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" -}}
   {{- $agents = promptMultichoiceOnce . "agents" "Which AI agent(s) will you be using" $agents_available -}}
 
-  {{- $_ := warnf "available tools per manager:\n  brew: %s\n  mise: %s\n  node: %s"
+  {{- $_ := warnf "available tools per manager:\n  brew: %s\n  mise: %s\n  node: %s\n  uv: %s"
       ($tools_brew_available | join ", ")
       ($tools_mise_available | join ", ")
-      ($tools_node_available | join ", ") -}}
+      ($tools_node_available | join ", ")
+      ($tools_uv_available | join ", ") -}}
 
   {{- $tools_management = promptMultichoiceOnce . "tools_management" "Which tool manager(s) would you like to use" $tools_management_available $tools_management_default -}}
 
@@ -93,6 +97,14 @@
       {{- end -}}
     {{- end -}}
     {{- $tools_node_available = $node_left -}}
+
+    {{- $uv_left := list -}}
+    {{- range $tools_uv_available -}}
+      {{- if not (has . $tools.mise) -}}
+        {{- $uv_left = append $uv_left . -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $tools_uv_available = $uv_left -}}
   {{- end -}}
 
   {{- if has "brew" $tools_management -}}
@@ -110,6 +122,10 @@
   {{- if has "node" $tools_management -}}
     {{- $_ := set $tools "node" (promptMultichoiceOnce . "tools.node" "Which tools would you like to install via node" $tools_node_available $tools_node_default) -}}
   {{- end -}}
+
+  {{- if has "uv" $tools_management -}}
+    {{- $_ := set $tools "uv" (promptMultichoiceOnce . "tools.uv" "Which tools would you like to install via uv" $tools_uv_available $tools_uv_default) -}}
+  {{- end -}}
 {{- end -}}
 
 # available agents: {{ $agents_available | join ", " }}
@@ -117,6 +133,7 @@
 # available tools.brew: {{ $tools_brew_available | join ", " }}
 # available tools.mise: {{ $tools_mise_available | join ", " }}
 # available tools.node: {{ $tools_node_available | join ", " }}
+# available tools.uv: {{ $tools_uv_available | join ", " }}
 
 umask: 0o22
 
@@ -156,5 +173,9 @@ data:
 {{- end }}
     node:{{ if eq (len $tools.node) 0 }} []{{ end }}
 {{- range $tools.node }}
+      - {{ . }}
+{{- end }}
+    uv:{{ if eq (len $tools.uv) 0 }} []{{ end }}
+{{- range $tools.uv }}
       - {{ . }}
 {{- end }}

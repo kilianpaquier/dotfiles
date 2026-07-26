@@ -4,7 +4,7 @@ set -e
 
 for requirement in node npm corepack; do
   if ! command -v $requirement >/dev/null 2>&1; then
-    echo "error: '$requirement' requires 'brew' or 'mise' as tools_mmanagement to be installed and used to install other tools" >&2
+    echo "'$requirement' requires 'brew' or 'mise' as tools_mmanagement to be installed and used to install other tools" >&2
     exit 1
   fi
 done

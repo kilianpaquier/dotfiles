@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+
+if ! command -v uv >/dev/null 2>&1; then
+  echo "'uv' requires 'brew' or 'mise' as tools_management to be installed and used to install other tools" >&2
+  exit 1
+fi
+
+{{- if has "graphify" .tools.uv }}
+
+# renovate: datasource=pypi packageName=graphifyy
+graphify_version=0.9.26
+uv tool install --force graphifyy==$graphify_version
+{{- end }}
+
+{{- if has "mempalace" .tools.uv }}
+
+# renovate: datasource=pypi packageName=mempalace
+mempalace_version=3.6.0
+uv tool install --force mempalace==$mempalace_version
+{{- end }}

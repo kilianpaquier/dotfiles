@@ -20,9 +20,14 @@ dependencies:
     - anthropics/claude-plugins-official/plugins/code-simplifier
     - anthropics/claude-plugins-official/plugins/feature-dev
     - kilianpaquier/agent-rules
-    - kilianpaquier/ai-integration/plugins/hooks/caveman-autostart
     - kilianpaquier/ai-integration/plugins/hooks/protected-paths
     - kilianpaquier/ai-integration/plugins/skills/schema-converter
+    - git: https://gitlab.com/kilianpaquier/ai-integration
+      path: plugins/rules/caveman-rules
+      ref: feat/caveman-rules
+    - git: https://gitlab.com/kilianpaquier/ai-integration
+      path: plugins/rules/actions-first
+      ref: feat/caveman-rules
 {{- if $mempalace }}
     - mempalace/mempalace
 {{- end }}

@@ -18,6 +18,7 @@ mise unuse -g "http:jdtls"
 {{- end }}
 mise {{ has "k6" .tools.mise | ternary "use" "unuse" }} -g k6
 mise {{ has "k8s" .tools.mise | ternary "use" "unuse" }} -g helm helm-ct kubectl kustomize
+mise {{ has "kotlin" .tools.mise | ternary "use" "unuse" }} -g kotlin 'github:Kotlin/kotlin-lsp'
 mise {{ has "opentofu" .tools.mise | ternary "use" "unuse" }} -g opentofu 'github:opentofu/tofu-ls'
 mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g shellcheck 'npm:bash-language-server'
 mise {{ has "terraform" .tools.mise | ternary "use" "unuse" }} -g terraform terraform-ls

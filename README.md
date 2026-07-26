@@ -65,8 +65,8 @@ Once a tool is picked under an earlier manager, it's removed from the choices of
 
 ### Available tools per manager
 
-| Manager | Available tools                                                                                                                                                             |
-| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| brew    | `bun`, `git-tools`, `go`, `hugo`, `incus`, `java`, `k6`, `k8s`, `opentofu`, `rtk`, `shell`, `terraform`, `typescript`, `uv`                                                 |
-| mise    | `bun`, `codebase-memory-mcp`, `codegraph`, `git-tools`, `go`, `graphify`, `hugo`, `incus`, `java`, `k6`, `k8s`, `opentofu`, `rtk`, `shell`, `terraform`, `typescript`, `uv` |
-| node    | `bun`, `cavemem`, `codebase-memory-mcp`, `hugo`, `pnpm`, `shell`, `typescript`, `yarn`                                                                                      |
+| Manager | Available tools                                                                                                                                                                       |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| brew    | `bun`, `git-tools`, `go`, `hugo`, `incus`, `java`, `k6`, `k8s`, `kotlin`, `opentofu`, `rtk`, `shell`, `terraform`, `typescript`, `uv`                                                 |
+| mise    | `bun`, `codebase-memory-mcp`, `codegraph`, `git-tools`, `go`, `graphify`, `hugo`, `incus`, `java`, `k6`, `k8s`, `kotlin`, `opentofu`, `rtk`, `shell`, `terraform`, `typescript`, `uv` |
+| node    | `bun`, `cavemem`, `codebase-memory-mcp`, `hugo`, `pnpm`, `shell`, `typescript`, `yarn`                                                                                                |

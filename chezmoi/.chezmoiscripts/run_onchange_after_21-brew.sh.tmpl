@@ -16,6 +16,7 @@ brew {{ has "incus" .tools.brew | ternary "install" "uninstall" }} incus || true
 brew {{ has "java" .tools.brew | ternary "install" "uninstall" }} openjdk jdtls || true
 brew {{ has "k6" .tools.brew | ternary "install" "uninstall" }} k6 || true
 brew {{ has "k8s" .tools.brew | ternary "install" "uninstall" }} helm chart-testing kubernetes-cli kustomize || true
+brew {{ has "kotlin" .tools.brew | ternary "install" "uninstall" }} kotlin kotlin-language-server || true
 brew {{ has "opentofu" .tools.brew | ternary "install" "uninstall" }} opentofu tofu-ls || true
 brew {{ has "shell" .tools.brew | ternary "install" "uninstall" }} shellcheck bash-language-server || true
 brew {{ has "terraform" .tools.brew | ternary "install" "uninstall" }} terraform-ls || true

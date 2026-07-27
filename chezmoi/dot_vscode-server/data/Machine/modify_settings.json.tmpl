@@ -9,4 +9,4 @@ set -- "$@" "$CHEZMOI_SOURCE_DIR/dot_vscode-server/data/Machine/settings.copilot
 {{- end }}
 
 # shallow merge (+ not *) so an object defined in a partial fully replaces the local one instead of merging keys into it
-jq -s 'reduce .[] as $x ({}; . + $x)' - "$@"
+jq -s --indent 4 'reduce .[] as $x ({}; . + $x)' - "$@"

@@ -1,4 +1,4 @@
 #!/bin/sh
 
 # shallow merge (+ not *) so an object defined in the partial fully replaces the local one instead of merging keys into it
-jq -s '(.[0] // {}) + (.[1] // {})' - "$CHEZMOI_SOURCE_DIR/dot_claude/settings.partial.json"
+jq -s --indent 4 '(.[0] // {}) + (.[1] // {})' - "$CHEZMOI_SOURCE_DIR/dot_claude/settings.partial.json"

@@ -36,7 +36,7 @@
 
 {{- $tools_management := list -}}
 {{- $tools_management_available := list "brew" "mise" "node" "uv" -}}
-{{- $tools_management_default := list "mise" "node" -}}
+{{- $tools_management_default := list "mise" "node" "uv" -}}
 
 {{- $profile_extra_tools := list -}}
 {{- if eq $profile "home" -}}
@@ -53,7 +53,7 @@
 {{- $tools_mise_available := list "bun" "codebase-memory-mcp" "codegraph" "git-tools" "go" "graphify" "hugo" "incus" "java" "k6" "k8s" "kotlin" "mempalace" "opentofu" "rtk" "shell" "terraform" "typescript" "uv" -}}
 {{- $tools_mise_default := list -}}
 
-{{- $tools_node_available := list "bun" "cavemem" "codebase-memory-mcp" "hugo" "pnpm" "shell" "typescript" "yarn" -}}
+{{- $tools_node_available := list "bun" "cavemem" "hugo" "pnpm" "shell" "typescript" "yarn" -}}
 {{- $tools_node_default := list -}}
 
 {{- $tools_uv_available := list "graphify" "mempalace" -}}

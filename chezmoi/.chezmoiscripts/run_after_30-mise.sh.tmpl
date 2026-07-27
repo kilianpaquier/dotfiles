@@ -11,5 +11,9 @@ rtk init -g --auto-patch
 {{- end }}
 {{- end }}
 
+{{- if has "codebase-memory-mcp" .tools.mise }}
+codebase-memory-mcp config set auto_index true
+{{- end }}
+
 mise upgrade
 mise reshim --force

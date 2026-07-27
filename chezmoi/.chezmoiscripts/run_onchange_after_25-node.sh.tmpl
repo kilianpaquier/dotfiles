@@ -28,13 +28,6 @@ cavemem_version=0.2.1
 npm install -g node-gyp@$nodegyp_version cavemem@$cavemem_version
 {{- end }}
 
-{{- if has "codebase-memory-mcp" .tools.node }}
-
-# renovate: datasource=npm packageName=codebase-memory-mcp
-codebasememorymcp_version=0.9.0
-npm install -g codebase-memory-mcp@$codebasememorymcp_version
-{{- end }}
-
 {{- if has "hugo" .tools.node }}
 
 # renovate: datasource=npm packageName=sass

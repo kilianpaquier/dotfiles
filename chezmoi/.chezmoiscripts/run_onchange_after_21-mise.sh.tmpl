@@ -24,7 +24,7 @@ mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g shellcheck
 mise {{ has "terraform" .tools.mise | ternary "use" "unuse" }} -g terraform terraform-ls
 mise {{ or (has "terraform" .tools.mise) (has "opentofu" .tools.mise) | ternary "use" "unuse" }} -g tflint
 mise {{ has "uv" .tools.mise | ternary "use" "unuse" }} -g uv
-mise {{ has "codebase-memory-mcp" .tools.mise | ternary "use" "unuse" }} -g 'github:DeusData/codebase-memory-mcp'
+mise {{ has "codebase-memory-mcp" .tools.mise | ternary "use" "unuse" }} -g 'github:DeusData/codebase-memory-mcp[matching=codebase-memory-mcp-ui]'
 mise {{ has "codegraph" .tools.mise | ternary "use" "unuse" }} -g 'github:colbymchenry/codegraph'
 mise {{ has "rtk" .tools.mise | ternary "use" "unuse" }} -g rtk
 

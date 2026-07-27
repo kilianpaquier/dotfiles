@@ -71,5 +71,5 @@ Once a tool is picked under an earlier manager, it's removed from the choices of
 | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | brew    | `bun`, `git-tools`, `go`, `hugo`, `incus`, `java`, `k6`, `k8s`, `kotlin`, `opentofu`, `rtk`, `shell`, `terraform`, `typescript`, `uv`                                                              |
 | mise    | `bun`, `codebase-memory-mcp`, `codegraph`, `git-tools`, `go`, `graphify`, `hugo`, `incus`, `java`, `k6`, `k8s`, `kotlin`, `mempalace`, `opentofu`, `rtk`, `shell`, `terraform`, `typescript`, `uv` |
-| node    | `bun`, `cavemem`, `codebase-memory-mcp`, `hugo`, `pnpm`, `shell`, `typescript`, `yarn`                                                                                                             |
+| node    | `bun`, `cavemem`, `hugo`, `pnpm`, `shell`, `typescript`, `yarn`                                                                                                                                    |
 | uv      | `graphify`, `mempalace`                                                                                                                                                                            |

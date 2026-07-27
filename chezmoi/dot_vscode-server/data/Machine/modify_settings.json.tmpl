@@ -8,4 +8,5 @@ set -- "$@" "$CHEZMOI_SOURCE_DIR/dot_vscode-server/data/Machine/settings.no-copi
 set -- "$@" "$CHEZMOI_SOURCE_DIR/dot_vscode-server/data/Machine/settings.copilot.partial.json"
 {{- end }}
 
-jq -s 'reduce .[] as $x ({}; . * $x)' - "$@"
+# shallow merge (+ not *) so an object defined in a partial fully replaces the local one instead of merging keys into it
+jq -s 'reduce .[] as $x ({}; . + $x)' - "$@"

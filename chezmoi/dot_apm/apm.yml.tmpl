@@ -23,10 +23,13 @@ dependencies:
     - kilianpaquier/ai-integration/plugins/hooks/protected-paths
     - kilianpaquier/ai-integration/plugins/skills/schema-converter
     - git: https://gitlab.com/kilianpaquier/ai-integration
-      path: plugins/rules/caveman-rules
+      path: plugins/hybrid/caveman-rules
       ref: feat/caveman-rules
     - git: https://gitlab.com/kilianpaquier/ai-integration
-      path: plugins/rules/actions-first
+      path: plugins/hybrid/actions-first
+      ref: feat/caveman-rules
+    - git: https://gitlab.com/kilianpaquier/ai-integration
+      path: plugins/hybrid/codebase-memory-mcp
       ref: feat/caveman-rules
 {{- if $mempalace }}
     - mempalace/mempalace

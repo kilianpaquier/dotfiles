@@ -12,9 +12,12 @@
         "~/.copilot/instructions": true
     },
     "chat.tools.terminal.autoApprove": {
+        "codebase-memory-mcp": true,
+        "codegraph": true,
         "git ls-remote": true,
         "kickr": true,
         "ls": true,
+        "mempalace": true,
         "rtk": true,
         "which": true
     },

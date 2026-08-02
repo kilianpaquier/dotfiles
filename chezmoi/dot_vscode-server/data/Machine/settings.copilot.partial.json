@@ -1,15 +1,29 @@
 {
+    "chat.agentSkillsLocations": {
+        ".agents/skills": true,
+        ".claude/skills": true,
+        ".github/skills": true,
+        "~/.agents/skills": true,
+        "~/.copilot/skills": true
+    },
+    "chat.agentFilesLocations": {
+        ".claude/agents": true,
+        ".github/agents": true,
+        "~/.copilot/agents": true
+    },
     "chat.hookFilesLocations": {
         ".github/hooks": true,
         "~/.copilot/hooks": true
     },
-    "chat.promptFilesLocations": {
-        ".github/prompts": true,
-        "~/.copilot/prompts": true
-    },
     "chat.instructionsFilesLocations": {
+        ".claude/rules": true,
         ".github/instructions": true,
         "~/.copilot/instructions": true
+    },
+    "chat.promptFilesLocations": {
+        ".claude/commands": true,
+        ".github/prompts": true,
+        "~/.copilot/prompts": true
     },
     "chat.tools.terminal.autoApprove": {
         "codebase-memory-mcp": true,
@@ -48,8 +62,11 @@
         "https://schemastore.org": true
     },
     "github.copilot.enable": {
+        "*": true,
         "dotenv": false,
         "http": false,
-        "markdown": true
+        "markdown": true,
+        "plaintext": false,
+        "scminput": false
     }
 }

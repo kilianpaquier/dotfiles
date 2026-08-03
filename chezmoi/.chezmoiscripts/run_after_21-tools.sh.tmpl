@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -e
+
+{{- if gt (len .agents) 0 }}
+apm self-update
+{{- end }}
+
+{{- if has "brew" .tools_management }}
+brew update
+brew upgrade
+{{- end }}
+
+{{- if has "claude" .agents }}
+claude update
+{{- end }}
+
+{{- if has "copilot" .agents }}
+copilot update
+{{- end }}
+
+{{- if has "mise" .tools_management }}
+mise self-update
+mise upgrade
+mise reshim --force
+{{- end }}

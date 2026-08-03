@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+{{- $mempalace := or (has "mempalace" .tools.mise) (has "mempalace" .tools.uv) }}
+
+{{- if $mempalace }}
+{{- if has "claude" .agents }}
+
+claude plugin marketplace add mempalace/mempalace
+claude plugin install mempalace@mempalace
+{{- end }}
+
+{{- if has "copilot" .agents }}
+
+copilot plugin marketplace add mempalace/mempalace || true
+copilot plugin install mempalace@mempalace
+{{- end }}
+{{- end }}

@@ -2,10 +2,9 @@
 
 set -e
 
-brew install age sops
+{{- if not (has "mise" .tools_management) }}
 
-{{- if and (has "node" .tools_management) (not (has "mise" .tools_management)) }}
-brew install node@24
+brew install age node@24 sops
 {{- end }}
 
 brew {{ has "bun" .tools.brew | ternary "install" "uninstall" }} bun || true

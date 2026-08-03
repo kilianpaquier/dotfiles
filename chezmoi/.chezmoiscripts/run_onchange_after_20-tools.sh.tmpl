@@ -7,7 +7,6 @@ set -e
 if ! command -v apm >/dev/null 2>&1; then
   curl -sSL https://aka.ms/apm-unix | APM_INSTALL_DIR=$HOME/.local/bin sh
 fi
-apm self-update
 {{- end }}
 
 {{- if has "brew" .tools_management }}
@@ -15,7 +14,6 @@ apm self-update
 if ! command -v brew >/dev/null 2>&1; then
   curl -fSL https://raw.githubusercontent.com/Homebrew/install/main/install.sh | bash
 fi
-brew update
 {{- else }}
 
 if command -v brew >/dev/null 2>&1; then
@@ -28,7 +26,6 @@ fi
 if ! command -v claude >/dev/null 2>&1; then
   curl -fSL https://claude.ai/install.sh | bash
 fi
-claude update
 {{- end }}
 
 {{- if has "copilot" .agents }}
@@ -36,7 +33,6 @@ claude update
 if ! command -v copilot >/dev/null 2>&1; then
   curl -fSL https://gh.io/copilot-install | PREFIX=$HOME/.local bash
 fi
-copilot update
 {{- end }}
 
 {{- if has "mise" .tools_management }}

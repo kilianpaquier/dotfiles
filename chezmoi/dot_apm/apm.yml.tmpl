@@ -3,7 +3,6 @@
 {{- $go := or (has "go" .tools.brew) (has "go" .tools.mise) }}
 {{- $java := or (has "java" .tools.brew) (has "java" .tools.mise) }}
 {{- $kotlin := or (has "kotlin" .tools.brew) (has "kotlin" .tools.mise) }}
-{{- $mempalace := or (has "mempalace" .tools.mise) (has "mempalace" .tools.uv) }}
 {{- $opentofu := or (has "opentofu" .tools.brew) (has "opentofu" .tools.mise) }}
 {{- $shell := or (has "shell" .tools.brew) (has "shell" .tools.mise) (has "shell" .tools.node) }}
 {{- $terraform := or (has "terraform" .tools.brew) (has "terraform" .tools.mise) }}
@@ -31,9 +30,6 @@ dependencies:
     - git: https://gitlab.com/kilianpaquier/ai-integration
       path: plugins/hybrid/codebase-memory-mcp
       ref: feat/caveman-rules
-{{- if $mempalace }}
-    - mempalace/mempalace
-{{- end }}
 {{- if $shell }}
     - piebald-ai/claude-code-lsps/bash-language-server
 {{- end }}

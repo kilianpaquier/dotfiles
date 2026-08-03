@@ -2,7 +2,15 @@
 
 set -e
 
-umask 022
+{{- if eq .shell "bash" }}
+
+if ! command -v bash >/dev/null 2>&1; then
+  sudo apt update
+  sudo apt -y install bash
+fi
+{{- end }}
+
+{{- if eq .shell "zsh" }}
 
 if ! command -v zsh >/dev/null 2>&1; then
   sudo apt update
@@ -12,7 +20,4 @@ fi
 if [ ! -d "$HOME/.cache/zsh4humans/v5" ]; then
   sh -c "$(curl -fSL https://raw.githubusercontent.com/romkatv/zsh4humans/v5/install)"
 fi
-
-if command -v z4h >/dev/null 2>&1; then
-  z4h update
-fi
+{{- end }}

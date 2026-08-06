@@ -17,7 +17,7 @@ mise use -g "http:jdtls[url=https://download.eclipse.org/jdtls/snapshots/jdt-lan
 mise unuse -g "http:jdtls"
 {{- end }}
 mise {{ has "k6" .tools.mise | ternary "use" "unuse" }} -g k6
-mise {{ has "k8s" .tools.mise | ternary "use" "unuse" }} -g helm helm-ct kubectl kustomize
+mise {{ has "k8s" .tools.mise | ternary "use" "unuse" }} -g helm helm-ct krew kubectl kustomize
 mise {{ has "kotlin" .tools.mise | ternary "use" "unuse" }} -g kotlin 'github:Kotlin/kotlin-lsp'
 mise {{ has "opentofu" .tools.mise | ternary "use" "unuse" }} -g opentofu 'github:opentofu/tofu-ls'
 mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g shellcheck

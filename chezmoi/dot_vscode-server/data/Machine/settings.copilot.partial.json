@@ -1,13 +1,11 @@
 {
     "chat.agentSkillsLocations": {
         ".agents/skills": true,
-        ".claude/skills": true,
         ".github/skills": true,
         "~/.agents/skills": true,
         "~/.copilot/skills": true
     },
     "chat.agentFilesLocations": {
-        ".claude/agents": true,
         ".github/agents": true,
         "~/.copilot/agents": true
     },
@@ -16,12 +14,10 @@
         "~/.copilot/hooks": true
     },
     "chat.instructionsFilesLocations": {
-        ".claude/rules": true,
         ".github/instructions": true,
         "~/.copilot/instructions": true
     },
     "chat.promptFilesLocations": {
-        ".claude/commands": true,
         ".github/prompts": true,
         "~/.copilot/prompts": true
     },

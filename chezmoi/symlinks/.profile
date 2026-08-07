@@ -37,6 +37,9 @@ umask 022
 # set PATH so it includes brew if it exists
 [ -d "/home/linuxbrew/.linuxbrew/bin" ] && PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
+# set PATH so it includes krew if it exists
+[ -d "$HOME/.krew/bin" ] && PATH="$HOME/.krew/bin:$PATH"
+
 # source mise env and aliases
 command -v mise >/dev/null 2>&1 && eval "$(mise env | grep -v 'PATH=')"
 

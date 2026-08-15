@@ -10,6 +10,7 @@ mise {{ has "go" .tools.mise | ternary "use" "unuse" }} -g go golangci-lint
 mise {{ has "hugo" .tools.mise | ternary "use" "unuse" }} -g hugo-extended 'github:sass/dart-sass'
 mise {{ has "incus" .tools.mise | ternary "use" "unuse" }} -g 'github:lxc/incus[matching=incus.,rename_exe=incus]'
 mise {{ has "java" .tools.mise | ternary "use" "unuse" }} -g java@lts
+mise {{ has "just" .tools.mise | ternary "use" "unuse" }} -g just
 {{- if has "java" .tools.mise }}
 # no GitHub releases for jdtls, fake version pin to always refetch latest.tar.gz
 mise use -g "http:jdtls[url=https://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz]@0.0.0"
@@ -21,6 +22,7 @@ mise {{ has "k8s" .tools.mise | ternary "use" "unuse" }} -g helm helm-ct krew ku
 mise {{ has "kotlin" .tools.mise | ternary "use" "unuse" }} -g kotlin 'github:Kotlin/kotlin-lsp'
 mise {{ has "opentofu" .tools.mise | ternary "use" "unuse" }} -g opentofu 'github:opentofu/tofu-ls'
 mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g shellcheck
+mise {{ has "task" .tools.mise | ternary "use" "unuse" }} -g task
 mise {{ has "terraform" .tools.mise | ternary "use" "unuse" }} -g terraform terraform-ls
 mise {{ or (has "terraform" .tools.mise) (has "opentofu" .tools.mise) | ternary "use" "unuse" }} -g tflint
 mise {{ has "uv" .tools.mise | ternary "use" "unuse" }} -g uv

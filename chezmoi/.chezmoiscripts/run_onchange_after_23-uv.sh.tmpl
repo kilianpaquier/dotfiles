@@ -14,6 +14,13 @@ graphify_version=0.9.26
 uv tool install --force graphifyy==$graphify_version
 {{- end }}
 
+{{- if has "just" .tools.uv }}
+
+# renovate: datasource=pypi packageName=rust-just
+just_version=1.58.0
+uv tool install --force rust-just==$just_version
+{{- end }}
+
 {{- if has "mempalace" .tools.uv }}
 
 # renovate: datasource=pypi packageName=mempalace

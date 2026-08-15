@@ -35,8 +35,10 @@ z4h init || return
 # Load plugins asynchronously after z4h initialization
 plugins=(
   kilianpaquier/zsh-plugins/highlight-styles
+  kilianpaquier/zsh-plugins/just-completion
   kilianpaquier/zsh-plugins/mise-completion
   kilianpaquier/zsh-plugins/release-sync
+  kilianpaquier/zsh-plugins/task-completion
 )
 for plugin in $plugins; do z4h load "$plugin"; done
 unset plugin plugins

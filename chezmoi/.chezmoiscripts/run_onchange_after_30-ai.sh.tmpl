@@ -4,28 +4,31 @@ set -e
 
 {{- $mempalace := or (has "mempalace" .tools.mise) (has "mempalace" .tools.uv) }}
 
-{{- if $mempalace }}
 {{- if has "claude" .agents }}
+
+{{- if $mempalace }}
 
 claude plugin marketplace add mempalace/mempalace
 claude plugin install mempalace@mempalace
 {{- end }}
 
+claude plugin marketplace add JuliusBrussee/caveman
+claude plugin install caveman@caveman
+
+claude plugin marketplace add DietrichGebert/ponytail
+claude plugin install ponytail@ponytail
+{{- end }}
+
 {{- if has "copilot" .agents }}
+{{- if $mempalace }}
 
 copilot plugin marketplace add mempalace/mempalace || true
 copilot plugin install mempalace@mempalace
 {{- end }}
-{{- end }}
-
-{{- if has "claude" .agents }}
-
-claude plugin marketplace add JuliusBrussee/caveman
-claude plugin install caveman@caveman
-{{- end }}
-
-{{- if has "copilot" .agents }}
 
 copilot plugin marketplace add JuliusBrussee/caveman || true
 copilot plugin install caveman@caveman
+
+copilot plugin marketplace add DietrichGebert/ponytail
+copilot plugin install ponytail@ponytail
 {{- end }}

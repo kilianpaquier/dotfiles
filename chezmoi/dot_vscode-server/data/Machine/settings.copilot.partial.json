@@ -57,6 +57,7 @@
     },
     "chat.tools.urls.autoApprove": {
         "https://aaif.io": true,
+        "https://agent-plugins.org": true,
         "https://ai.kilianpaquier.dev": true,
         "https://cli.netlify.com": true,
         "https://code.visualstudio.com": true,
@@ -77,7 +78,6 @@
         "https://mise.jdx.dev": true,
         "https://oauth2-proxy.github.io": true,
         "https://open-api.netlify.com": true,
-        "https://open-plugins.com": true,
         "https://packages.debian.org": true,
         "https://registry.npmjs.org": true,
         "https://schemastore.org": true

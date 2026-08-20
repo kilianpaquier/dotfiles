@@ -19,6 +19,7 @@
             "Bash(git stash *)",
             "Bash(go *)",
             "Bash(golangci-lint *)",
+            "Bash(head *)",
             "Bash(kickr *)",
             "Bash(make lint)",
             "Bash(make test)",
@@ -165,6 +166,7 @@
             "~/workspaces"
         ]
     },
+    "remoteControlAtStartup": false,
     "sandbox": {
         "allowUnsandboxedCommands": false,
         "autoAllowBashIfSandboxed": true,

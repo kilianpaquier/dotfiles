@@ -4,7 +4,7 @@ $knownHosts = "$env:USERPROFILE\.ssh\known_hosts"
 if (Test-Path $key) {
   echo "SSH key already exists, not generating..."
 } else {
-  ssh-keygen -t ed25519 -C "{{ .user.username }}@{{ .computer_name }}" -f $key
+  ssh-keygen -t ed25519 -C "{{ .user.username }}@{{ .machine_name }}" -f $key
   cat "$key.pub"
 }
 

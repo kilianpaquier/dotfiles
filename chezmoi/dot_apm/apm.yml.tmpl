@@ -1,13 +1,5 @@
 # yaml-language-server: $schema=https://microsoft.github.io/apm/specs/schemas/manifest-v0.1.schema.json
 
-{{- $go := or (has "go" .tools.brew) (has "go" .tools.mise) }}
-{{- $java := or (has "java" .tools.brew) (has "java" .tools.mise) }}
-{{- $kotlin := or (has "kotlin" .tools.brew) (has "kotlin" .tools.mise) }}
-{{- $opentofu := or (has "opentofu" .tools.brew) (has "opentofu" .tools.mise) }}
-{{- $shell := or (has "shell" .tools.brew) (has "shell" .tools.mise) (has "shell" .tools.node) }}
-{{- $terraform := or (has "terraform" .tools.brew) (has "terraform" .tools.mise) }}
-{{- $typescript := or (has "typescript" .tools.brew) (has "typescript" .tools.mise) (has "typescript" .tools.node) }}
-
 name: {{ .user.username }}
 version: 1.0.0
 
@@ -19,36 +11,10 @@ dependencies:
     - anthropics/claude-plugins-official/plugins/code-simplifier
     - anthropics/claude-plugins-official/plugins/feature-dev
     - kilianpaquier/agent-rules
-    - kilianpaquier/ai-integration/plugins/hooks/protected-paths
-    - kilianpaquier/ai-integration/plugins/skills/schema-converter
-    - git: https://gitlab.com/kilianpaquier/ai-integration
-      path: plugins/hybrid/codebase-memory-mcp
-      ref: feat/caveman-rules
-{{- if $shell }}
-    - piebald-ai/claude-code-lsps/bash-language-server
-{{- end }}
-{{- if $go }}
-    - piebald-ai/claude-code-lsps/gopls
-{{- end }}
-{{- if $java }}
-    - piebald-ai/claude-code-lsps/jdtls
-{{- end }}
-{{- if $kotlin }}
-    - piebald-ai/claude-code-lsps/kotlin-lsp
-{{- end }}
-{{- if $terraform }}
-    - piebald-ai/claude-code-lsps/terraform-ls
-{{- end }}
-{{- if $opentofu }}
-    - piebald-ai/claude-code-lsps/tofu-ls
-{{- end }}
-{{- if $typescript }}
-    - piebald-ai/claude-code-lsps/typescript-language-server
-{{- end }}
   mcp: []
 
 includes: auto
 targets:
-{{- range .agents }}
+{{- range .ai.agents }}
   - {{ . }}
 {{- end }}

@@ -19,9 +19,9 @@
 {{- $ide := promptMultichoiceOnce . "ide" "What IDE are you using to develop" (list "intellij" "vscode" "zed") (list "vscode") -}}
 
 {{- $ssh_generate := promptBoolOnce . "ssh.generate" "Would you like to generate an SSH key" -}}
-{{- $computer_name := "" -}}
+{{- $machine_name := "" -}}
 {{- if $ssh_generate -}}
-  {{- $computer_name = promptStringOnce . "computer_name" "What is this computer's name" .chezmoi.hostname -}}
+  {{- $machine_name = promptStringOnce . "machine_name" "What is this machine's name" .chezmoi.hostname -}}
 {{- end -}}
 
 {{- $email := "" -}}
@@ -33,6 +33,10 @@
 
 {{- $agents := list -}}
 {{- $agents_available := list "claude" "copilot" -}}
+
+{{- $plugins := list -}}
+{{- $plugins_available := list "caveman" "ponytail" -}}
+{{- $plugins_default := list "caveman" "ponytail" -}}
 
 {{- $tools_management := list -}}
 {{- $tools_management_available := list "brew" "mise" "node" "uv" -}}
@@ -63,7 +67,11 @@
 {{- $git_ssh := false -}}
 {{- if $dev -}}
   {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" -}}
-  {{- $agents = promptMultichoiceOnce . "agents" "Which AI agent(s) will you be using" $agents_available -}}
+  {{- $agents = promptMultichoiceOnce . "ai.agents" "Which AI agent(s) will you be using" $agents_available -}}
+
+  {{- if gt (len $agents) 0 -}}
+    {{- $plugins = promptMultichoiceOnce . "ai.plugins" "Which agent plugin(s) would you like to install" $plugins_available $plugins_default -}}
+  {{- end -}}
 
   {{- $_ := warnf "available tools per manager:\n  brew: %s\n  mise: %s\n  node: %s\n  uv: %s"
       ($tools_brew_available | join ", ")
@@ -128,7 +136,8 @@
   {{- end -}}
 {{- end -}}
 
-# available agents: {{ $agents_available | join ", " }}
+# available agent runtimes: {{ $agents_available | join ", " }}
+# available agent plugins: {{ $plugins_available | join ", " }}
 # available tools_management: {{ $tools_management_available | join ", " }}
 # available tools.brew: {{ $tools_brew_available | join ", " }}
 # available tools.mise: {{ $tools_mise_available | join ", " }}
@@ -138,11 +147,16 @@
 umask: 0o22
 
 data:
-  agents:{{ if eq (len $agents) 0 }} []{{ end }}
+  ai:
+    agents:{{ if eq (len $agents) 0 }} []{{ end }}
 {{- range $agents }}
-    - {{ . }}
+      - {{ . }}
 {{- end }}
-  computer_name: {{ $computer_name }}
+    plugins:{{ if eq (len $plugins) 0 }} []{{ end }}
+{{- range $plugins }}
+      - {{ . }}
+{{- end }}
+  machine_name: {{ $machine_name }}
   dev: {{ $dev }}
   gaming: {{ $gaming }}
   git:

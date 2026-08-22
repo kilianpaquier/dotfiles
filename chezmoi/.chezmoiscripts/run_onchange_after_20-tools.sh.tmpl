@@ -2,7 +2,7 @@
 
 set -e
 
-{{- if gt (len .agents) 0 }}
+{{- if gt (len .ai.agents) 0 }}
 
 if ! command -v apm >/dev/null 2>&1; then
   curl -sSL https://aka.ms/apm-unix | APM_INSTALL_DIR=$HOME/.local/bin sh
@@ -21,14 +21,14 @@ if command -v brew >/dev/null 2>&1; then
 fi
 {{- end }}
 
-{{- if has "claude" .agents }}
+{{- if has "claude" .ai.agents }}
 
 if ! command -v claude >/dev/null 2>&1; then
   curl -fSL https://claude.ai/install.sh | bash
 fi
 {{- end }}
 
-{{- if has "copilot" .agents }}
+{{- if has "copilot" .ai.agents }}
 
 if ! command -v copilot >/dev/null 2>&1; then
   curl -fSL https://gh.io/copilot-install | PREFIX=$HOME/.local bash

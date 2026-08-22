@@ -3,10 +3,10 @@
 set -e
 
 {{- if or (has "rtk" .tools.mise) (has "rtk" .tools.brew) }}
-{{- if has "copilot" .agents }}
+{{- if has "copilot" .ai.agents }}
 rtk init -g --copilot --auto-patch
 {{- end }}
-{{- if has "claude" .agents }}
+{{- if has "claude" .ai.agents }}
 rtk init -g --auto-patch
 {{- end }}
 {{- end }}
@@ -15,19 +15,19 @@ rtk init -g --auto-patch
 codebase-memory-mcp config set auto_index true
 {{- end }}
 
-{{- if has "claude" .agents }}
+{{- if has "claude" .ai.agents }}
 
 claude plugin marketplace update
 claude plugin list --json | jq -r '.[].id' | xargs claude plugin update
 {{- end }}
 
-{{- if has "copilot" .agents }}
+{{- if has "copilot" .ai.agents }}
 
 copilot plugin marketplace update
 copilot plugin update --all
 {{- end }}
 
-{{- if has "copilot" .agents }}
+{{- if has "copilot" .ai.agents }}
 
 if command -v uvx >/dev/null 2>&1; then
   # temporarily use a custom branch to get user-scope instructions correctly under ~/.copilot/instructions

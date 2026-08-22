@@ -1,0 +1,89 @@
+{{- $go := or (has "go" .tools.brew) (has "go" .tools.mise) }}
+{{- $java := or (has "java" .tools.brew) (has "java" .tools.mise) }}
+{{- $kotlin := or (has "kotlin" .tools.brew) (has "kotlin" .tools.mise) }}
+{{- $opentofu := or (has "opentofu" .tools.brew) (has "opentofu" .tools.mise) }}
+{{- $shell := or (has "shell" .tools.brew) (has "shell" .tools.mise) (has "shell" .tools.node) }}
+{{- $terraform := or (has "terraform" .tools.brew) (has "terraform" .tools.mise) }}
+{{- $typescript := or (has "typescript" .tools.brew) (has "typescript" .tools.mise) (has "typescript" .tools.node) }}
+{
+  "lspServers": {
+{{- if $go }}
+    "go": {
+      "command": "gopls",
+      "args": [],
+      "fileExtensions": {
+        ".go": "go"
+      }
+    },
+{{- end }}
+{{- if $java }}
+    "java": {
+      "command": "jdtls",
+      "args": [],
+      "fileExtensions": {
+        ".java": "java"
+      }
+    },
+{{- end }}
+{{- if $kotlin }}
+    "kotlin": {
+      "command": "kotlin-lsp",
+      "args": ["--stdio"],
+      "fileExtensions": {
+        ".kt": "kotlin",
+        ".kts": "kotlin"
+      }
+    },
+{{- end }}
+{{- if $opentofu }}
+    "opentofu": {
+      "command": "tofu-ls",
+      "args": ["serve"],
+      "fileExtensions": {
+        ".tf": "opentofu",
+        ".tfvars": "opentofu-vars",
+        ".tofu": "opentofu"
+      }
+    },
+{{- end }}
+{{- if $shell }}
+    "shellscript": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "fileExtensions": {
+        ".bash": "shellscript",
+        ".sh": "shellscript"
+      }
+    },
+{{- end }}
+{{- if $terraform }}
+    "terraform": {
+      "command": "terraform-ls",
+      "args": ["serve"],
+      "fileExtensions": {
+        ".policy.hcl": "terraform-policy",
+        ".policytest.hcl": "terraform-policytest",
+        ".tf": "terraform",
+        ".tfcomponent.hcl": "terraform-stack",
+        ".tfdeploy.hcl": "terraform-deploy",
+        ".tfquery.hcl": "terraform-search",
+        ".tfvars": "terraform-vars"
+      }
+    },
+{{- end }}
+{{- if $typescript }}
+    "typescript": {
+      "command": "typescript-language-server",
+      "args": ["--stdio"],
+      "fileExtensions": {
+        ".cjs": "javascript",
+        ".js": "javascript",
+        ".jsx": "javascriptreact",
+        ".mjs": "javascript",
+        ".ts": "typescript",
+        ".tsx": "typescriptreact"
+      }
+    },
+{{- end }}
+  }
+}

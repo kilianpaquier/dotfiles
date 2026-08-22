@@ -7,5 +7,16 @@ trusted_config_paths = ["~/workspaces", "~/.local/share/chezmoi", "~/.local/shar
 [settings.npm]
 shell_out = true
 
+[tool_alias]
+bash-language-server = "npm:bash-language-server"
+codebase-memory-mcp = "github:DeusData/codebase-memory-mcp[matching=codebase-memory-mcp-ui]"
+codegraph = "github:colbymchenry/codegraph"
+dart-sass = "github:sass/dart-sass"
+incus = "github:lxc/incus[matching=incus.,rename_exe=incus]"
+kotlin-lsp = "github:Kotlin/kotlin-lsp"
+mempalace = "pipx:mempalace"
+tofu-ls = "github:opentofu/tofu-ls"
+
 [env]
 CAVEMAN_DEFAULT_MODE = "ultra"
+PONYTAIL_DEFAULT_MODE = "ultra"

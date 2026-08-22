@@ -36,11 +36,12 @@ chezmoi init --prompt
 | `shell`            | choice      | non-windows | `bash`                  |                               | Shell to configure: `bash` or `zsh`                                                 |
 | `ide`              | multichoice | all         | `vscode`                |                               | IDEs in use: `intellij`, `vscode`, `zed`                                            |
 | `ssh.generate`     | bool        | all         | `false`                 |                               | Generate an SSH key (`id_ed25519`)                                                  |
-| `computer_name`    | string      | all         | hostname                | `ssh.generate`                | Computer name (used in the SSH key comment)                                         |
+| `machine_name`     | string      | all         | hostname                | `ssh.generate`                | Computer name (used in the SSH key comment)                                         |
 | `user.email`       | string      | all         |                         | `dev` or `ssh.generate`       | Committer email address                                                             |
 | `user.username`    | string      | all         |                         | `dev` or `ssh.generate`       | Username                                                                            |
 | `git.ssh`          | bool        | all         | `false`                 | `dev`                         | Sign commits with SSH key                                                           |
-| `agents`           | multichoice | all         |                         | `dev`                         | AI agents to configure: `claude`, `copilot`                                         |
+| `ai.agents`        | multichoice | all         |                         | `dev`                         | AI agents to configure: `claude`, `copilot`                                         |
+| `ai.plugins`       | multichoice | all         | `caveman`, `ponytail`   | `agents` non-empty            | Agent plugins to install: `caveman`, `ponytail`                                     |
 | `tools_management` | multichoice | all         | `mise`, `node`          | `dev`                         | Tool manager(s) to use: `brew`, `mise`, `node`, `uv`. See [Tooling](#tooling) below |
 | `tools.brew`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `brew` | Tools to install with brew. See [Tooling](#tooling) below                           |
 | `tools.mise`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `mise` | Tools to install with mise. See [Tooling](#tooling) below                           |
@@ -67,9 +68,9 @@ Once a tool is picked under an earlier manager, it's removed from the choices of
 
 ### Available tools per manager
 
-| Manager | Available tools                                                                                                                                                                                    |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Manager | Available tools                                                                                                                                                                                                    |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | brew    | `bun`, `git-tools`, `go`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv`                                                              |
 | mise    | `bun`, `codebase-memory-mcp`, `codegraph`, `git-tools`, `go`, `graphify`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `mempalace`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv` |
-| node    | `bun`, `cavemem`, `hugo`, `pnpm`, `shell`, `task`, `typescript`, `yarn`                                                                                                                                    |
-| uv      | `graphify`, `just`, `mempalace`                                                                                                                                                                            |
+| node    | `bun`, `cavemem`, `hugo`, `pnpm`, `shell`, `task`, `typescript`, `yarn`                                                                                                                                            |
+| uv      | `graphify`, `just`, `mempalace`                                                                                                                                                                                    |

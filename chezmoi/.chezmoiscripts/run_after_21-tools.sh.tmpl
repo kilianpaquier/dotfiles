@@ -2,7 +2,7 @@
 
 set -e
 
-{{- if gt (len .agents) 0 }}
+{{- if gt (len .ai.agents) 0 }}
 apm self-update
 {{- end }}
 
@@ -11,11 +11,11 @@ brew update
 brew upgrade
 {{- end }}
 
-{{- if has "claude" .agents }}
+{{- if has "claude" .ai.agents }}
 claude update
 {{- end }}
 
-{{- if has "copilot" .agents }}
+{{- if has "copilot" .ai.agents }}
 copilot update
 {{- end }}
 

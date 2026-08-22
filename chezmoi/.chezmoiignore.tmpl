@@ -29,17 +29,17 @@
 .chezmoiscripts/*-computer.ps1
 {{- end }}
 
-{{- if eq (len .agents) 0 }}
+{{- if eq (len .ai.agents) 0 }}
 .apm
 .chezmoiscripts/*-ai.sh
 .config/rtk
 {{- end }}
 
-{{- if not (has "claude" .agents) }}
+{{- if not (has "claude" .ai.agents) }}
 .claude
 {{- end }}
 
-{{- if not (has "copilot" .agents) }}
+{{- if not (has "copilot" .ai.agents) }}
 .copilot
 {{- end }}
 

@@ -44,7 +44,7 @@
             "mcp__mempalace",
             "mcp__opentofu",
             "mcp__plugin_cavemem_cavemem",
-            "mcp__plugin_codebase-memory-mcp_codebase-memory-mcp",
+            "mcp__plugin_codebase-memory-mcp_codebase-memory-mcp__*",
             "mcp__plugin_codegraph_codegraph",
             "mcp__plugin_context7_context7",
             "mcp__plugin_github_github",

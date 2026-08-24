@@ -55,7 +55,7 @@
 {{- $tools_brew_default := list -}}
 
 {{- $tools_mise_available := list "bun" "codebase-memory-mcp" "codegraph" "context7" "git-tools" "go" "graphify" "hugo" "incus" "java" "just" "k6" "k8s" "kotlin" "mempalace" "opentofu" "rtk" "shell" "task" "terraform" "typescript" "uv" -}}
-{{- $tools_mise_default := list -}}
+{{- $tools_mise_default := list "context7" -}}
 
 {{- $tools_node_available := list "bun" "cavemem" "context7" "hugo" "pnpm" "shell" "task" "typescript" "yarn" -}}
 {{- $tools_node_default := list -}}
@@ -91,9 +91,9 @@
   {{- $tools_management = promptMultichoiceOnce . "tools_management" "Which tool manager(s) would you like to use" $tools_management_available $tools_management_default -}}
 
   {{- if has "mise" $tools_management -}}
-    {{- $tools_mise_default = concat $tools_common_default $profile_extra_tools -}}
+    {{- $tools_mise_default = concat $tools_mise_default $tools_common_default $profile_extra_tools -}}
   {{- else if has "brew" $tools_management -}}
-    {{- $tools_brew_default = concat $tools_common_default $profile_extra_tools -}}
+    {{- $tools_brew_default = concat $tools_brew_default $tools_common_default $profile_extra_tools -}}
   {{- end -}}
 
   {{- if has "mise" $tools_management -}}

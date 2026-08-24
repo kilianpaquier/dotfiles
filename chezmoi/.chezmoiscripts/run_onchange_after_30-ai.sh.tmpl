@@ -3,6 +3,7 @@
 set -e
 
 {{- $mempalace := or (has "mempalace" .tools.mise) (has "mempalace" .tools.uv) }}
+{{- $context7 := or (has "context7" .tools.mise) (has "context7" .tools.node) }}
 {{- $caveman := has "caveman" .ai.plugins }}
 {{- $ponytail := has "ponytail" .ai.plugins }}
 
@@ -35,13 +36,14 @@ claude plugin install ponytail@ponytail
 {{- end }}
 
 claude plugin marketplace add kilianpaquier/ai-integration
-claude plugin install context7@one-for-all
-claude plugin install protected-paths@one-for-all
-claude plugin install schema-converter@one-for-all
-
 {{- if has "codebase-memory-mcp" .tools.mise }}
 claude plugin install codebase-memory-mcp@one-for-all
 {{- end }}
+{{- if $context7 }}
+claude plugin install context7@one-for-all
+{{- end }}
+claude plugin install protected-paths@one-for-all
+claude plugin install schema-converter@one-for-all
 
 claude plugin marketplace add piebald-ai/claude-code-lsps
 {{- if $shell }}
@@ -87,11 +89,12 @@ copilot plugin install ponytail@ponytail
 {{- end }}
 
 copilot plugin marketplace add kilianpaquier/ai-integration || true
-copilot plugin install context7@one-for-all
-copilot plugin install protected-paths@one-for-all
-copilot plugin install schema-converter@one-for-all
-
 {{- if has "codebase-memory-mcp" .tools.mise }}
 copilot plugin install codebase-memory-mcp@one-for-all
 {{- end }}
+{{- if $context7 }}
+copilot plugin install context7@one-for-all
+{{- end }}
+copilot plugin install protected-paths@one-for-all
+copilot plugin install schema-converter@one-for-all
 {{- end }}

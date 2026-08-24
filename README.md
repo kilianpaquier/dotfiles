@@ -60,12 +60,6 @@ Dev tools are installed through one or more managers, selected via `tools_manage
 Managers are prompted in order: `mise`, then `brew`, then `node`, then `uv`.
 Once a tool is picked under an earlier manager, it's removed from the choices offered to the later ones, so the same tool never installs twice.
 
-### Defaults
-
-- Common defaults, `git-tools`, `go`, `hugo`, `rtk`, `shell`, `uv`, go to `tools.mise` if `mise` is selected, otherwise to `tools.brew` if `brew` is selected.
-- On top of those, chosen `profile` adds more: `home` adds `bun`, `incus`, `opentofu`; `soprasteria` adds `java`, `k6`, `k8s`, `terraform`.
-- `tools.node` and `tools.uv` never get defaults, tools for these managers must always be picked explicitly.
-
 ### Available tools per manager
 
 | Manager | Available tools                                                                                                                                                                                                                |

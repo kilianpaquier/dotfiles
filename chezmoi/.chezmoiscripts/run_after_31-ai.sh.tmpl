@@ -18,7 +18,7 @@ codebase-memory-mcp config set auto_index true
 {{- if has "claude" .ai.agents }}
 
 claude plugin marketplace update
-claude plugin list --json | jq -r '.[].id' | xargs claude plugin update
+claude plugin list --json | jq -r '.[].id' | xargs -n1 claude plugin update -y
 {{- end }}
 
 {{- if has "copilot" .ai.agents }}

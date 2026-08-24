@@ -11,6 +11,8 @@ shell_out = true
 bash-language-server = "npm:bash-language-server"
 codebase-memory-mcp = "github:DeusData/codebase-memory-mcp[matching=codebase-memory-mcp-ui]"
 codegraph = "github:colbymchenry/codegraph"
+context7 = "npm:ctx7"
+context7-mcp = "npm:@upstash/context7-mcp"
 dart-sass = "github:sass/dart-sass"
 incus = "github:lxc/incus[matching=incus.,rename_exe=incus]"
 kotlin-lsp = "github:Kotlin/kotlin-lsp"

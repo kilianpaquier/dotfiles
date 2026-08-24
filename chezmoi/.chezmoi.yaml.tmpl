@@ -39,7 +39,7 @@
 {{- $plugins_default := list "caveman" "ponytail" -}}
 
 {{- $tools_management := list -}}
-{{- $tools_management_available := list "brew" "mise" "node" "uv" -}}
+{{- $tools_management_available := list "mise" "brew" "node" "uv" -}}
 {{- $tools_management_default := list "mise" "node" "uv" -}}
 
 {{- $profile_extra_tools := list -}}
@@ -54,14 +54,23 @@
 {{- $tools_brew_available := list "bun" "git-tools" "go" "hugo" "incus" "java" "just" "k6" "k8s" "kotlin" "opentofu" "rtk" "shell" "task" "terraform" "typescript" "uv" -}}
 {{- $tools_brew_default := list -}}
 
-{{- $tools_mise_available := list "bun" "codebase-memory-mcp" "codegraph" "git-tools" "go" "graphify" "hugo" "incus" "java" "just" "k6" "k8s" "kotlin" "mempalace" "opentofu" "rtk" "shell" "task" "terraform" "typescript" "uv" -}}
+{{- $tools_mise_available := list "bun" "codebase-memory-mcp" "codegraph" "context7" "git-tools" "go" "graphify" "hugo" "incus" "java" "just" "k6" "k8s" "kotlin" "mempalace" "opentofu" "rtk" "shell" "task" "terraform" "typescript" "uv" -}}
 {{- $tools_mise_default := list -}}
 
-{{- $tools_node_available := list "bun" "cavemem" "hugo" "pnpm" "shell" "task" "typescript" "yarn" -}}
+{{- $tools_node_available := list "bun" "cavemem" "context7" "hugo" "pnpm" "shell" "task" "typescript" "yarn" -}}
 {{- $tools_node_default := list -}}
 
 {{- $tools_uv_available := list "graphify" "just" "mempalace" -}}
 {{- $tools_uv_default := list -}}
+
+# available agent runtimes: {{ $agents_available | join ", " }}
+# available agent plugins: {{ $plugins_available | join ", " }}
+# available tools_management: {{ $tools_management_available | join ", " }}
+# available tools per manager (listed in tools_management preference order, for easier upgrades):
+#   - mise: {{ $tools_mise_available | join ", " }}
+#   - brew: {{ $tools_brew_available | join ", " }}
+#   - node: {{ $tools_node_available | join ", " }}
+#   - uv: {{ $tools_uv_available | join ", " }}
 
 {{- $tools := dict "brew" (list) "mise" (list) "node" (list) "uv" (list) -}}
 {{- $git_ssh := false -}}
@@ -135,14 +144,6 @@
     {{- $_ := set $tools "uv" (promptMultichoiceOnce . "tools.uv" "Which tools would you like to install via uv" $tools_uv_available $tools_uv_default) -}}
   {{- end -}}
 {{- end -}}
-
-# available agent runtimes: {{ $agents_available | join ", " }}
-# available agent plugins: {{ $plugins_available | join ", " }}
-# available tools_management: {{ $tools_management_available | join ", " }}
-# available tools.brew: {{ $tools_brew_available | join ", " }}
-# available tools.mise: {{ $tools_mise_available | join ", " }}
-# available tools.node: {{ $tools_node_available | join ", " }}
-# available tools.uv: {{ $tools_uv_available | join ", " }}
 
 umask: 0o22
 

@@ -28,6 +28,15 @@ cavemem_version=0.2.1
 npm install -g node-gyp@$nodegyp_version cavemem@$cavemem_version
 {{- end }}
 
+{{- if has "context7" .tools.node }}
+
+# renovate: datasource=npm packageName=ctx7
+context7_version=0.5.8
+# renovate: datasource=npm packageName=@upstash/context7-mcp
+context7mcp_version=4.0.3
+npm install -g ctx7@$context7_version @upstash/context7-mcp@$context7mcp_version
+{{- end }}
+
 {{- if has "hugo" .tools.node }}
 
 # renovate: datasource=npm packageName=sass

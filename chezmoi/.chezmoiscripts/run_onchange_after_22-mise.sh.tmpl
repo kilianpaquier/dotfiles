@@ -32,9 +32,10 @@ mise {{ has "rtk" .tools.mise | ternary "use" "unuse" }} -g rtk
 
 if command -v npm >/dev/null 2>&1; then
   mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g bash-language-server
+  mise {{ has "context7" .tools.mise | ternary "use" "unuse" }} -g context7 context7-mcp
   mise {{ has "typescript" .tools.mise | ternary "use" "unuse" }} -g 'npm:typescript' 'npm:typescript-language-server'
 else
-  echo "'npm' is required for 'bash-language-server', 'typescript', 'typescript-language-server' entries in mise, install 'node' via 'brew' or 'mise' tools_management" >&2
+  echo "'npm' is required for 'bash-language-server', 'context7', 'context7-mcp', 'typescript', 'typescript-language-server' entries in mise, install 'node' via 'brew' or 'mise' tools_management" >&2
 fi
 
 if command -v uv >/dev/null 2>&1 || command -v pipx >/dev/null 2>&1; then

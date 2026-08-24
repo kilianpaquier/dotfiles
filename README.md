@@ -68,9 +68,9 @@ Once a tool is picked under an earlier manager, it's removed from the choices of
 
 ### Available tools per manager
 
-| Manager | Available tools                                                                                                                                                                                                    |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| brew    | `bun`, `git-tools`, `go`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv`                                                              |
-| mise    | `bun`, `codebase-memory-mcp`, `codegraph`, `git-tools`, `go`, `graphify`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `mempalace`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv` |
-| node    | `bun`, `cavemem`, `hugo`, `pnpm`, `shell`, `task`, `typescript`, `yarn`                                                                                                                                            |
-| uv      | `graphify`, `just`, `mempalace`                                                                                                                                                                                    |
+| Manager | Available tools                                                                                                                                                                                                                |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| brew    | `bun`, `git-tools`, `go`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv`                                                                          |
+| mise    | `bun`, `codebase-memory-mcp`, `codegraph`, `context7`, `git-tools`, `go`, `graphify`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `mempalace`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv` |
+| node    | `bun`, `cavemem`, `context7`, `hugo`, `pnpm`, `shell`, `task`, `typescript`, `yarn`                                                                                                                                            |
+| uv      | `graphify`, `just`, `mempalace`                                                                                                                                                                                                |

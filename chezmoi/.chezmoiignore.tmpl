@@ -27,6 +27,8 @@
 {{- if .dev }}
 .chezmoiscripts/*-computer.sh
 .chezmoiscripts/*-computer.ps1
+{{- else }}
+.terraformrc
 {{- end }}
 
 {{- if eq (len .ai.agents) 0 }}

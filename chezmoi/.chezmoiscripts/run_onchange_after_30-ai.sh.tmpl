@@ -39,6 +39,9 @@ claude plugin marketplace add kilianpaquier/ai-integration
 {{- if has "codebase-memory-mcp" .tools.mise }}
 claude plugin install codebase-memory-mcp@one-for-all
 {{- end }}
+{{- if has "codegraph" .tools.mise }}
+claude plugin install codegraph@one-for-all
+{{- end }}
 {{- if $context7 }}
 claude plugin install context7@one-for-all
 {{- end }}
@@ -91,6 +94,9 @@ copilot plugin install ponytail@ponytail
 copilot plugin marketplace add kilianpaquier/ai-integration || true
 {{- if has "codebase-memory-mcp" .tools.mise }}
 copilot plugin install codebase-memory-mcp@one-for-all
+{{- end }}
+{{- if has "codegraph" .tools.mise }}
+copilot plugin install codegraph@one-for-all
 {{- end }}
 {{- if $context7 }}
 copilot plugin install context7@one-for-all

@@ -251,6 +251,8 @@
             "mcp__plugin_mempalace_mempalace__mempalace_kg_invalidate"
         ],
         "deny": [
+            "Bash(bun exec*)",
+            "Bash(bunx *)",
             "Bash(gh agent-task*)",
             "Bash(gh attestation*)",
             "Bash(gh codespace*)",
@@ -267,7 +269,11 @@
             "Bash(glab stack*)",
             "Bash(just --fmt*)",
             "Bash(just --init*)",
-            "Bash(task --init*)"
+            "Bash(npm exec*)",
+            "Bash(npx *)",
+            "Bash(pnpm dlx*)",
+            "Bash(task --init*)",
+            "Bash(yarn dlx*)"
         ],
         "defaultMode": "default",
         "disableBypassPermissionsMode": "disable",

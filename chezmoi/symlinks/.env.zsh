@@ -34,6 +34,8 @@ z4h init || return
 
 # Load plugins asynchronously after z4h initialization
 plugins=(
+  kilianpaquier/zsh-plugins/disk-cleanup
+  kilianpaquier/zsh-plugins/docker-rootless
   kilianpaquier/zsh-plugins/highlight-styles
   kilianpaquier/zsh-plugins/just-completion
   kilianpaquier/zsh-plugins/mise-completion

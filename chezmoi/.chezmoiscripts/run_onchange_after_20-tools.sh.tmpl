@@ -28,6 +28,13 @@ if ! command -v claude >/dev/null 2>&1; then
 fi
 {{- end }}
 
+{{- if has "codex" .ai.agents }}
+
+if ! command -v codex >/dev/null 2>&1; then
+  curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
+fi
+{{- end }}
+
 {{- if has "copilot" .ai.agents }}
 
 if ! command -v copilot >/dev/null 2>&1; then

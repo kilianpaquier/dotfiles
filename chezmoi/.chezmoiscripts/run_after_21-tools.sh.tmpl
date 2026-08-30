@@ -15,6 +15,10 @@ brew upgrade
 claude update
 {{- end }}
 
+{{- if has "codex" .ai.agents }}
+curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
+{{- end }}
+
 {{- if has "copilot" .ai.agents }}
 copilot update
 {{- end }}

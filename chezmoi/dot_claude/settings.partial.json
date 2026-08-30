@@ -87,6 +87,31 @@
             "WebFetch(domain:schemastore.org)",
             "WebSearch"
         ],
+        "deny": [
+            "Bash(bun exec*)",
+            "Bash(bunx *)",
+            "Bash(gh agent-task*)",
+            "Bash(gh attestation*)",
+            "Bash(gh codespace*)",
+            "Bash(gh copilot*)",
+            "Bash(gh preview*)",
+            "Bash(gh skill*)",
+            "Bash(glab artifact-registry*)",
+            "Bash(glab cluster*)",
+            "Bash(glab dependency-firewall*)",
+            "Bash(glab duo*)",
+            "Bash(glab mcp*)",
+            "Bash(glab orbit*)",
+            "Bash(glab runner-controller*)",
+            "Bash(glab stack*)",
+            "Bash(just --fmt*)",
+            "Bash(just --init*)",
+            "Bash(npm exec*)",
+            "Bash(npx *)",
+            "Bash(pnpm dlx*)",
+            "Bash(task --init*)",
+            "Bash(yarn dlx*)"
+        ],
         "ask": [
             "Bash(awk *>*)",
             "Bash(awk *system*)",
@@ -250,31 +275,6 @@
             "mcp__plugin_mempalace_mempalace__mempalace_delete_tunnel",
             "mcp__plugin_mempalace_mempalace__mempalace_kg_invalidate"
         ],
-        "deny": [
-            "Bash(bun exec*)",
-            "Bash(bunx *)",
-            "Bash(gh agent-task*)",
-            "Bash(gh attestation*)",
-            "Bash(gh codespace*)",
-            "Bash(gh copilot*)",
-            "Bash(gh preview*)",
-            "Bash(gh skill*)",
-            "Bash(glab artifact-registry*)",
-            "Bash(glab cluster*)",
-            "Bash(glab dependency-firewall*)",
-            "Bash(glab duo*)",
-            "Bash(glab mcp*)",
-            "Bash(glab orbit*)",
-            "Bash(glab runner-controller*)",
-            "Bash(glab stack*)",
-            "Bash(just --fmt*)",
-            "Bash(just --init*)",
-            "Bash(npm exec*)",
-            "Bash(npx *)",
-            "Bash(pnpm dlx*)",
-            "Bash(task --init*)",
-            "Bash(yarn dlx*)"
-        ],
         "defaultMode": "default",
         "disableBypassPermissionsMode": "disable",
         "additionalDirectories": [
@@ -284,10 +284,10 @@
     },
     "remoteControlAtStartup": false,
     "sandbox": {
-        "allowUnsandboxedCommands": false,
-        "autoAllowBashIfSandboxed": true,
         "enabled": false,
-        "failIfUnavailable": true
+        "failIfUnavailable": true,
+        "autoAllowBashIfSandboxed": true,
+        "allowUnsandboxedCommands": false
     },
     "worktree": {
         "baseRef": "head",

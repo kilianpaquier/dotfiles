@@ -40,7 +40,7 @@ chezmoi init --prompt
 | `user.email`       | string      | all         |                         | `dev` or `ssh.generate`       | Committer email address                                                             |
 | `user.username`    | string      | all         |                         | `dev` or `ssh.generate`       | Username                                                                            |
 | `git.ssh`          | bool        | all         | `false`                 | `dev`                         | Sign commits with SSH key                                                           |
-| `ai.agents`        | multichoice | all         |                         | `dev`                         | AI agents to configure: `claude`, `copilot`                                         |
+| `ai.agents`        | multichoice | all         |                         | `dev`                         | AI agents to configure: `claude`, `codex`, `copilot`                                |
 | `ai.plugins`       | multichoice | all         | `caveman`, `ponytail`   | `agents` non-empty            | Agent plugins to install: `caveman`, `ponytail`                                     |
 | `tools_management` | multichoice | all         | `mise`, `node`          | `dev`                         | Tool manager(s) to use: `brew`, `mise`, `node`, `uv`. See [Tooling](#tooling) below |
 | `tools.brew`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `brew` | Tools to install with brew. See [Tooling](#tooling) below                           |

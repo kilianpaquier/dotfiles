@@ -72,6 +72,40 @@ claude plugin install typescript-language-server@claude-code-lsps
 {{- end }}
 {{- end }}
 
+{{- if has "codex" .ai.agents }}
+
+{{- if $mempalace }}
+
+codex plugin marketplace add mempalace/mempalace
+codex plugin add mempalace@mempalace
+{{- end }}
+
+{{- if $caveman }}
+
+codex plugin marketplace add JuliusBrussee/caveman
+codex plugin add caveman@caveman
+{{- end }}
+
+{{- if $ponytail }}
+
+codex plugin marketplace add DietrichGebert/ponytail
+codex plugin add ponytail@ponytail
+{{- end }}
+
+codex plugin marketplace add kilianpaquier/ai-integration
+{{- if has "codebase-memory-mcp" .tools.mise }}
+codex plugin add codebase-memory-mcp@one-for-all
+{{- end }}
+{{- if has "codegraph" .tools.mise }}
+codex plugin add codegraph@one-for-all
+{{- end }}
+{{- if $context7 }}
+codex plugin add context7@one-for-all
+{{- end }}
+codex plugin add protected-paths@one-for-all
+codex plugin add schema-converter@one-for-all
+{{- end }}
+
 {{- if has "copilot" .ai.agents }}
 {{- if $mempalace }}
 

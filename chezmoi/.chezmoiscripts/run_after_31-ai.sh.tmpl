@@ -9,6 +9,9 @@ rtk init -g --copilot --auto-patch
 {{- if has "claude" .ai.agents }}
 rtk init -g --auto-patch
 {{- end }}
+{{- if has "codex" .ai.agents }}
+rtk init -g --codex
+{{- end }}
 {{- end }}
 
 {{- if has "codebase-memory-mcp" .tools.mise }}
@@ -19,6 +22,12 @@ codebase-memory-mcp config set auto_index true
 
 claude plugin marketplace update
 claude plugin list --json | jq -r '.[].id' | xargs -n1 claude plugin update -y
+{{- end }}
+
+{{- if has "codex" .ai.agents }}
+
+codex plugin marketplace upgrade
+codex plugin list --json | jq -r '.installed[].pluginId' | xargs -n1 codex plugin add
 {{- end }}
 
 {{- if has "copilot" .ai.agents }}

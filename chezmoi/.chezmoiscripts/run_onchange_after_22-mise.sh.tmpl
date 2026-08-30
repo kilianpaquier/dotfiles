@@ -28,6 +28,7 @@ mise {{ or (has "terraform" .tools.mise) (has "opentofu" .tools.mise) | ternary 
 mise {{ has "uv" .tools.mise | ternary "use" "unuse" }} -g uv
 mise {{ has "codebase-memory-mcp" .tools.mise | ternary "use" "unuse" }} -g codebase-memory-mcp
 mise {{ has "codegraph" .tools.mise | ternary "use" "unuse" }} -g codegraph
+mise {{ has "destructive-command-guard" .tools.mise | ternary "use" "unuse" }} -g destructive-command-guard
 mise {{ has "rtk" .tools.mise | ternary "use" "unuse" }} -g rtk
 
 if command -v npm >/dev/null 2>&1; then

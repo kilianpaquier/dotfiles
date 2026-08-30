@@ -1,0 +1,24 @@
+[agents.default]
+trust_level = "low"
+disabled_allowlist = true
+
+[packs]
+enabled = [
+    "cicd",
+    "cloud",
+    "containers",
+    "core",
+    "database",
+    "infrastructure",
+    "kubernetes",
+    "loadbalancer",
+    "monitoring",
+    "package_managers",
+    "platform",
+    "remote",
+    "secret_disclosure",
+    "secrets",
+    "storage",
+    "strict_git",
+    "system"
+]

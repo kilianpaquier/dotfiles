@@ -36,6 +36,8 @@
 .apm
 .chezmoiscripts/*-ai.sh
 .config/rtk
+{{- if not (or (has "destructive-command-guard" .tools.brew) (has "destructive-command-guard" .tools.mise)) }}
+.config/dcg
 {{- end }}
 
 {{- if not (has "claude" .ai.agents) }}

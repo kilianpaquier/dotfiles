@@ -14,6 +14,10 @@ rtk init -g --codex
 {{- end }}
 {{- end }}
 
+{{- if or (has "destructive-command-guard" .tools.mise) (has "destructive-command-guard" .tools.brew) }}
+dcg install
+{{- end }}
+
 {{- if has "codebase-memory-mcp" .tools.mise }}
 codebase-memory-mcp config set auto_index true
 {{- end }}

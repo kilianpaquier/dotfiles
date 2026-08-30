@@ -49,12 +49,12 @@
   {{- $profile_extra_tools = list "java" "k6" "k8s" "terraform" -}}
 {{- end -}}
 
-{{- $tools_common_default := list "git-tools" "go" "hugo" "rtk" "shell" "uv" -}}
+{{- $tools_common_default := list "destructive-command-guard" "git-tools" "go" "hugo" "rtk" "shell" "uv" -}}
 
-{{- $tools_brew_available := list "bun" "git-tools" "go" "hugo" "incus" "java" "just" "k6" "k8s" "kotlin" "opentofu" "rtk" "shell" "task" "terraform" "typescript" "uv" -}}
+{{- $tools_brew_available := list "bun" "destructive-command-guard" "git-tools" "go" "hugo" "incus" "java" "just" "k6" "k8s" "kotlin" "opentofu" "rtk" "shell" "task" "terraform" "typescript" "uv" -}}
 {{- $tools_brew_default := list -}}
 
-{{- $tools_mise_available := list "bun" "codebase-memory-mcp" "codegraph" "context7" "git-tools" "go" "graphify" "hugo" "incus" "java" "just" "k6" "k8s" "kotlin" "mempalace" "opentofu" "rtk" "shell" "task" "terraform" "typescript" "uv" -}}
+{{- $tools_mise_available := list "bun" "codebase-memory-mcp" "codegraph" "context7" "destructive-command-guard" "git-tools" "go" "graphify" "hugo" "incus" "java" "just" "k6" "k8s" "kotlin" "mempalace" "opentofu" "rtk" "shell" "task" "terraform" "typescript" "uv" -}}
 {{- $tools_mise_default := list "context7" -}}
 
 {{- $tools_node_available := list "bun" "cavemem" "context7" "hugo" "pnpm" "shell" "task" "typescript" "yarn" -}}

@@ -23,4 +23,5 @@ brew {{ has "task" .tools.brew | ternary "install" "uninstall" }} go-task || tru
 brew {{ has "terraform" .tools.brew | ternary "install" "uninstall" }} terraform-ls || true
 brew {{ has "typescript" .tools.brew | ternary "install" "uninstall" }} typescript-language-server || true
 brew {{ has "uv" .tools.brew | ternary "install" "uninstall" }} uv || true
+brew {{ has "destructive-command-guard" .tools.brew | ternary "install" "uninstall" }} dicklesworthstone/tap/dcg || true
 brew {{ has "rtk" .tools.brew | ternary "install" "uninstall" }} rtk || true

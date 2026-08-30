@@ -35,7 +35,12 @@
 {{- if eq (len .ai.agents) 0 }}
 .apm
 .chezmoiscripts/*-ai.sh
+{{- end }}
+
+{{- if not (or (has "rtk" .tools.brew) (has "rtk" .tools.mise)) }}
 .config/rtk
+{{- end }}
+
 {{- if not (or (has "destructive-command-guard" .tools.brew) (has "destructive-command-guard" .tools.mise)) }}
 .config/dcg
 {{- end }}

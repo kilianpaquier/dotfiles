@@ -17,6 +17,8 @@ corepack {{ has "yarn" .tools.node | ternary "enable" "disable" }} yarn
 # renovate: datasource=npm packageName=bun
 bun_version=1.3.14
 npm install -g bun@$bun_version
+{{- else }}
+npm uninstall -g bun
 {{- end }}
 
 {{- if has "cavemem" .tools.node }}
@@ -26,6 +28,8 @@ nodegyp_version=13.0.1
 # renovate: datasource=npm packageName=cavemem
 cavemem_version=0.2.1
 npm install -g node-gyp@$nodegyp_version cavemem@$cavemem_version
+{{- else }}
+npm uninstall -g node-gyp cavemem
 {{- end }}
 
 {{- if has "context7" .tools.node }}
@@ -35,6 +39,8 @@ context7_version=0.5.8
 # renovate: datasource=npm packageName=@upstash/context7-mcp
 context7mcp_version=4.0.3
 npm install -g ctx7@$context7_version @upstash/context7-mcp@$context7mcp_version
+{{- else }}
+npm uninstall -g ctx7 @upstash/context7-mcp
 {{- end }}
 
 {{- if has "hugo" .tools.node }}
@@ -42,6 +48,8 @@ npm install -g ctx7@$context7_version @upstash/context7-mcp@$context7mcp_version
 # renovate: datasource=npm packageName=sass
 dartsass_version=1.102.0
 npm install -g sass@$dartsass_version
+{{- else }}
+npm uninstall -g sass
 {{- end }}
 
 {{- if has "shell" .tools.node }}
@@ -49,6 +57,8 @@ npm install -g sass@$dartsass_version
 # renovate: datasource=npm packageName=bash-language-server
 bashls_version=5.6.0
 npm install -g bash-language-server@$bashls_version
+{{- else }}
+npm uninstall -g bash-language-server
 {{- end }}
 
 {{- if has "task" .tools.node }}
@@ -56,6 +66,8 @@ npm install -g bash-language-server@$bashls_version
 # renovate: datasource=npm packageName=@go-task/cli
 task_version=3.52.0
 npm install -g @go-task/cli@$task_version
+{{- else }}
+npm uninstall -g @go-task/cli
 {{- end }}
 
 {{- if has "typescript" .tools.node }}
@@ -65,4 +77,6 @@ typescript_version=7.0.2
 # renovate: datasource=npm packageName=typescript-language-server
 typescriptls_version=5.3.0
 npm install -g typescript@$typescript_version typescript-language-server@$typescriptls_version
+{{- else }}
+npm uninstall -g typescript typescript-language-server
 {{- end }}

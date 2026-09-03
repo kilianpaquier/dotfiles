@@ -3,19 +3,11 @@
 set -e
 
 {{- if or (has "rtk" .tools.mise) (has "rtk" .tools.brew) }}
-{{- if has "copilot" .ai.agents }}
-rtk init -g --copilot --auto-patch
-{{- end }}
-{{- if has "claude" .ai.agents }}
-rtk init -g --auto-patch
-{{- end }}
-{{- if has "codex" .ai.agents }}
-rtk init -g --codex
-{{- end }}
-{{- end }}
-
-{{- if or (has "destructive-command-guard" .tools.mise) (has "destructive-command-guard" .tools.brew) }}
-dcg install
+if command -v rtk >/dev/null 2>&1; then
+  rtk init -g {{ has "copilot" .ai.agents | ternary "" "--uninstall" }} --copilot --auto-patch
+  rtk init -g {{ has "claude" .ai.agents | ternary "" "--uninstall" }} --auto-patch
+  rtk init -g {{ has "codex" .ai.agents | ternary "" "--uninstall" }} --codex
+fi
 {{- end }}
 
 {{- if has "codebase-memory-mcp" .tools.mise }}

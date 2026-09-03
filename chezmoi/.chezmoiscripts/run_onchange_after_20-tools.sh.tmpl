@@ -7,6 +7,14 @@ set -e
 if ! command -v apm >/dev/null 2>&1; then
   curl -sSL https://aka.ms/apm-unix | APM_INSTALL_DIR=$HOME/.local/bin sh
 fi
+{{- else }}
+
+if command -v apm >/dev/null 2>&1; then
+  rm -f "$(command -v apm)"
+  rm -rf "$HOME/.apm"
+  rm -rf "$HOME/.cache/apm"
+  rm -rf "$HOME/.local/lib/apm"
+fi
 {{- end }}
 
 {{- if has "brew" .tools_management }}
@@ -26,6 +34,15 @@ fi
 if ! command -v claude >/dev/null 2>&1; then
   curl -fSL https://claude.ai/install.sh | bash
 fi
+{{- else }}
+
+if command -v claude >/dev/null 2>&1; then
+  rm -f "$(command -v claude)"
+  rm -rf "$HOME/.cache/claude-cli-nodejs"
+  rm -rf "$HOME/.cache/claude"
+  rm -rf "$HOME/.claude"
+  rm -rf "$HOME/.local/share/claude"
+fi
 {{- end }}
 
 {{- if has "codex" .ai.agents }}
@@ -33,12 +50,26 @@ fi
 if ! command -v codex >/dev/null 2>&1; then
   curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
 fi
+{{- else }}
+
+if command -v codex >/dev/null 2>&1; then
+  rm -f "$(command -v codex)"
+  rm -rf "$HOME/.cache/codex"
+  rm -rf "$HOME/.codex"
+fi
 {{- end }}
 
 {{- if has "copilot" .ai.agents }}
 
 if ! command -v copilot >/dev/null 2>&1; then
   curl -fSL https://gh.io/copilot-install | PREFIX=$HOME/.local bash
+fi
+{{- else }}
+
+if command -v copilot >/dev/null 2>&1; then
+  rm -f "$(command -v copilot)"
+  rm -rf "$HOME/.cache/copilot"
+  rm -rf "$HOME/.copilot"
 fi
 {{- end }}
 

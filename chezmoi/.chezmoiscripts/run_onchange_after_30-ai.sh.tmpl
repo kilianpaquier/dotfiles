@@ -17,124 +17,66 @@ set -e
 
 {{- if has "claude" .ai.agents }}
 
-{{- if $mempalace }}
-
 claude plugin marketplace add mempalace/mempalace
-claude plugin install mempalace@mempalace
-{{- end }}
-
-{{- if $caveman }}
-
-claude plugin marketplace add JuliusBrussee/caveman
-claude plugin install caveman@caveman
-{{- end }}
-
-{{- if $ponytail }}
+claude plugin {{ $mempalace | ternary "install" "uninstall" }} mempalace@mempalace || true
 
 claude plugin marketplace add DietrichGebert/ponytail
-claude plugin install ponytail@ponytail
-{{- end }}
+claude plugin {{ $ponytail | ternary "install" "uninstall" }} ponytail@ponytail || true
 
 claude plugin marketplace add kilianpaquier/ai-integration
-{{- if has "codebase-memory-mcp" .tools.mise }}
-claude plugin install codebase-memory-mcp@one-for-all
-{{- end }}
-{{- if has "codegraph" .tools.mise }}
-claude plugin install codegraph@one-for-all
-{{- end }}
-{{- if $context7 }}
-claude plugin install context7@one-for-all
-{{- end }}
+claude plugin {{ has "codebase-memory-mcp" .tools.mise | ternary "install" "uninstall" }} codebase-memory-mcp@one-for-all || true
+claude plugin {{ has "codegraph" .tools.mise | ternary "install" "uninstall" }} codegraph@one-for-all || true
+claude plugin {{ $context7 | ternary "install" "uninstall" }} context7@one-for-all || true
 claude plugin install protected-paths@one-for-all
 claude plugin install schema-converter@one-for-all
 
 claude plugin marketplace add piebald-ai/claude-code-lsps
-{{- if $shell }}
-claude plugin install bash-language-server@claude-code-lsps
-{{- end }}
-{{- if $go }}
-claude plugin install gopls@claude-code-lsps
-{{- end }}
-{{- if $java }}
-claude plugin install jdtls@claude-code-lsps
-{{- end }}
-{{- if $kotlin }}
-claude plugin install kotlin-lsp@claude-code-lsps
-{{- end }}
-{{- if $terraform }}
-claude plugin install terraform-ls@claude-code-lsps
-{{- end }}
-{{- if $opentofu }}
-claude plugin install tofu-ls@claude-code-lsps
-{{- end }}
-{{- if $typescript }}
-claude plugin install typescript-language-server@claude-code-lsps
-{{- end }}
+claude plugin {{ $shell | ternary "install" "uninstall" }} bash-language-server@claude-code-lsps || true
+claude plugin {{ $go | ternary "install" "uninstall" }} gopls@claude-code-lsps || true
+claude plugin {{ $java | ternary "install" "uninstall" }} jdtls@claude-code-lsps || true
+claude plugin {{ $kotlin | ternary "install" "uninstall" }} kotlin-lsp@claude-code-lsps || true
+claude plugin {{ $terraform | ternary "install" "uninstall" }} terraform-ls@claude-code-lsps || true
+claude plugin {{ $opentofu | ternary "install" "uninstall" }} tofu-ls@claude-code-lsps || true
+claude plugin {{ $typescript | ternary "install" "uninstall" }} typescript-language-server@claude-code-lsps || true
+{{- else }}
+
+rm -rf "$HOME/.claude"
 {{- end }}
 
 {{- if has "codex" .ai.agents }}
 
-{{- if $mempalace }}
-
 codex plugin marketplace add mempalace/mempalace
-codex plugin add mempalace@mempalace
-{{- end }}
-
-{{- if $caveman }}
-
-codex plugin marketplace add JuliusBrussee/caveman
-codex plugin add caveman@caveman
-{{- end }}
-
-{{- if $ponytail }}
+codex plugin {{ $mempalace | ternary "add" "remove" }} mempalace@mempalace || true
 
 codex plugin marketplace add DietrichGebert/ponytail
-codex plugin add ponytail@ponytail
-{{- end }}
+codex plugin {{ $ponytail | ternary "add" "remove" }} ponytail@ponytail || true
 
 codex plugin marketplace add kilianpaquier/ai-integration
-{{- if has "codebase-memory-mcp" .tools.mise }}
-codex plugin add codebase-memory-mcp@one-for-all
-{{- end }}
-{{- if has "codegraph" .tools.mise }}
-codex plugin add codegraph@one-for-all
-{{- end }}
-{{- if $context7 }}
-codex plugin add context7@one-for-all
-{{- end }}
+codex plugin {{ has "codebase-memory-mcp" .tools.mise | ternary "add" "remove" }} codebase-memory-mcp@one-for-all || true
+codex plugin {{ has "codegraph" .tools.mise | ternary "add" "remove" }} codegraph@one-for-all || true
+codex plugin {{ $context7 | ternary "add" "remove" }} context7@one-for-all || true
 codex plugin add protected-paths@one-for-all
 codex plugin add schema-converter@one-for-all
+{{- else }}
+
+rm -rf "$HOME/.codex"
 {{- end }}
 
 {{- if has "copilot" .ai.agents }}
-{{- if $mempalace }}
 
 copilot plugin marketplace add mempalace/mempalace || true
-copilot plugin install mempalace@mempalace
-{{- end }}
-
-{{- if $caveman }}
-
-copilot plugin marketplace add JuliusBrussee/caveman || true
-copilot plugin install caveman@caveman
-{{- end }}
-
-{{- if $ponytail }}
+copilot plugin {{ $mempalace | ternary "install" "uninstall" }} mempalace@mempalace || true
 
 copilot plugin marketplace add DietrichGebert/ponytail || true
-copilot plugin install ponytail@ponytail
-{{- end }}
+copilot plugin {{ $ponytail | ternary "install" "uninstall" }} ponytail@ponytail || true
 
 copilot plugin marketplace add kilianpaquier/ai-integration || true
-{{- if has "codebase-memory-mcp" .tools.mise }}
-copilot plugin install codebase-memory-mcp@one-for-all
-{{- end }}
-{{- if has "codegraph" .tools.mise }}
-copilot plugin install codegraph@one-for-all
-{{- end }}
-{{- if $context7 }}
-copilot plugin install context7@one-for-all
-{{- end }}
+copilot plugin {{ has "codebase-memory-mcp" .tools.mise | ternary "install" "uninstall" }} codebase-memory-mcp@one-for-all || true
+copilot plugin {{ has "codegraph" .tools.mise | ternary "install" "uninstall" }} codegraph@one-for-all || true
+copilot plugin {{ $context7 | ternary "install" "uninstall" }} context7@one-for-all || true
 copilot plugin install protected-paths@one-for-all
 copilot plugin install schema-converter@one-for-all
+{{- else }}
+
+rm -rf "$HOME/.copilot"
 {{- end }}

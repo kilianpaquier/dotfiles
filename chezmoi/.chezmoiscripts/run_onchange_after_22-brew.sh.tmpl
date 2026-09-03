@@ -2,10 +2,7 @@
 
 set -e
 
-{{- if not (has "mise" .tools_management) }}
-
-brew install age node@24 sops
-{{- end }}
+brew {{ not (has "mise" .tools_management) | ternary "install" "uninstall" }} age node@24 sops || true
 
 brew {{ has "bun" .tools.brew | ternary "install" "uninstall" }} bun || true
 brew {{ has "git-tools" .tools.brew | ternary "install" "uninstall" }} gh glab pre-commit || true

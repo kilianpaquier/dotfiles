@@ -1,0 +1,14 @@
+{{- if has "claude" .ai.agents }}
+.claude/rules:
+  type: archive
+  url: "https://gitlab.com/api/v4/projects/kilianpaquier%2Fagent-rules/repository/archive.tar.gz?path=.apm/instructions"
+  stripComponents: 3
+  refreshPeriod: 24h
+{{- end }}
+{{- if has "copilot" .ai.agents }}
+.copilot/instructions:
+  type: archive
+  url: "https://gitlab.com/api/v4/projects/kilianpaquier%2Fagent-rules/repository/archive.tar.gz?path=.apm/instructions"
+  stripComponents: 3
+  refreshPeriod: 24h
+{{- end }}

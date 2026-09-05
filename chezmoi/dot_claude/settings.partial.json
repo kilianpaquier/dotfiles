@@ -90,6 +90,7 @@
         "deny": [
             "Bash(bun exec *)",
             "Bash(bunx *)",
+            "Bash(chezmoi *)",
             "Bash(gh agent-task *)",
             "Bash(gh attestation *)",
             "Bash(gh codespace *)",

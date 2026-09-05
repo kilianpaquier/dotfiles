@@ -147,6 +147,7 @@
         "/task .*release/": false,
         "/yarn dlx/": false,
         "awk": true,
+        "chezmoi": false,
         "codebase-memory-mcp": true,
         "codegraph": true,
         "ctx7": true,

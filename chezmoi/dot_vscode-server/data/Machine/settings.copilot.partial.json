@@ -178,6 +178,7 @@
         "https://developers.openai.com": true,
         "https://docs.brew.sh": true,
         "https://docs.claude.com": true,
+        "https://docs.cloud.google.com": true,
         "https://docs.devin.ai": true,
         "https://docs.github.com": true,
         "https://docs.gitlab.com": true,

@@ -64,6 +64,7 @@
             "WebFetch(domain:developers.openai.com)",
             "WebFetch(domain:docs.brew.sh)",
             "WebFetch(domain:docs.claude.com)",
+            "WebFetch(domain:docs.cloud.google.com)",
             "WebFetch(domain:docs.devin.ai)",
             "WebFetch(domain:docs.github.com)",
             "WebFetch(domain:docs.gitlab.com)",

@@ -17,13 +17,13 @@ codebase-memory-mcp config set auto_index true
 {{- if has "claude" .ai.agents }}
 
 claude plugin marketplace update
-claude plugin list --json | jq -r '.[].id' | xargs -n1 claude plugin update -y
+claude plugin list --json | jq -r '.[].id' | xargs -r -n1 claude plugin update -y
 {{- end }}
 
 {{- if has "codex" .ai.agents }}
 
 codex plugin marketplace upgrade
-codex plugin list --json | jq -r '.installed[].pluginId' | xargs -n1 codex plugin add
+codex plugin list --json | jq -r '.installed[].pluginId' | xargs -r -n1 codex plugin add
 {{- end }}
 
 {{- if has "copilot" .ai.agents }}
@@ -32,14 +32,4 @@ copilot plugin marketplace update
 copilot plugin update --all
 {{- end }}
 
-{{- if has "copilot" .ai.agents }}
-
-if command -v uvx >/dev/null 2>&1; then
-  # temporarily use a custom branch to get user-scope instructions correctly under ~/.copilot/instructions
-  uvx --from "git+https://github.com/kilianpaquier/apm@fix/copilot-user-scope-instructions" apm update -g -y
-else
-  echo "tool 'uv' is needed to handle copilot global instructions with APM"
-fi
-{{- else }}
 apm update -g -y
-{{- end }}

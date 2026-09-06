@@ -1,13 +1,10 @@
 #!/bin/sh
 # handle .gitconfig through a script to avoid merging issues (where many will change it for their own aliases or preferences)
 
-if ! command -v git >/dev/null 2>&1; then
-  sudo apt update
-  sudo apt -y install git
-fi
+set -e
 
-git config --global user.name {{ .user.username }}
-git config --global user.email {{ .user.email }}
+git config --global user.name '{{ .user.username }}'
+git config --global user.email '{{ .user.email }}'
 
 git config --global init.defaultbranch main
 git config --global push.autoSetupRemote true
@@ -41,13 +38,11 @@ git config --global alias.branches "branch --format='%(HEAD) %(color:yellow)%(re
 git config --global alias.c 'commit -m'
 git config --global alias.cp 'cherry-pick'
 git config --global alias.current 'branch --show-current'
+# shellcheck disable=SC2016
 git config --global alias.upstream '!f() { git branch --set-upstream-to="${1-origin}/$(git current)" "$(git current)"; }; f'
 git config --global alias.ls 'log --stat'
 git config --global alias.last 'ls -1 HEAD --stat'
 git config --global alias.ll 'ls --oneline'
-# shellcheck disable=SC2016
-# git config --global alias.mad '!f() { git reset --hard ${1-origin/$(git current)}; }; f'
-# shellcheck disable=SC2016
 git config --global alias.mad 'reset --hard'
 git config --global alias.n 'checkout -b'
 git config --global alias.p 'push'

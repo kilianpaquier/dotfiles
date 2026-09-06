@@ -42,7 +42,7 @@ chezmoi init --prompt
 | `git.ssh`          | bool        | all         | `false`                 | `dev`                         | Sign commits with SSH key                                                           |
 | `ai.agents`        | multichoice | all         |                         | `dev`                         | AI agents to configure: `claude`, `codex`, `copilot`                                |
 | `ai.plugins`       | multichoice | all         | `caveman`, `ponytail`   | `agents` non-empty            | Agent plugins to install: `caveman`, `ponytail`                                     |
-| `tools_management` | multichoice | all         | `mise`, `node`          | `dev`                         | Tool manager(s) to use: `brew`, `mise`, `node`, `uv`. See [Tooling](#tooling) below |
+| `tools_management` | multichoice | all         | `mise`, `node`, `uv`    | `dev`                         | Tool manager(s) to use: `brew`, `mise`, `node`, `uv`. See [Tooling](#tooling) below |
 | `tools.brew`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `brew` | Tools to install with brew. See [Tooling](#tooling) below                           |
 | `tools.mise`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `mise` | Tools to install with mise. See [Tooling](#tooling) below                           |
 | `tools.node`       | multichoice | all         | (empty)                 | `tools_management` has `node` | Tools to install with node (npm). See [Tooling](#tooling) below                     |
@@ -51,6 +51,7 @@ chezmoi init --prompt
 ## Tooling
 
 Dev tools are installed through one or more managers, selected via `tools_management`: `brew`, `mise`, `node`, `uv`.
+
 - `apm` (AI agent tooling) is automatic whenever `agents` is non-empty, no manager choice needed.
 - `node` as a manager needs `brew` or `mise` to actually provide the `node` binary, so pick at least one of those alongside it.
 - `uv` as a manager needs `brew` or `mise` to actually provide the `uv` binary, so pick at least one of those alongside it.
@@ -62,9 +63,9 @@ Once a tool is picked under an earlier manager, it's removed from the choices of
 
 ### Available tools per manager
 
-| Manager | Available tools                                                                                                                                                                                                                |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| brew    | `bun`, `git-tools`, `go`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv`                                                                          |
-| mise    | `bun`, `codebase-memory-mcp`, `codegraph`, `context7`, `git-tools`, `go`, `graphify`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `mempalace`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv` |
-| node    | `bun`, `cavemem`, `context7`, `hugo`, `pnpm`, `shell`, `task`, `typescript`, `yarn`                                                                                                                                            |
-| uv      | `graphify`, `just`, `mempalace`                                                                                                                                                                                                |
+| Manager | Available tools                                                                                                                                                                                                                                             |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| brew    | `bun`, `destructive-command-guard`, `git-tools`, `go`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv`                                                                          |
+| mise    | `bun`, `codebase-memory-mcp`, `codegraph`, `context7`, `destructive-command-guard`, `git-tools`, `go`, `graphify`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `mempalace`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv` |
+| node    | `bun`, `cavemem`, `context7`, `pnpm`, `task`, `typescript`, `yarn`                                                                                                                                                                                          |
+| uv      | `graphify`, `just`, `mempalace`                                                                                                                                                                                                                             |

@@ -4,7 +4,7 @@ set -e
 
 for requirement in node npm corepack; do
   if ! command -v $requirement >/dev/null 2>&1; then
-    echo "'$requirement' requires 'brew' or 'mise' as tools_mmanagement to be installed and used to install other tools" >&2
+    echo "'$requirement' requires 'brew' or 'mise' as tools_management to be installed and used to install other tools" >&2
     exit 1
   fi
 done
@@ -41,24 +41,6 @@ context7mcp_version=4.0.3
 npm install -g ctx7@$context7_version @upstash/context7-mcp@$context7mcp_version
 {{- else }}
 npm uninstall -g ctx7 @upstash/context7-mcp
-{{- end }}
-
-{{- if has "hugo" .tools.node }}
-
-# renovate: datasource=npm packageName=sass
-dartsass_version=1.102.0
-npm install -g sass@$dartsass_version
-{{- else }}
-npm uninstall -g sass
-{{- end }}
-
-{{- if has "shell" .tools.node }}
-
-# renovate: datasource=npm packageName=bash-language-server
-bashls_version=5.6.0
-npm install -g bash-language-server@$bashls_version
-{{- else }}
-npm uninstall -g bash-language-server
 {{- end }}
 
 {{- if has "task" .tools.node }}

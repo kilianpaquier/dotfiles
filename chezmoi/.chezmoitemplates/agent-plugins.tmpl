@@ -1,0 +1,21 @@
+{{- /* shared plugin wiring for every agent runtime, they differ only by binary name, verbs and install listing */ -}}
+{{- $all := merge .plugins .lsps -}}
+
+{{ .command }} plugin marketplace add DietrichGebert/ponytail || true
+{{ .command }} plugin marketplace add kilianpaquier/ai-integration || true
+{{ .command }} plugin marketplace add mempalace/mempalace || true
+{{- if .lsps }}
+{{ .command }} plugin marketplace add piebald-ai/claude-code-lsps || true
+{{- end }}
+{{ .command }} plugin marketplace {{ .command_update }} || true
+
+installed=" $({{ .command_list }} | tr '\n' ' ')"
+
+for plugin in{{ range $id, $enabled := $all }}{{ if $enabled }} {{ $id }}{{ end }}{{ end }}; do
+  case "$installed" in *" $plugin "*) continue ;; esac
+  {{ .command }} plugin {{ .command_add }} "$plugin" || true
+done
+
+for plugin in{{ range $id, $enabled := $all }}{{ if not $enabled }} {{ $id }}{{ end }}{{ end }}; do
+  case "$installed" in *" $plugin "*) {{ .command }} plugin {{ .command_remove }} "$plugin" || true ;; esac
+done

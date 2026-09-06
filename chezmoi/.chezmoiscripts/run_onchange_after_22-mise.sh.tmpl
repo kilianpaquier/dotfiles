@@ -31,15 +31,9 @@ mise {{ has "codegraph" .tools.mise | ternary "use" "unuse" }} -g codegraph
 mise {{ has "destructive-command-guard" .tools.mise | ternary "use" "unuse" }} -g destructive-command-guard
 mise {{ has "rtk" .tools.mise | ternary "use" "unuse" }} -g rtk
 
-if command -v npm >/dev/null 2>&1; then
-  mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g bash-language-server
-  mise {{ has "context7" .tools.mise | ternary "use" "unuse" }} -g context7 context7-mcp
-  mise {{ has "typescript" .tools.mise | ternary "use" "unuse" }} -g 'npm:typescript' 'npm:typescript-language-server'
-{{- if or (has "shell" .tools.mise) (has "context7" .tools.mise) (has "typescript" .tools.mise) }}
-else
-  echo "'npm' is required for 'bash-language-server', 'context7', 'context7-mcp', 'typescript', 'typescript-language-server' entries in mise, install 'node' via 'brew' or 'mise' tools_management" >&2
-{{- end }}
-fi
+mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g bash-language-server
+mise {{ has "context7" .tools.mise | ternary "use" "unuse" }} -g context7 context7-mcp
+mise {{ has "typescript" .tools.mise | ternary "use" "unuse" }} -g 'npm:typescript' 'npm:typescript-language-server'
 
 if command -v uv >/dev/null 2>&1 || command -v pipx >/dev/null 2>&1; then
   mise {{ has "graphify" .tools.mise | ternary "use" "unuse" }} -g 'pipx:graphifyy'
@@ -49,3 +43,7 @@ else
   echo "'uv' or 'pipx' is required for 'graphify', 'mempalace' entries in mise, install 'uv' via 'brew' or 'mise' tools_management" >&2
 {{- end }}
 fi
+
+mise upgrade -y
+mise prune -y
+mise reshim --force -y

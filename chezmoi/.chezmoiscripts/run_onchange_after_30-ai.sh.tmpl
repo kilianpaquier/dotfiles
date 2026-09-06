@@ -2,100 +2,61 @@
 
 set -e
 
-{{- $mempalace := or (has "mempalace" .tools.mise) (has "mempalace" .tools.uv) }}
-{{- $context7 := or (has "context7" .tools.mise) (has "context7" .tools.node) }}
-{{- $caveman := has "caveman" .ai.plugins }}
-{{- $ponytail := has "ponytail" .ai.plugins }}
-
-{{- $dcg := or (has "destructive-command-guard" .tools.brew) (has "destructive-command-guard" .tools.mise) }}
-{{- $go := or (has "go" .tools.brew) (has "go" .tools.mise) }}
-{{- $java := or (has "java" .tools.brew) (has "java" .tools.mise) }}
-{{- $kotlin := or (has "kotlin" .tools.brew) (has "kotlin" .tools.mise) }}
-{{- $opentofu := or (has "opentofu" .tools.brew) (has "opentofu" .tools.mise) }}
-{{- $shell := or (has "shell" .tools.brew) (has "shell" .tools.mise) (has "shell" .tools.node) }}
-{{- $terraform := or (has "terraform" .tools.brew) (has "terraform" .tools.mise) }}
-{{- $typescript := or (has "typescript" .tools.brew) (has "typescript" .tools.mise) (has "typescript" .tools.node) }}
+{{- $plugins := dict
+    "caveman@one-for-all" (has "caveman" .ai.plugins)
+    "code-simplifier@one-for-all" true
+    "codebase-memory-mcp@one-for-all" (has "codebase-memory-mcp" .tools.mise)
+    "codegraph@one-for-all" (has "codegraph" .tools.mise)
+    "context7@one-for-all" (or (has "context7" .tools.mise) (has "context7" .tools.node))
+    "dcg@one-for-all" (or (has "destructive-command-guard" .tools.brew) (has "destructive-command-guard" .tools.mise))
+    "exam-drill@one-for-all" true
+    "feature-dev@one-for-all" true
+    "mempalace@mempalace" (or (has "mempalace" .tools.mise) (has "mempalace" .tools.uv))
+    "ponytail@ponytail" (has "ponytail" .ai.plugins)
+    "protected-paths@one-for-all" true
+    "schema-converter@one-for-all" true }}
+{{- /* claude-code-lsps has no codex or copilot support, only claude receives those plugins */ -}}
+{{- $lsps := dict
+    "bash-language-server@claude-code-lsps" (or (has "shell" .tools.brew) (has "shell" .tools.mise))
+    "gopls@claude-code-lsps" (or (has "go" .tools.brew) (has "go" .tools.mise))
+    "jdtls@claude-code-lsps" (or (has "java" .tools.brew) (has "java" .tools.mise))
+    "kotlin-lsp@claude-code-lsps" (or (has "kotlin" .tools.brew) (has "kotlin" .tools.mise))
+    "terraform-ls@claude-code-lsps" (or (has "terraform" .tools.brew) (has "terraform" .tools.mise))
+    "tofu-ls@claude-code-lsps" (or (has "opentofu" .tools.brew) (has "opentofu" .tools.mise))
+    "typescript-language-server@claude-code-lsps" (or (has "typescript" .tools.brew) (has "typescript" .tools.mise) (has "typescript" .tools.node)) }}
 
 {{- if has "claude" .ai.agents }}
 
-claude plugin marketplace add mempalace/mempalace
-claude plugin marketplace add DietrichGebert/ponytail
-claude plugin marketplace add kilianpaquier/ai-integration
-claude plugin marketplace add piebald-ai/claude-code-lsps
-claude plugin marketplace update
-
-claude plugin {{ $mempalace | ternary "install" "uninstall" }} mempalace@mempalace || true
-claude plugin {{ $ponytail | ternary "install" "uninstall" }} ponytail@ponytail || true
-
-claude plugin {{ $caveman | ternary "install" "uninstall" }} caveman@one-for-all || true
-claude plugin {{ has "codebase-memory-mcp" .tools.mise | ternary "install" "uninstall" }} codebase-memory-mcp@one-for-all || true
-claude plugin {{ has "codegraph" .tools.mise | ternary "install" "uninstall" }} codegraph@one-for-all || true
-claude plugin {{ $context7 | ternary "install" "uninstall" }} context7@one-for-all || true
-claude plugin {{ $dcg | ternary "install" "uninstall" }} dcg@one-for-all || true
-claude plugin install code-simplifier@one-for-all
-claude plugin install exam-drill@one-for-all
-claude plugin install feature-dev@one-for-all
-claude plugin install protected-paths@one-for-all
-claude plugin install schema-converter@one-for-all
-
-claude plugin {{ $shell | ternary "install" "uninstall" }} bash-language-server@claude-code-lsps || true
-claude plugin {{ $go | ternary "install" "uninstall" }} gopls@claude-code-lsps || true
-claude plugin {{ $java | ternary "install" "uninstall" }} jdtls@claude-code-lsps || true
-claude plugin {{ $kotlin | ternary "install" "uninstall" }} kotlin-lsp@claude-code-lsps || true
-claude plugin {{ $terraform | ternary "install" "uninstall" }} terraform-ls@claude-code-lsps || true
-claude plugin {{ $opentofu | ternary "install" "uninstall" }} tofu-ls@claude-code-lsps || true
-claude plugin {{ $typescript | ternary "install" "uninstall" }} typescript-language-server@claude-code-lsps || true
-{{- else }}
-
-rm -rf "$HOME/.claude"
+{{ includeTemplate "agent-plugins.tmpl" (dict
+  "command" "claude"
+  "command_add" "install"
+  "command_list" "claude plugin list --json | jq -r '.[].id'"
+  "command_remove" "uninstall"
+  "command_update" "update"
+  "lsps" $lsps
+  "plugins" $plugins) }}
 {{- end }}
 
 {{- if has "codex" .ai.agents }}
 
-codex plugin marketplace add mempalace/mempalace
-codex plugin marketplace add DietrichGebert/ponytail
-codex plugin marketplace add kilianpaquier/ai-integration
-codex plugin marketplace upgrade
-
-codex plugin {{ $mempalace | ternary "add" "remove" }} mempalace@mempalace || true
-codex plugin {{ $ponytail | ternary "add" "remove" }} ponytail@ponytail || true
-
-codex plugin {{ $caveman | ternary "add" "remove" }} caveman@one-for-all || true
-codex plugin {{ has "codebase-memory-mcp" .tools.mise | ternary "add" "remove" }} codebase-memory-mcp@one-for-all || true
-codex plugin {{ has "codegraph" .tools.mise | ternary "add" "remove" }} codegraph@one-for-all || true
-codex plugin {{ $context7 | ternary "add" "remove" }} context7@one-for-all || true
-codex plugin {{ $dcg | ternary "add" "remove" }} dcg@one-for-all || true
-codex plugin add code-simplifier@one-for-all
-codex plugin add exam-drill@one-for-all
-codex plugin add feature-dev@one-for-all
-codex plugin add protected-paths@one-for-all
-codex plugin add schema-converter@one-for-all
-{{- else }}
-
-rm -rf "$HOME/.codex"
+{{ includeTemplate "agent-plugins.tmpl" (dict
+  "command" "codex"
+  "command_add" "add"
+  "command_list" "codex plugin list --json | jq -r '.installed[].pluginId'"
+  "command_remove" "remove"
+  "command_update" "upgrade"
+  "lsps" dict
+  "plugins" $plugins) }}
 {{- end }}
 
 {{- if has "copilot" .ai.agents }}
 
-copilot plugin marketplace add mempalace/mempalace || true
-copilot plugin marketplace add DietrichGebert/ponytail || true
-copilot plugin marketplace add kilianpaquier/ai-integration || true
-copilot plugin marketplace update || true
-
-copilot plugin {{ $mempalace | ternary "install" "uninstall" }} mempalace@mempalace || true
-copilot plugin {{ $ponytail | ternary "install" "uninstall" }} ponytail@ponytail || true
-
-copilot plugin {{ $caveman | ternary "install" "uninstall" }} caveman@one-for-all || true
-copilot plugin {{ has "codebase-memory-mcp" .tools.mise | ternary "install" "uninstall" }} codebase-memory-mcp@one-for-all || true
-copilot plugin {{ has "codegraph" .tools.mise | ternary "install" "uninstall" }} codegraph@one-for-all || true
-copilot plugin {{ $context7 | ternary "install" "uninstall" }} context7@one-for-all || true
-copilot plugin {{ $dcg | ternary "install" "uninstall" }} dcg@one-for-all || true
-copilot plugin install code-simplifier@one-for-all
-copilot plugin install exam-drill@one-for-all
-copilot plugin install feature-dev@one-for-all
-copilot plugin install protected-paths@one-for-all
-copilot plugin install schema-converter@one-for-all
-{{- else }}
-
-rm -rf "$HOME/.copilot"
+{{ includeTemplate "agent-plugins.tmpl" (dict
+  "command" "copilot"
+  "command_add" "install"
+  "command_list" "copilot plugin list | grep -oE '[A-Za-z0-9._-]+@[A-Za-z0-9._-]+'"
+  "command_remove" "uninstall"
+  "command_update" "update"
+  "lsps" dict
+  "plugins" $plugins) }}
 {{- end }}

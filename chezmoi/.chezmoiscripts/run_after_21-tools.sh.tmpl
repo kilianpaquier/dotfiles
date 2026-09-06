@@ -24,7 +24,5 @@ copilot update
 {{- end }}
 
 {{- if has "mise" .tools_management }}
-mise self-update
-mise upgrade
-mise reshim --force
+mise self-update -y
 {{- end }}

@@ -1,196 +1,115 @@
-{{- $dev := false -}}
-{{- if ne .chezmoi.os "windows" -}}
-  {{- $dev = promptBoolOnce . "dev" "Is this a development machine (full tooling, git, etc.)" -}}
+{{- $data := include ".chezmoidata/tools.yaml" | fromYaml }}
+
+{{- $dev := false }}
+{{- if ne .chezmoi.os "windows" }}
+  {{- $dev = promptBoolOnce . "dev" "Is this a development machine (full tooling, git, etc.)" }}
+{{- end }}
+
+{{- $profile := promptChoiceOnce . "profile" "Which profile should apply to this machine" (keys $data.profiles | sortAlpha) }}
+
+{{- $gaming := false }}
+{{- if and (eq $profile "home") (eq .chezmoi.os "windows") }}
+  {{- $gaming = promptBoolOnce . "gaming" "Is this a gaming machine" }}
+{{- end }}
+
+{{- $shell := "powershell" }}
+{{- if ne .chezmoi.os "windows" }}
+  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") "bash" }}
+{{- end }}
+
+{{- $ide := promptMultichoiceOnce . "ide" "What IDE are you using to develop" (list "intellij" "vscode" "zed") (list "vscode") }}
+
+{{- $ssh_generate := promptBoolOnce . "ssh.generate" "Would you like to generate an SSH key" }}
+{{- $machine_name := "" }}
+{{- if $ssh_generate }}
+  {{- $machine_name = promptStringOnce . "machine_name" "What is this machine's name" .chezmoi.hostname }}
+{{- end }}
+
+{{- $email := "" }}
+{{- $username := "" }}
+{{- if or $dev $ssh_generate }}
+  {{- $username = promptStringOnce . "user.username" "What is your comitter username" }}
+  {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
+{{- end }}
+
+{{- $managers := keys $data.bundles | sortAlpha }}
+
+{{- $tools := dict }}
+{{- $bundle_summary := list }}
+{{- range $manager := $managers -}}
+  {{- $_ := set $tools $manager (list) }}
+  {{- $bundle_summary = append $bundle_summary (printf "%s: %s" $manager ((index $data.bundles $manager).available | join ", ")) }}
 {{- end -}}
 
-{{- $profiles := list "home" "soprasteria" -}}
-{{- $profile := promptChoiceOnce . "profile" "Which profile should apply to this machine" $profiles -}}
+# available agent runtimes: {{ $data.agent_runtimes | join ", " }}
+# available agent plugins: {{ $data.plugins.available | join ", " }}
+# available tools_management: {{ $managers | join ", " }}
+# available tools per manager:
+{{- range $bundle_summary }}
+#   - {{ . }}
+{{- end }}
 
-{{- $gaming := false -}}
-{{- if and (eq $profile "home") (eq .chezmoi.os "windows") -}}
-  {{- $gaming = promptBoolOnce . "gaming" "Is this a gaming machine" -}}
-{{- end -}}
+{{- $agents := list }}
+{{- $git_ssh := false }}
+{{- $plugins := list }}
+{{- $tools_management := list }}
+{{- if $dev }}
+  {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" }}
+  {{- $agents = promptMultichoiceOnce . "ai.agents" "Which AI agent(s) will you be using" $data.agent_runtimes }}
 
-{{- $shell := "powershell" -}}
-{{- if ne .chezmoi.os "windows" -}}
-  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") "bash" -}}
-{{- end -}}
+  {{- if gt (len $agents) 0 }}
+    {{- $plugins = promptMultichoiceOnce . "ai.plugins" "Which agent plugin(s) would you like to install" $data.plugins.available $data.plugins.default }}
+  {{- end }}
 
-{{- $ide := promptMultichoiceOnce . "ide" "What IDE are you using to develop" (list "intellij" "vscode" "zed") (list "vscode") -}}
+  {{- $_ := warnf "available tools per manager:\n  %s" ($bundle_summary | join "\n  ") }}
 
-{{- $ssh_generate := promptBoolOnce . "ssh.generate" "Would you like to generate an SSH key" -}}
-{{- $machine_name := "" -}}
-{{- if $ssh_generate -}}
-  {{- $machine_name = promptStringOnce . "machine_name" "What is this machine's name" .chezmoi.hostname -}}
-{{- end -}}
+  {{- $tools_management = promptMultichoiceOnce . "tools_management" "Which tool manager(s) would you like to use" $managers $data.default_managers }}
 
-{{- $email := "" -}}
-{{- $username := "" -}}
-{{- if or $dev $ssh_generate -}}
-  {{- $username = promptStringOnce . "user.username" "What is your comitter username" -}}
-  {{- $email = promptStringOnce . "user.email" "What is your committer email" -}}
-{{- end -}}
+  {{- $taken := list }}
+  {{- range $manager := $tools_management }}
+    {{- $bundle := index $data.bundles $manager }}
 
-{{- $agents := list -}}
-{{- $agents_available := list "claude" "codex" "copilot" -}}
+    {{- /* a tool an earlier manager already took is neither offered again nor preselected */ -}}
+    {{- $choices := list }}
+    {{- $preselected := list }}
+    {{- range $tool := $bundle.available }}
+      {{- if has $tool $taken }}{{- continue }}{{- end }}
+      {{- $choices = append $choices $tool }}
+      {{- if and (has $tool $bundle.default) (has $tool (index $data.profiles $profile).default_tools) }}
+        {{- $preselected = append $preselected $tool }}
+      {{- end }}
+    {{- end }}
 
-{{- $plugins := list -}}
-{{- $plugins_available := list "caveman" "ponytail" -}}
-{{- $plugins_default := list "caveman" "ponytail" -}}
+    {{- $_ := set $tools $manager (promptMultichoiceOnce $
+        (print "tools." $manager)
+        (print "Which tools would you like to install via " $manager)
+        $choices $preselected) }}
 
-{{- $tools_management := list -}}
-{{- $tools_management_available := list "mise" "brew" "node" "uv" -}}
-{{- $tools_management_default := list "mise" "node" "uv" -}}
-
-{{- $profile_extra_tools := list -}}
-{{- if eq $profile "home" -}}
-  {{- $profile_extra_tools = list "bun" "incus" "opentofu" -}}
-{{- else if eq $profile "soprasteria" -}}
-  {{- $profile_extra_tools = list "java" "k6" "k8s" "terraform" -}}
-{{- end -}}
-
-{{- $tools_common_default := list "destructive-command-guard" "git-tools" "go" "hugo" "rtk" "shell" "uv" -}}
-
-{{- $tools_brew_available := list "bun" "destructive-command-guard" "git-tools" "go" "hugo" "incus" "java" "just" "k6" "k8s" "kotlin" "opentofu" "rtk" "shell" "task" "terraform" "typescript" "uv" -}}
-{{- $tools_brew_default := list -}}
-
-{{- $tools_mise_available := list "bun" "codebase-memory-mcp" "codegraph" "context7" "destructive-command-guard" "git-tools" "go" "graphify" "hugo" "incus" "java" "just" "k6" "k8s" "kotlin" "mempalace" "opentofu" "rtk" "shell" "task" "terraform" "typescript" "uv" -}}
-{{- $tools_mise_default := list "context7" -}}
-
-{{- $tools_node_available := list "bun" "cavemem" "context7" "hugo" "pnpm" "shell" "task" "typescript" "yarn" -}}
-{{- $tools_node_default := list -}}
-
-{{- $tools_uv_available := list "graphify" "just" "mempalace" -}}
-{{- $tools_uv_default := list -}}
-
-# available agent runtimes: {{ $agents_available | join ", " }}
-# available agent plugins: {{ $plugins_available | join ", " }}
-# available tools_management: {{ $tools_management_available | join ", " }}
-# available tools per manager (listed in tools_management preference order, for easier upgrades):
-#   - mise: {{ $tools_mise_available | join ", " }}
-#   - brew: {{ $tools_brew_available | join ", " }}
-#   - node: {{ $tools_node_available | join ", " }}
-#   - uv: {{ $tools_uv_available | join ", " }}
-
-{{- $tools := dict "brew" (list) "mise" (list) "node" (list) "uv" (list) -}}
-{{- $git_ssh := false -}}
-{{- if $dev -}}
-  {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" -}}
-  {{- $agents = promptMultichoiceOnce . "ai.agents" "Which AI agent(s) will you be using" $agents_available -}}
-
-  {{- if gt (len $agents) 0 -}}
-    {{- $plugins = promptMultichoiceOnce . "ai.plugins" "Which agent plugin(s) would you like to install" $plugins_available $plugins_default -}}
-  {{- end -}}
-
-  {{- $_ := warnf "available tools per manager:\n  brew: %s\n  mise: %s\n  node: %s\n  uv: %s"
-      ($tools_brew_available | join ", ")
-      ($tools_mise_available | join ", ")
-      ($tools_node_available | join ", ")
-      ($tools_uv_available | join ", ") -}}
-
-  {{- $tools_management = promptMultichoiceOnce . "tools_management" "Which tool manager(s) would you like to use" $tools_management_available $tools_management_default -}}
-
-  {{- if has "mise" $tools_management -}}
-    {{- $tools_mise_default = concat $tools_mise_default $tools_common_default $profile_extra_tools -}}
-  {{- else if has "brew" $tools_management -}}
-    {{- $tools_brew_default = concat $tools_brew_default $tools_common_default $profile_extra_tools -}}
-  {{- end -}}
-
-  {{- if has "mise" $tools_management -}}
-    {{- $_ := set $tools "mise" (promptMultichoiceOnce . "tools.mise" "Which tools would you like to install via mise" $tools_mise_available $tools_mise_default) -}}
-
-    {{- $brew_left := list -}}
-    {{- range $tools_brew_available -}}
-      {{- if not (has . $tools.mise) -}}
-        {{- $brew_left = append $brew_left . -}}
-      {{- end -}}
-    {{- end -}}
-    {{- $tools_brew_available = $brew_left -}}
-
-    {{- $node_left := list -}}
-    {{- range $tools_node_available -}}
-      {{- if not (has . $tools.mise) -}}
-        {{- $node_left = append $node_left . -}}
-      {{- end -}}
-    {{- end -}}
-    {{- $tools_node_available = $node_left -}}
-
-    {{- $uv_left := list -}}
-    {{- range $tools_uv_available -}}
-      {{- if not (has . $tools.mise) -}}
-        {{- $uv_left = append $uv_left . -}}
-      {{- end -}}
-    {{- end -}}
-    {{- $tools_uv_available = $uv_left -}}
-  {{- end -}}
-
-  {{- if has "brew" $tools_management -}}
-    {{- $_ := set $tools "brew" (promptMultichoiceOnce . "tools.brew" "Which tools would you like to install via brew" $tools_brew_available $tools_brew_default) -}}
-
-    {{- $node_left := list -}}
-    {{- range $tools_node_available -}}
-      {{- if not (has . $tools.brew) -}}
-        {{- $node_left = append $node_left . -}}
-      {{- end -}}
-    {{- end -}}
-    {{- $tools_node_available = $node_left -}}
-  {{- end -}}
-
-  {{- if has "node" $tools_management -}}
-    {{- $_ := set $tools "node" (promptMultichoiceOnce . "tools.node" "Which tools would you like to install via node" $tools_node_available $tools_node_default) -}}
-  {{- end -}}
-
-  {{- if has "uv" $tools_management -}}
-    {{- $_ := set $tools "uv" (promptMultichoiceOnce . "tools.uv" "Which tools would you like to install via uv" $tools_uv_available $tools_uv_default) -}}
-  {{- end -}}
-{{- end -}}
+    {{- $taken = concat $taken (index $tools $manager) }}
+  {{- end }}
+{{- end }}
 
 umask: 0o22
 
 data:
   ai:
-    agents:{{ if eq (len $agents) 0 }} []{{ end }}
-{{- range $agents }}
-      - {{ . }}
-{{- end }}
-    plugins:{{ if eq (len $plugins) 0 }} []{{ end }}
-{{- range $plugins }}
-      - {{ . }}
-{{- end }}
-  machine_name: {{ $machine_name }}
+    agents:{{ $agents | toYaml | trim | nindent 6 }}
+    plugins:{{ $plugins | toYaml | trim | nindent 6 }}
   dev: {{ $dev }}
   gaming: {{ $gaming }}
   git:
     ssh: {{ $git_ssh }}
+  ide:{{ $ide | toYaml | trim | nindent 4 }}
+  machine_name: {{ $machine_name }}
+  profile: {{ $profile }}
+  shell: {{ $shell }}
   ssh:
     generate: {{ $ssh_generate }}
+  tools:
+{{- range $manager := $managers }}
+    {{ $manager }}:{{ index $tools $manager | toYaml | trim | nindent 6 }}
+{{- end }}
+  tools_management:{{ $tools_management | toYaml | trim | nindent 4 }}
   user:
     email: {{ $email }}
     username: {{ $username }}
-  ide:{{ if eq (len $ide) 0 }} []{{ end }}
-{{- range $ide }}
-    - {{ . }}
-{{- end }}
-  profile: {{ $profile }}
-  shell: {{ $shell }}
-  tools_management:{{ if eq (len $tools_management) 0 }} []{{ end }}
-{{- range $tools_management }}
-    - {{ . }}
-{{- end }}
-  tools:
-    brew:{{ if eq (len $tools.brew) 0 }} []{{ end }}
-{{- range $tools.brew }}
-      - {{ . }}
-{{- end }}
-    mise:{{ if eq (len $tools.mise) 0 }} []{{ end }}
-{{- range $tools.mise }}
-      - {{ . }}
-{{- end }}
-    node:{{ if eq (len $tools.node) 0 }} []{{ end }}
-{{- range $tools.node }}
-      - {{ . }}
-{{- end }}
-    uv:{{ if eq (len $tools.uv) 0 }} []{{ end }}
-{{- range $tools.uv }}
-      - {{ . }}
-{{- end }}

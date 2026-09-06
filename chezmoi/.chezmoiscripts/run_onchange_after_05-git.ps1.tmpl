@@ -4,15 +4,15 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
   winget install -e -i Git.Git
 }
 
-git config --global user.name {{ .user.username }}
-git config --global user.email {{ .user.email }}
+git config --global user.name '{{ .user.username }}'
+git config --global user.email '{{ .user.email }}'
 
 git config --global init.defaultbranch main
 git config --global push.autoSetupRemote true
 {{- if has "vscode" .ide }}
 git config --global core.editor 'code --wait'
 {{- else }}
-git config --global --unset core.editor
+git config --global --unset core.editor; $LASTEXITCODE = 0
 {{- end }}
 
 {{- if .git.ssh }}
@@ -24,7 +24,7 @@ git config --global tag.gpgsign true
 {{- else }}
 
 git config --global commit.gpgsign false
-git config --global --unset gpg.format
-git config --global --unset gpg.ssh.defaultKeyCommand
+git config --global --unset gpg.format; $LASTEXITCODE = 0
+git config --global --unset gpg.ssh.defaultKeyCommand; $LASTEXITCODE = 0
 git config --global tag.gpgsign false
 {{- end }}

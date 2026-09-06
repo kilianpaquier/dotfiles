@@ -2,10 +2,10 @@
 
 set -e
 
-TMPDIR=$(mktemp -d)
+tmpdir=$(mktemp -d)
+trap 'rm -rf "$tmpdir"' EXIT
 
-sudo apt update
-sudo apt -y full-upgrade
+# run_before_00-apt.sh already ran update and full-upgrade in this same apply
 
 sudo apt -y install curl libreoffice
 {{- if eq .profile "home" }}
@@ -18,8 +18,8 @@ sudo apt -y autoremove
 
 # Code
 if ! command -v code >/dev/null 2>&1; then
-  curl -fSL "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64" -o "$TMPDIR/code.deb"
-  sudo apt -y install "$TMPDIR/code.deb"
+  curl -fSL "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64" -o "$tmpdir/code.deb"
+  sudo apt -y install "$tmpdir/code.deb"
 fi
 {{- end }}
 
@@ -40,13 +40,12 @@ if ! command -v spotify >/dev/null 2>&1; then
 fi
 
 # Wayland Scroll Factor
-# renovate datasource=github-tags packageName=daniel-g-carrasco/wayland-scroll-factor depName=wayland-scroll-factor
+# renovate: datasource=github-tags packageName=daniel-g-carrasco/wayland-scroll-factor depName=wayland-scroll-factor
 wayland_version=0.3.5
 if ! command -v wsf >/dev/null 2>&1 || [ "$(wsf version)" != "wayland-scroll-factor $wayland_version" ]; then
   curl -fSL "https://github.com/daniel-g-carrasco/wayland-scroll-factor/releases/download/v${wayland_version}/wayland-scroll-factor_${wayland_version}-1_amd64.deb" \
-    -o "$TMPDIR/wayland-scroll.deb"
-  sudo apt -y install "$TMPDIR/wayland-scroll.deb"
-  unset wayland_version
+    -o "$tmpdir/wayland-scroll.deb"
+  sudo apt -y install "$tmpdir/wayland-scroll.deb"
 
   wsf set --scroll-vertical 0.10 --scroll-horizontal 0.10
 fi
@@ -60,8 +59,8 @@ fi
 
 # Discord
 if ! command -v discord >/dev/null 2>&1; then
-  curl -fSL https://discord.com/api/download?platform=linux -o "$TMPDIR/discord.deb"
-  sudo apt install "$TMPDIR/discord.deb"
+  curl -fSL https://discord.com/api/download?platform=linux -o "$tmpdir/discord.deb"
+  sudo apt -y install "$tmpdir/discord.deb"
 fi
 
 # NetBird

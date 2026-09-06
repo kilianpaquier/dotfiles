@@ -1,0 +1,70 @@
+agent_runtimes: [claude, codex, copilot]
+
+bundles:
+  mise:
+    default: [context7, destructive-command-guard, git-tools, go, hugo, rtk, shell, uv]
+    available:
+      - bun
+      - codebase-memory-mcp
+      - codegraph
+      - context7
+      - destructive-command-guard
+      - git-tools
+      - go
+      - graphify
+      - hugo
+      - incus
+      - java
+      - just
+      - k6
+      - k8s
+      - kotlin
+      - mempalace
+      - opentofu
+      - rtk
+      - shell
+      - task
+      - terraform
+      - typescript
+      - uv
+  brew:
+    default: [destructive-command-guard, git-tools, go, hugo, rtk, shell, uv]
+    available:
+      - bun
+      - destructive-command-guard
+      - git-tools
+      - go
+      - hugo
+      - incus
+      - java
+      - just
+      - k6
+      - k8s
+      - kotlin
+      - opentofu
+      - rtk
+      - shell
+      - task
+      - terraform
+      - typescript
+      - uv
+  node:
+    default: []
+    available: [bun, cavemem, context7, pnpm, task, typescript, yarn]
+  uv:
+    default: []
+    available: [graphify, just, mempalace]
+
+default_managers: [mise, node, uv]
+
+profiles:
+  home:
+    default_tools: [bun, incus, opentofu]
+    default_plugins: []
+  soprasteria:
+    default_tools: [java, k6, k8s, terraform]
+    default_plugins: []
+
+plugins:
+  default: [caveman, ponytail]
+  available: [caveman, ponytail]

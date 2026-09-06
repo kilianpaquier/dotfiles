@@ -9,23 +9,20 @@ if ! command -v apm >/dev/null 2>&1; then
 fi
 {{- else }}
 
-if command -v apm >/dev/null 2>&1; then
-  rm -f "$(command -v apm)"
-  rm -rf "$HOME/.apm"
-  rm -rf "$HOME/.cache/apm"
-  rm -rf "$HOME/.local/lib/apm"
-fi
+# force remove chezmoi-managed element (.chezmoiremove would skip it)
+rm -rf "$HOME/.apm"
 {{- end }}
 
 {{- if has "brew" .tools_management }}
 
+# install.sh aborts when stdin is not a terminal, hence the command substitution instead of a pipe
 if ! command -v brew >/dev/null 2>&1; then
-  curl -fSL https://raw.githubusercontent.com/Homebrew/install/main/install.sh | bash
+  NONINTERACTIVE=1 bash -c "$(curl -fSL https://raw.githubusercontent.com/Homebrew/install/main/install.sh)"
 fi
 {{- else }}
 
 if command -v brew >/dev/null 2>&1; then
-  curl -fSL https://raw.githubusercontent.com/Homebrew/install/main/uninstall.sh | bash
+  bash -c "$(curl -fSL https://raw.githubusercontent.com/Homebrew/install/main/uninstall.sh)" -- --force
 fi
 {{- end }}
 
@@ -34,15 +31,6 @@ fi
 if ! command -v claude >/dev/null 2>&1; then
   curl -fSL https://claude.ai/install.sh | bash
 fi
-{{- else }}
-
-if command -v claude >/dev/null 2>&1; then
-  rm -f "$(command -v claude)"
-  rm -rf "$HOME/.cache/claude-cli-nodejs"
-  rm -rf "$HOME/.cache/claude"
-  rm -rf "$HOME/.claude"
-  rm -rf "$HOME/.local/share/claude"
-fi
 {{- end }}
 
 {{- if has "codex" .ai.agents }}
@@ -50,26 +38,12 @@ fi
 if ! command -v codex >/dev/null 2>&1; then
   curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
 fi
-{{- else }}
-
-if command -v codex >/dev/null 2>&1; then
-  rm -f "$(command -v codex)"
-  rm -rf "$HOME/.cache/codex"
-  rm -rf "$HOME/.codex"
-fi
 {{- end }}
 
 {{- if has "copilot" .ai.agents }}
 
 if ! command -v copilot >/dev/null 2>&1; then
   curl -fSL https://gh.io/copilot-install | PREFIX=$HOME/.local bash
-fi
-{{- else }}
-
-if command -v copilot >/dev/null 2>&1; then
-  rm -f "$(command -v copilot)"
-  rm -rf "$HOME/.cache/copilot"
-  rm -rf "$HOME/.copilot"
 fi
 {{- end }}
 

@@ -4,8 +4,11 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
   winget install -e -i Git.Git
 }
 
+{{- if .user.username }}
+
 git config --global user.name '{{ .user.username }}'
 git config --global user.email '{{ .user.email }}'
+{{- end }}
 
 git config --global init.defaultbranch main
 git config --global push.autoSetupRemote true

@@ -4,6 +4,8 @@ set -e
 
 tmpdir=$(mktemp -d)
 trap 'rm -rf "$tmpdir"' EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 # run_before_00-apt.sh already ran update and full-upgrade in this same apply
 

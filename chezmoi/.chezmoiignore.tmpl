@@ -10,7 +10,7 @@
 .chezmoiscripts/*-tools.sh
 {{- end }}
 
-{{- range list "brew" "mise" "node" "uv" }}
+{{- range .managers }}
 {{- if not (has . $.tools_management) }}
 .chezmoiscripts/*-{{ . }}.sh
 {{- end }}
@@ -70,7 +70,6 @@
 .env.zsh
 .zlogout
 .zprofile
-.zshenv
 .zshrc
 {{- end }}
 
@@ -79,6 +78,3 @@
 
 # symlinks
 symlinks
-
-# generated
-.zshenv

@@ -2,6 +2,8 @@
 
 set -e
 
+{{- $uv := or (has "uv" .tools.mise) (has "uv" .tools.brew) }}
+
 mise use -g age@latest cosign@latest node@24 sops@latest usage@latest
 
 mise {{ has "bun" .tools.mise | ternary "use" "unuse" }} -g bun
@@ -35,14 +37,11 @@ mise {{ has "shell" .tools.mise | ternary "use" "unuse" }} -g bash-language-serv
 mise {{ has "context7" .tools.mise | ternary "use" "unuse" }} -g context7 context7-mcp
 mise {{ has "typescript" .tools.mise | ternary "use" "unuse" }} -g 'npm:typescript' 'npm:typescript-language-server'
 
-if command -v uv >/dev/null 2>&1 || command -v pipx >/dev/null 2>&1; then
-  mise {{ has "graphify" .tools.mise | ternary "use" "unuse" }} -g 'pipx:graphifyy'
-  mise {{ has "mempalace" .tools.mise | ternary "use" "unuse" }} -g mempalace
-{{- if or (has "graphify" .tools.mise) (has "mempalace" .tools.mise) }}
-else
-  echo "'uv' or 'pipx' is required for 'graphify', 'mempalace' entries in mise, install 'uv' via 'brew' or 'mise' tools_management" >&2
+mise {{ and (has "graphify" .tools.mise) $uv | ternary "use" "unuse" }} -g 'pipx:graphifyy'
+mise {{ and (has "mempalace" .tools.mise) $uv | ternary "use" "unuse" }} -g mempalace
+{{- if and (not $uv) (or (has "graphify" .tools.mise) (has "mempalace" .tools.mise)) }}
+echo "'uv' is required for 'graphify', 'mempalace' entries in mise, add 'uv' to the 'brew' or 'mise' tools" >&2
 {{- end }}
-fi
 
 mise upgrade -y
 mise prune -y

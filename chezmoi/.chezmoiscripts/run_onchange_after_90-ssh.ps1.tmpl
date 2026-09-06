@@ -8,7 +8,9 @@ if (Test-Path $key) {
   cat "$key.pub"
 }
 
-New-Item -ItemType File -Force -Path $knownHosts | Out-Null
+if (-not (Test-Path $knownHosts)) {
+  New-Item -ItemType File -Path $knownHosts | Out-Null
+}
 $scanned = & ssh-keyscan -T 10 -t ed25519,rsa github.com gitlab.com 2>$null | Where-Object { $_ -and ($_ -notmatch '^#') }
 $existing = Get-Content $knownHosts
 foreach ($line in $scanned) {

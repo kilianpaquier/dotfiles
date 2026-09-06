@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 {{- $dirs := list
     (joinPath .chezmoi.homeDir ".local" "share" "chezmoi")
     (joinPath .chezmoi.homeDir "workspaces") }}

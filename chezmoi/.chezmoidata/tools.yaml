@@ -1,5 +1,7 @@
 agent_runtimes: [claude, codex, copilot]
 
+managers: [mise, brew, node, uv]
+
 bundles:
   mise:
     default: [context7, destructive-command-guard, git-tools, go, hugo, rtk, shell, uv]
@@ -60,10 +62,8 @@ default_managers: [mise, node, uv]
 profiles:
   home:
     default_tools: [bun, incus, opentofu]
-    default_plugins: []
   soprasteria:
     default_tools: [java, k6, k8s, terraform]
-    default_plugins: []
 
 plugins:
   default: [caveman, ponytail]

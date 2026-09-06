@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 set -- "$CHEZMOI_SOURCE_DIR/dot_vscode-server/data/Machine/settings.base.partial.json"
 {{- if and (not (has "copilot" .ai.agents)) (has "vscode" .ide) }}
 set -- "$@" "$CHEZMOI_SOURCE_DIR/dot_vscode-server/data/Machine/settings.no-copilot.partial.json"

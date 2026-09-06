@@ -32,7 +32,7 @@
   {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
 {{- end }}
 
-{{- $managers := keys $data.bundles | sortAlpha }}
+{{- $managers := $data.managers }}
 
 {{- $tools := dict }}
 {{- $bundle_summary := list }}
@@ -75,7 +75,7 @@
     {{- range $tool := $bundle.available }}
       {{- if has $tool $taken }}{{- continue }}{{- end }}
       {{- $choices = append $choices $tool }}
-      {{- if and (has $tool $bundle.default) (has $tool (index $data.profiles $profile).default_tools) }}
+      {{- if or (has $tool $bundle.default) (has $tool (index $data.profiles $profile).default_tools) }}
         {{- $preselected = append $preselected $tool }}
       {{- end }}
     {{- end }}

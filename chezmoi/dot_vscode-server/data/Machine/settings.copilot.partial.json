@@ -154,6 +154,7 @@
         "find": true,
         "gh": true,
         "glab": true,
+        "head": true,
         "just": true,
         "kickr": true,
         "ls": true,

@@ -8,6 +8,7 @@ mise use -g age@latest cosign@latest node@24 sops@latest usage@latest
 
 mise {{ has "bun" .tools.mise | ternary "use" "unuse" }} -g bun
 mise {{ has "git-tools" .tools.mise | ternary "use" "unuse" }} -g gh glab pre-commit
+mise {{ has "gitlab-ci-local" .tools.mise | ternary "use" "unuse" }} -g gitlab-ci-local
 mise {{ has "go" .tools.mise | ternary "use" "unuse" }} -g go golangci-lint
 mise {{ has "hugo" .tools.mise | ternary "use" "unuse" }} -g hugo-extended dart-sass
 mise {{ has "incus" .tools.mise | ternary "use" "unuse" }} -g incus

@@ -43,6 +43,15 @@ npm install -g ctx7@$context7_version @upstash/context7-mcp@$context7mcp_version
 npm uninstall -g ctx7 @upstash/context7-mcp
 {{- end }}
 
+{{- if has "gitlab-ci-local" .tools.node }}
+
+# renovate: datasource=npm packageName=gitlab-ci-local
+gitlabcilocal_version=4.75.1
+npm install -g gitlab-ci-local@$gitlabcilocal_version
+{{- else }}
+npm uninstall -g gitlab-ci-local
+{{- end }}
+
 {{- if has "task" .tools.node }}
 
 # renovate: datasource=npm packageName=@go-task/cli

@@ -12,6 +12,7 @@ bundles:
       - context7
       - destructive-command-guard
       - git-tools
+      - gitlab-ci-local
       - go
       - graphify
       - hugo
@@ -35,6 +36,7 @@ bundles:
       - bun
       - destructive-command-guard
       - git-tools
+      - gitlab-ci-local
       - go
       - hugo
       - incus
@@ -52,7 +54,7 @@ bundles:
       - uv
   node:
     default: []
-    available: [bun, cavemem, context7, pnpm, task, typescript, yarn]
+    available: [bun, cavemem, context7, gitlab-ci-local, pnpm, task, typescript, yarn]
   uv:
     default: []
     available: [graphify, just, mempalace]

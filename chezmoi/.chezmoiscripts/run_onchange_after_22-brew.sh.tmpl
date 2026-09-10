@@ -6,6 +6,7 @@ brew {{ not (has "mise" .tools_management) | ternary "install" "uninstall" }} ag
 
 brew {{ has "bun" .tools.brew | ternary "install" "uninstall" }} bun || true
 brew {{ has "git-tools" .tools.brew | ternary "install" "uninstall" }} gh glab pre-commit || true
+brew {{ has "gitlab-ci-local" .tools.brew | ternary "install" "uninstall" }} gitlab-ci-local || true
 brew {{ has "go" .tools.brew | ternary "install" "uninstall" }} go golangci-lint || true
 brew {{ has "hugo" .tools.brew | ternary "install" "uninstall" }} hugo dart-sass || true
 brew {{ has "incus" .tools.brew | ternary "install" "uninstall" }} incus || true

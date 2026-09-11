@@ -1,12 +1,13 @@
 agent_runtimes: [claude, codex, copilot]
 
-managers: [mise, brew, node, uv]
+managers: [mise, brew]
 
 bundles:
   mise:
     default: [context7, destructive-command-guard, git-tools, go, hugo, rtk, shell, uv]
     available:
       - bun
+      - cavemem
       - codebase-memory-mcp
       - codegraph
       - context7
@@ -24,12 +25,14 @@ bundles:
       - kotlin
       - mempalace
       - opentofu
+      - pnpm
       - rtk
       - shell
       - task
       - terraform
       - typescript
       - uv
+      - yarn
   brew:
     default: [destructive-command-guard, git-tools, go, hugo, rtk, shell, uv]
     available:
@@ -52,14 +55,8 @@ bundles:
       - terraform
       - typescript
       - uv
-  node:
-    default: []
-    available: [bun, cavemem, context7, gitlab-ci-local, pnpm, task, typescript, yarn]
-  uv:
-    default: []
-    available: [graphify, just, mempalace]
 
-default_managers: [mise, node, uv]
+default_managers: [mise]
 
 profiles:
   home:

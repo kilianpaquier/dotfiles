@@ -1,0 +1,95 @@
+{{- /* absence from this file is removal (run_after_22-brew.sh runs brew bundle cleanup) */ -}}
+{{- if not (has "mise" .tools_management) }}
+brew "age"
+brew "node@24"
+brew "sops"
+{{- end }}
+
+{{- if has "bun" .tools.brew }}
+brew "bun"
+{{- end }}
+
+{{- if has "destructive-command-guard" .tools.brew }}
+tap "dicklesworthstone/tap"
+brew "dicklesworthstone/tap/dcg"
+{{- end }}
+
+{{- if has "git-tools" .tools.brew }}
+brew "gh"
+brew "glab"
+brew "pre-commit"
+{{- end }}
+
+{{- if has "gitlab-ci-local" .tools.brew }}
+brew "gitlab-ci-local"
+{{- end }}
+
+{{- if has "go" .tools.brew }}
+brew "go"
+brew "golangci-lint"
+{{- end }}
+
+{{- if has "hugo" .tools.brew }}
+brew "hugo"
+brew "dart-sass"
+{{- end }}
+
+{{- if has "incus" .tools.brew }}
+brew "incus"
+{{- end }}
+
+{{- if has "java" .tools.brew }}
+brew "openjdk"
+brew "jdtls"
+{{- end }}
+
+{{- if has "just" .tools.brew }}
+brew "just"
+{{- end }}
+
+{{- if has "k6" .tools.brew }}
+brew "k6"
+{{- end }}
+
+{{- if has "k8s" .tools.brew }}
+brew "chart-testing"
+brew "helm"
+brew "krew"
+brew "kubernetes-cli"
+brew "kustomize"
+{{- end }}
+
+{{- if has "kotlin" .tools.brew }}
+brew "kotlin"
+brew "kotlin-language-server"
+{{- end }}
+
+{{- if has "opentofu" .tools.brew }}
+brew "opentofu"
+brew "tofu-ls"
+{{- end }}
+
+{{- if has "rtk" .tools.brew }}
+brew "rtk"
+{{- end }}
+
+{{- if has "shell" .tools.brew }}
+brew "shellcheck"
+brew "bash-language-server"
+{{- end }}
+
+{{- if has "task" .tools.brew }}
+brew "go-task"
+{{- end }}
+
+{{- if has "terraform" .tools.brew }}
+brew "terraform-ls"
+{{- end }}
+
+{{- if has "typescript" .tools.brew }}
+brew "typescript-language-server"
+{{- end }}
+
+{{- if has "uv" .tools.brew }}
+brew "uv"
+{{- end }}

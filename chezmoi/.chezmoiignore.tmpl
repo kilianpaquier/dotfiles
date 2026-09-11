@@ -20,9 +20,17 @@
 .config/mise
 {{- end }}
 
+{{- if not (has "brew" .tools_management) }}
+.Brewfile
+{{- end }}
+
 {{- if not .ssh.generate }}
 .chezmoiscripts/*-ssh.sh
 .chezmoiscripts/*-ssh.ps1
+{{- end }}
+
+{{- if or (not .ssh.generate) (eq .chezmoi.os "windows") }}
+.ssh
 {{- end }}
 
 {{- if .dev }}
@@ -47,6 +55,10 @@
 
 {{- if not (has "claude" .ai.agents) }}
 .claude
+{{- end }}
+
+{{- if not (has "codex" .ai.agents) }}
+.codex
 {{- end }}
 
 {{- if not (has "copilot" .ai.agents) }}

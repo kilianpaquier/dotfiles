@@ -16,7 +16,7 @@ Purpose: share computer setup via automation + shared config.
 
 - Trusted directories between the following files must be identical, always update them together:
   - `dot_claude/settings.partial.json`: `permissions.additionalDirectories`
-  - `dot_copilot/modify_config.json.tmpl`: `trustedFolders`
+  - `dot_copilot/modify_private_config.json.tmpl`: `trustedFolders`
 - URLs permissions between the following files must be identical, always update them together:
   - `dot_claude/settings.partial.json`: `WebFetch(domain:...)`,
   - `dot_copilot/settings.partial.json`: `allowedUrls`

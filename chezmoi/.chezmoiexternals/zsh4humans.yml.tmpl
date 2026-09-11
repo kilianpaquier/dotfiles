@@ -1,0 +1,6 @@
+{{- if eq .shell "zsh" }}
+.zshenv:
+  type: file
+  url: "https://raw.githubusercontent.com/romkatv/zsh4humans/v5/.zshenv"
+  refreshPeriod: 168h
+{{- end }}

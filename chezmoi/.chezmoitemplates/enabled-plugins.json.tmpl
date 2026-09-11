@@ -1,0 +1,4 @@
+{{- /* the enabled subset of plugins.json.tmpl, same .lsps switch */ -}}
+{{- $enabled := dict }}
+{{- range $id, $on := includeTemplate "plugins.json.tmpl" . | fromJson }}{{ if $on }}{{ $_ := set $enabled $id true }}{{ end }}{{ end }}
+{{- $enabled | toJson }}

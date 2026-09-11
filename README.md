@@ -28,44 +28,39 @@ chezmoi init --prompt
 
 ## Prompts
 
-| Key                | Type        | OS          | Default                 | When                          | Description                                                                         |
-| ------------------ | ----------- | ----------- | ----------------------- | ----------------------------- | ----------------------------------------------------------------------------------- |
-| `dev`              | bool        | non-windows | `false`                 |                               | Development machine (enables git, mise, agents, IDE)                                |
-| `profile`          | choice      | all         |                         |                               | Work profile: `home` or `soprasteria`                                               |
-| `gaming`           | bool        | windows     | `false`                 | `profile` == `home`           | Gaming machine (installs EA, Epic, Steam, Ubisoft...)                               |
-| `shell`            | choice      | non-windows | `bash`                  |                               | Shell to configure: `bash` or `zsh`                                                 |
-| `ide`              | multichoice | all         | `vscode`                |                               | IDEs in use: `intellij`, `vscode`, `zed`                                            |
-| `ssh.generate`     | bool        | all         | `false`                 |                               | Generate an SSH key (`id_ed25519`)                                                  |
-| `machine_name`     | string      | all         | hostname                | `ssh.generate`                | Computer name (used in the SSH key comment)                                         |
-| `user.email`       | string      | all         |                         | `dev` or `ssh.generate`       | Committer email address                                                             |
-| `user.username`    | string      | all         |                         | `dev` or `ssh.generate`       | Username                                                                            |
-| `git.ssh`          | bool        | all         | `false`                 | `dev`                         | Sign commits with SSH key                                                           |
-| `ai.agents`        | multichoice | all         |                         | `dev`                         | AI agents to configure: `claude`, `codex`, `copilot`                                |
-| `ai.plugins`       | multichoice | all         | `caveman`, `ponytail`   | `agents` non-empty            | Agent plugins to install: `caveman`, `ponytail`                                     |
-| `tools_management` | multichoice | all         | `mise`, `node`, `uv`    | `dev`                         | Tool manager(s) to use: `brew`, `mise`, `node`, `uv`. See [Tooling](#tooling) below |
-| `tools.brew`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `brew` | Tools to install with brew. See [Tooling](#tooling) below                           |
-| `tools.mise`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `mise` | Tools to install with mise. See [Tooling](#tooling) below                           |
-| `tools.node`       | multichoice | all         | (empty)                 | `tools_management` has `node` | Tools to install with node (npm). See [Tooling](#tooling) below                     |
-| `tools.uv`         | multichoice | all         | (empty)                 | `tools_management` has `uv`   | Tools to install with uv (pip). See [Tooling](#tooling) below                       |
+| Key                | Type        | OS          | Default                 | When                          | Description                                                           |
+| ------------------ | ----------- | ----------- | ----------------------- | ----------------------------- | --------------------------------------------------------------------- |
+| `dev`              | bool        | non-windows | `false`                 |                               | Development machine (enables git, mise, agents, IDE)                  |
+| `profile`          | choice      | all         |                         |                               | Work profile: `home` or `soprasteria`                                 |
+| `gaming`           | bool        | windows     | `false`                 | `profile` == `home`           | Gaming machine (installs EA, Epic, Steam, Ubisoft...)                 |
+| `shell`            | choice      | non-windows | `bash`                  |                               | Shell to configure: `bash` or `zsh`                                   |
+| `ide`              | multichoice | all         | `vscode`                |                               | IDEs in use: `intellij`, `vscode`, `zed`                              |
+| `ssh.generate`     | bool        | all         | `false`                 |                               | Generate an SSH key (`id_ed25519`)                                    |
+| `machine_name`     | string      | all         | hostname                | `ssh.generate`                | Computer name (used in the SSH key comment)                           |
+| `user.email`       | string      | all         |                         | `dev` or `ssh.generate`       | Committer email address                                               |
+| `user.username`    | string      | all         |                         | `dev` or `ssh.generate`       | Username                                                              |
+| `git.ssh`          | bool        | all         | `false`                 | `dev`                         | Sign commits with SSH key                                             |
+| `ai.agents`        | multichoice | all         |                         | `dev`                         | AI agents to configure: `claude`, `codex`, `copilot`                  |
+| `ai.plugins`       | multichoice | all         | `caveman`, `ponytail`   | `agents` non-empty            | Agent plugins to install: `caveman`, `ponytail`                       |
+| `tools_management` | multichoice | all         | `mise`                  | `dev`                         | Tool manager(s) to use: `brew`, `mise`. See [Tooling](#tooling) below |
+| `tools.brew`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `brew` | Tools to install with brew. See [Tooling](#tooling) below             |
+| `tools.mise`       | multichoice | all         | see [Tooling](#tooling) | `tools_management` has `mise` | Tools to install with mise. See [Tooling](#tooling) below             |
 
 ## Tooling
 
-Dev tools are installed through one or more managers, selected via `tools_management`: `brew`, `mise`, `node`, `uv`.
+Dev tools are installed through one or more managers, selected via `tools_management`: `brew`, `mise`.
+Each manager is driven by a chezmoi-managed manifest (`~/.config/mise/config.toml`, `~/.Brewfile`), reconciled on every `chezmoi apply`.
 
 - `apm` (AI agent tooling) is automatic whenever `agents` is non-empty, no manager choice needed.
-- `node` as a manager needs `brew` or `mise` to actually provide the `node` binary, so pick at least one of those alongside it.
-- `uv` as a manager needs `brew` or `mise` to actually provide the `uv` binary, so pick at least one of those alongside it.
 
 ### Cross-manager exclusivity
 
-Managers are prompted in order: `mise`, then `brew`, then `node`, then `uv`.
+Managers are prompted in order: `mise`, then `brew`.
 Once a tool is picked under an earlier manager, it's removed from the choices offered to the later ones, so the same tool never installs twice.
 
 ### Available tools per manager
 
-| Manager | Available tools                                                                                                                                                                                                                                             |
-| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| brew    | `bun`, `destructive-command-guard`, `git-tools`, `gitlab-ci-local`, `go`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv`                                                                          |
-| mise    | `bun`, `codebase-memory-mcp`, `codegraph`, `context7`, `destructive-command-guard`, `git-tools`, `gitlab-ci-local`, `go`, `graphify`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `mempalace`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv` |
-| node    | `bun`, `cavemem`, `context7`, `gitlab-ci-local`, `pnpm`, `task`, `typescript`, `yarn`                                                                                                                                                                                          |
-| uv      | `graphify`, `just`, `mempalace`                                                                                                                                                                                                                             |
+| Manager | Available tools                                                                                                                                                                                                                                                                                           |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| brew    | `bun`, `destructive-command-guard`, `git-tools`, `gitlab-ci-local`, `go`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `opentofu`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv`                                                                                                     |
+| mise    | `bun`, `cavemem`, `codebase-memory-mcp`, `codegraph`, `context7`, `destructive-command-guard`, `git-tools`, `gitlab-ci-local`, `go`, `graphify`, `hugo`, `incus`, `java`, `just`, `k6`, `k8s`, `kotlin`, `mempalace`, `opentofu`, `pnpm`, `rtk`, `shell`, `task`, `terraform`, `typescript`, `uv`, `yarn` |

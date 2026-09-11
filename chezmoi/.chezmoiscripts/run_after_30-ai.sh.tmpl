@@ -1,0 +1,53 @@
+#!/bin/sh
+
+set -e
+
+if ! command -v apm >/dev/null 2>&1; then
+  curl -sSL https://aka.ms/apm-unix | APM_INSTALL_DIR=$HOME/.local/bin sh
+fi
+apm self-update
+
+{{- if has "claude" .ai.agents }}
+
+if ! command -v claude >/dev/null 2>&1; then
+  curl -fSL https://claude.ai/install.sh | bash
+fi
+claude update
+claude plugin marketplace update || true
+
+installed=" $(claude plugin list --json | jq -r '.[].id' | tr '\n' ' ')"
+for plugin in $(jq -r '.enabledPlugins | to_entries[] | select(.value) | .key' "$HOME/.claude/settings.json"); do
+  case "$installed" in *" $plugin "*) continue ;; esac
+  claude plugin install "$plugin" || true
+done
+claude plugin list --json | jq -r '.[].id' | xargs -r -n1 claude plugin update -y
+{{- end }}
+
+{{- if has "codex" .ai.agents }}
+
+curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
+# marketplace refresh installs the plugins declared in config.toml
+codex plugin marketplace upgrade
+{{- end }}
+
+{{- if has "copilot" .ai.agents }}
+
+if ! command -v copilot >/dev/null 2>&1; then
+  curl -fSL https://gh.io/copilot-install | PREFIX=$HOME/.local bash
+fi
+copilot update
+# copilot installs the plugins declared in settings.json on its own
+copilot plugin marketplace update
+copilot plugin update --all
+{{- end }}
+
+{{- if or (has "rtk" .tools.mise) (has "rtk" .tools.brew) }}
+
+if command -v rtk >/dev/null 2>&1; then
+  rtk init -g {{ has "copilot" .ai.agents | ternary "" "--uninstall" }} --copilot --auto-patch
+  rtk init -g {{ has "claude" .ai.agents | ternary "" "--uninstall" }} --auto-patch
+  rtk init -g {{ has "codex" .ai.agents | ternary "" "--uninstall" }} --codex
+fi
+{{- end }}
+
+apm update -g -y

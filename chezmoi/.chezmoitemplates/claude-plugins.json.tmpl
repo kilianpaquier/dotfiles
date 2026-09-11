@@ -1,0 +1,35 @@
+{
+    "enabledPlugins": {{ includeTemplate "enabled-plugins.json.tmpl" (merge (dict "lsps" true) .) }},
+    "extraKnownMarketplaces": {
+        "claude-code-lsps": {
+            "source": {
+                "repo": "piebald-ai/claude-code-lsps",
+                "source": "github"
+            }
+        },
+        "claude-plugins-official": {
+            "source": {
+                "repo": "anthropics/claude-plugins-official",
+                "source": "github"
+            }
+        },
+        "mempalace": {
+            "source": {
+                "repo": "mempalace/mempalace",
+                "source": "github"
+            }
+        },
+        "one-for-all": {
+            "source": {
+                "repo": "kilianpaquier/ai-integration",
+                "source": "github"
+            }
+        },
+        "ponytail": {
+            "source": {
+                "repo": "DietrichGebert/ponytail",
+                "source": "github"
+            }
+        }
+    }
+}

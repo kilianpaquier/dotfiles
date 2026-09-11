@@ -1,20 +1,7 @@
 $key = "$env:USERPROFILE\.ssh\id_ed25519"
-$knownHosts = "$env:USERPROFILE\.ssh\known_hosts"
-
 if (Test-Path $key) {
   echo "SSH key already exists, not generating..."
 } else {
   ssh-keygen -t ed25519 -C "{{ .user.username }}@{{ .machine_name }}" -f $key
   cat "$key.pub"
-}
-
-if (-not (Test-Path $knownHosts)) {
-  New-Item -ItemType File -Path $knownHosts | Out-Null
-}
-$scanned = & ssh-keyscan -T 10 -t ed25519,rsa github.com gitlab.com 2>$null | Where-Object { $_ -and ($_ -notmatch '^#') }
-$existing = Get-Content $knownHosts
-foreach ($line in $scanned) {
-  if ($existing -notcontains $line) {
-    Add-Content -Path $knownHosts -Value $line
-  }
 }

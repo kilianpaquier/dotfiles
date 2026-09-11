@@ -3,17 +3,9 @@
 set -e
 
 key="$HOME/.ssh/id_ed25519"
-known_hosts="$HOME/.ssh/known_hosts"
-
 if [ -f "$key" ]; then
   echo "SSH key already exists, not generating..."
 else
   ssh-keygen -t ed25519 -C "{{ .user.username }}@{{ .machine_name }}" -f "$key"
   cat "$key.pub"
 fi
-
-[ -f "$known_hosts" ] || touch "$known_hosts"
-
-ssh-keyscan -T 10 -t ed25519,rsa github.com gitlab.com 2>/dev/null | grep -v '^#' | while IFS= read -r line; do
-  grep -qxF "$line" "$known_hosts" || echo "$line" >> "$known_hosts"
-done

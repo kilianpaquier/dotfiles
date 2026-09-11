@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# use GitHub keys instead of SSH checks to ensure it's verified by default (SSL/TLS retrieval).
+github_keys() {
+  curl -fsSL https://api.github.com/meta | jq -r '.ssh_keys[] | "github.com " + .'
+}
+
+# verify keys fingerprint with GitLab registered ones https://docs.gitlab.com/user/gitlab_com/#ssh-host-keys-fingerprints.
+gitlab_keys() {
+  # the "# gitlab.com:22 banner" lines go to stdout and are not keys
+  ssh-keyscan -t ed25519,ecdsa,rsa gitlab.com 2>/dev/null | grep -v '^#' | while IFS= read -r line; do
+    fingerprint=$(printf '%s\n' "$line" | ssh-keygen -lf - -E sha256 | awk '{print $2}')
+    case "$fingerprint" in
+    SHA256:eUXGGm1YGsMAS7vkcx6JOJdOGHPem5gQp4taiCfCLB8) echo "$line" ;;
+    SHA256:HbW3g8zUjNSksFbqTiUWPWg2Bq1x8xdGUrliXFzSnUw) echo "$line" ;;
+    SHA256:ROQFvPThGrW4RuWLoL9tq9I9zJ42fK4XywyRtbOz/EQ) echo "$line" ;;
+    esac
+  done
+}
+
+{ awk 1; github_keys; gitlab_keys; } | sort -u

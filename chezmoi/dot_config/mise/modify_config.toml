@@ -42,4 +42,4 @@
 
 {{- $_ := mergeOverwrite $tools (dict "age" "latest" "cosign" "latest" "node" "24" "sops" "latest" "usage" "latest") }}
 {{- $_ := set $config "tools" $tools }}
-{{- regexReplaceAll "(?m)^ +" (toToml $config) "" }}
+{{- regexReplaceAll "(?m)^ +" (toToml $config) "" -}}

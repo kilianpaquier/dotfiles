@@ -10,10 +10,6 @@ if command -v rtk >/dev/null 2>&1; then
 fi
 {{- end }}
 
-{{- if has "codebase-memory-mcp" .tools.mise }}
-codebase-memory-mcp config set auto_index true
-{{- end }}
-
 {{- if has "claude" .ai.agents }}
 
 claude plugin marketplace update

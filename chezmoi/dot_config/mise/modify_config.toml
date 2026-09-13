@@ -19,7 +19,7 @@
     "k8s" (dict "helm" "latest" "helm-ct" "latest" "krew" "latest" "kubectl" "latest" "kustomize" "latest")
     "kotlin" (dict "kotlin" "latest" "kotlin-lsp" "latest")
     "mempalace" (dict "mempalace" "latest")
-    "opentofu" (dict "opentofu" "latest" "tflint" "latest" "tofu-ls" "latest")
+    "opentofu" (dict "opentofu" "latest" "tflint" "latest" "tofu-ls" "latest" "tflint" "latest")
     "pnpm" (dict "pnpm" "latest")
     "rtk" (dict "rtk" "latest")
     "shell" (dict "bash-language-server" "latest" "shellcheck" "latest")

@@ -65,7 +65,9 @@ brew "kotlin-language-server"
 {{- end }}
 
 {{- if has "opentofu" .tools.brew }}
+tap "terraform-linters/tap"
 brew "opentofu"
+brew "terraform-linters/tap/tflint"
 brew "tofu-ls"
 {{- end }}
 
@@ -83,10 +85,15 @@ brew "go-task"
 {{- end }}
 
 {{- if has "terraform" .tools.brew }}
+tap "hashicorp/tap"
+tap "terraform-linters/tap"
+brew "hashicorp/tap/terraform"
 brew "terraform-ls"
+brew "terraform-linters/tap/tflint"
 {{- end }}
 
 {{- if has "typescript" .tools.brew }}
+brew "typescript"
 brew "typescript-language-server"
 {{- end }}
 

@@ -36,6 +36,7 @@ z4h init || return
 plugins=(
   kilianpaquier/zsh-plugins/disk-cleanup
   kilianpaquier/zsh-plugins/docker-rootless
+  kilianpaquier/zsh-plugins/gitlab-ci-local
   kilianpaquier/zsh-plugins/highlight-styles
   kilianpaquier/zsh-plugins/just-completion
   kilianpaquier/zsh-plugins/mise-completion

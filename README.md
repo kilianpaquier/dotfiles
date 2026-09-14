@@ -13,11 +13,11 @@
 
 ```sh
 umask 022
-sh -c "$(curl -sSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch feat/chezmoi --apply https://gitlab.com/kilianpaquier/dotfiles.git
+sh -c "$(curl -sSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main --apply https://gitlab.com/kilianpaquier/dotfiles.git
 ```
 
 ```ps1
-iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '~/.local/bin' -- init --branch 'feat/chezmoi' --apply 'https://gitlab.com/kilianpaquier/dotfiles.git'"
+iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '~/.local/bin' -- init --branch 'main' --apply 'https://gitlab.com/kilianpaquier/dotfiles.git'"
 ```
 
 In case you'd want to change your initial responses to prompts:

@@ -17,11 +17,6 @@
 # umask 066 # bofh-like -rw-------
 umask 022
 
-# if running bash
-# include .bashrc if it exists
-# shellcheck disable=SC1091
-# [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
-
 # set PATH so it includes user's private bin if it exists
 [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
 
@@ -39,6 +34,8 @@ umask 022
 
 # set PATH so it includes krew if it exists
 [ -d "$HOME/.krew/bin" ] && PATH="$HOME/.krew/bin:$PATH"
+
+unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
 
 # source mise env and aliases
 command -v mise >/dev/null 2>&1 && eval "$(mise env | grep -v 'PATH=')"
@@ -58,8 +55,6 @@ if command -v go >/dev/null 2>&1; then
   # shellcheck disable=SC2034
   export GOLANGCI_LINT_CACHE="$HOME/.cache/golangci-lint"
 fi
-
-unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
 
 # shellcheck disable=SC2034
 PROFILE_SOURCED=1

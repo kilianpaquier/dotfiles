@@ -19,5 +19,6 @@ alias lla='ls -lart'
 alias l='ls -CF'
 
 if command -v docker >/dev/null 2>&1; then alias dc="docker compose"; fi
+if command -v gitlab-ci-local >/dev/null 2>&1; then alias gcl=gitlab-ci-local; fi
 if command -v kubectl >/dev/null 2>&1; then alias k=kubectl; fi
 if command -v terraform >/dev/null 2>&1; then alias tf=terraform; fi

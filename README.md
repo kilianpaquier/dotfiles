@@ -28,22 +28,22 @@ chezmoi init --prompt
 
 ## Prompts
 
-| Description                                                                           | Type        | OS          | Default                                              | When                                    | Key                |
-| ------------------------------------------------------------------------------------- | ----------- | ----------- | ---------------------------------------------------- | --------------------------------------- | ------------------ |
-| Development machine (enables git, agents, tool managers, skips desktop apps and IDEs) | bool        | non-windows | `true`                                               |                                         | `dev`              |
-| Work profile: `home` or `soprasteria`                                                 | choice      | all         |                                                      |                                         | `profile`          |
-| Gaming machine (installs EA, Epic, Steam, Ubisoft...)                                 | bool        | windows     | `false`                                              | `profile` == `home`                     | `gaming`           |
-| Shell to configure: `bash` or `zsh`                                                   | choice      | non-windows | `zsh`                                                |                                         | `shell`            |
-| IDEs in use: `intellij` (windows only), `vscode`, `zed`                               | multichoice | all         | `vscode`                                             |                                         | `ide`              |
-| Generate an SSH key (`id_ed25519`)                                                    | bool        | all         | `true`                                               |                                         | `ssh.generate`     |
-| Computer name (used in the SSH key comment)                                           | string      | all         | hostname                                             | `ssh.generate`                          | `machine_name`     |
-| Committer email address                                                               | string      | all         |                                                      | `dev` or `ssh.generate`                 | `user.email`       |
-| Username                                                                              | string      | all         | OS username                                          | `dev` or `ssh.generate`                 | `user.username`    |
-| Sign commits with SSH key                                                             | bool        | non-windows | `true`                                               | `dev`                                   | `git.ssh`          |
-| AI agents to configure: `claude`, `codex`, `copilot`                                  | multichoice | non-windows | `claude`, `copilot` (home) / `copilot` (soprasteria) | `dev`                                   | `ai.agents`        |
-| Agent plugins to install: `caveman`, `ponytail`                                       | multichoice | non-windows | `caveman`, `ponytail`                                | `ai.agents` non-empty                   | `ai.plugins`       |
-| Tool manager(s) to use: `mise`. See [Tooling](#tooling) below                         | multichoice | non-windows | `mise`                                               | `dev`                                   | `tools_management` |
-| Tools to install with mise. See [Tooling](#tooling) below                             | multichoice | non-windows |                                                      | `dev` and `tools_management` has `mise` | `tools.mise`       |
+| Description                                                                           | Default                                              | When                                                 | Key                |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- | ------------------ |
+| Development machine (enables git, agents, tool managers, skips desktop apps and IDEs) | `true`                                               | non-windows                                          | `dev`              |
+| Work profile: `home` or `soprasteria`                                                 |                                                      |                                                      | `profile`          |
+| Gaming machine (installs EA, Epic, Steam, Ubisoft...)                                 | `false`                                              | windows and `profile` == `home`                      | `gaming`           |
+| Shell to configure: `bash` or `zsh`                                                   | `zsh`                                                | non-windows                                          | `shell`            |
+| IDEs in use: `intellij` (windows only), `vscode`, `zed`                               | `vscode`                                             |                                                      | `ide`              |
+| Generate an SSH key (`id_ed25519`)                                                    | `true`                                               |                                                      | `ssh.generate`     |
+| Computer name (used in the SSH key comment)                                           | hostname                                             | `ssh.generate`                                       | `machine_name`     |
+| Committer email address                                                               |                                                      | `dev` or `ssh.generate`                              | `user.email`       |
+| Username                                                                              | OS username                                          | `dev` or `ssh.generate`                              | `user.username`    |
+| Sign commits with SSH key                                                             | `true`                                               | non-windows and `dev`                                | `git.ssh`          |
+| AI agents to configure: `claude`, `codex`, `copilot`                                  | `claude`, `copilot` (home) / `copilot` (soprasteria) | non-windows and `dev`                                | `ai.agents`        |
+| Agent plugins to install: `caveman`, `ponytail`                                       | `caveman`, `ponytail`                                | non-windows and `ai.agents` non-empty                | `ai.plugins`       |
+| Tool manager(s) to use: `mise`. See [Tooling](#tooling) below                         | `mise`                                               | non-windows and `dev`                                | `tools_management` |
+| Tools to install with mise. See [Tooling](#tooling) below                             |                                                      | non-windows, `dev` and `tools_management` has `mise` | `tools.mise`       |
 
 ## Tooling
 
@@ -116,29 +116,24 @@ Desktop apps install only when `dev` is false, through apt on linux and winget o
 When at least one AI agent is selected, the selected CLIs (`claude`, `codex`, `copilot`)
 and [**apm**](https://github.com/microsoft/apm) are installed and updated on every `chezmoi apply`.
 
-Components come through three channels: `apm` (`~/.apm/apm.yml`), `plugin` (each agent's marketplace) and `chezmoi` (externals and templates).
+`apm` deploys the skill repos, each agent's marketplace installs the plugins, chezmoi handles agent-rules and the copilot LSP config.
 
-| Component              | Type               | Via             | Source                                                                                           | Agents              | When                         |
-| ---------------------- | ------------------ | --------------- | ------------------------------------------------------------------------------------------------ | ------------------- | ---------------------------- |
-| `agent-rules`          | Instructions       | chezmoi         | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules), refreshed daily                     | `claude`, `copilot` | always                       |
-| `code-simplifier`      | Agents, Skills     | plugin          | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | all                 | always                       |
-| `exam-drill`           | Skills             | plugin          | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | all                 | always                       |
-| `feature-dev`          | Agents, Skills     | plugin          | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | all                 | always                       |
-| `find-skills`          | Skills             | apm             | [vercel-labs/skills](https://github.com/vercel-labs/skills)                                      | all                 | always                       |
-| `grill-me`, `grilling` | Skills             | apm             | [mattpocock/skills](https://github.com/mattpocock/skills)                                        | all                 | always                       |
-| `protected-paths`      | Hooks              | plugin          | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | all                 | always                       |
-| `schema-converter`     | Skills             | plugin          | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | all                 | always                       |
-| `caveman`              | Hooks, Skills      | plugin          | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | all                 | `ai.plugins` has it          |
-| `ponytail`             | Hooks, Skills      | plugin          | [ponytail](https://github.com/DietrichGebert/ponytail)                                           | all                 | `ai.plugins` has it          |
-| `codegraph`            | Hooks, MCP, Skills | plugin          | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | all                 | `tools.mise` has it          |
-| `context7`             | Hooks, MCP, Skills | plugin          | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | all                 | `tools.mise` has it          |
-| `mempalace`            | Hooks, MCP, Skills | plugin          | [mempalace](https://github.com/mempalace/mempalace)                                              | all                 | `tools.mise` has it          |
-| `bash-language-server` | Language server    | plugin, chezmoi | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `claude`, `copilot` | `tools.mise` has `shell`     |
-| `gopls`                | Language server    | plugin, chezmoi | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `claude`, `copilot` | `tools.mise` has `go`        |
-| `jdtls`                | Language server    | plugin, chezmoi | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `claude`, `copilot` | `tools.mise` has `java`      |
-| `kotlin-lsp`           | Language server    | plugin, chezmoi | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `claude`, `copilot` | `tools.mise` has `kotlin`    |
-| `terraform-ls`         | Language server    | plugin, chezmoi | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `claude`, `copilot` | `tools.mise` has `terraform` |
-| `tofu-ls`              | Language server    | plugin, chezmoi | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `claude`, `copilot` | `tools.mise` has `opentofu`  |
+| Component                                                                            | Type               | Source                                                                                           | When                                                        |
+| ------------------------------------------------------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| `agent-rules`                                                                        | Instructions       | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules), refreshed daily                     | `claude` and `copilot` only                                 |
+| `code-simplifier`                                                                    | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                      |
+| `exam-drill`                                                                         | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                      |
+| `feature-dev`                                                                        | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                      |
+| `find-skills`                                                                        | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)                                      | always                                                      |
+| `grill-me`, `grilling`                                                               | Skills             | [mattpocock/skills](https://github.com/mattpocock/skills)                                        | always                                                      |
+| `protected-paths`                                                                    | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                      |
+| `schema-converter`                                                                   | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                      |
+| `caveman`                                                                            | Hooks, Skills      | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `ai.plugins` has it                                         |
+| `ponytail`                                                                           | Hooks, Skills      | [ponytail](https://github.com/DietrichGebert/ponytail)                                           | `ai.plugins` has it                                         |
+| `codegraph`                                                                          | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `tools.mise` has it                                         |
+| `context7`                                                                           | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `tools.mise` has it                                         |
+| `mempalace`                                                                          | Hooks, MCP, Skills | [mempalace](https://github.com/mempalace/mempalace)                                              | `tools.mise` has it                                         |
+| `bash-language-server`, `gopls`, `jdtls`, `kotlin-lsp`, `terraform-ls`, `tofu-ls`    | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | matching `tools.mise` bundle, `claude` and `copilot` only   |
 
 ### Mise
 

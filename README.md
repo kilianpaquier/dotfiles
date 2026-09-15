@@ -50,7 +50,7 @@ chezmoi init --prompt
 ### Shell
 
 The `shell` prompt picks `bash` or `zsh` (selecting the latter also provide the setup for the former),
-installed through apt with base packages (`bash-completion`, `curl`, `git`, `jq`, `make`, `ripgrep`, `vim`, `yq`, etc.).
+installed through apt with base packages (bash-completion, curl, git, jq, make, ripgrep, vim, yq, etc.).
 Dotfiles are symlinks into the chezmoi source, editing them in place edits the repository (easier for maintenance and updatability).
 
 What both shells get:
@@ -60,14 +60,14 @@ What both shells get:
 
 On top of that:
 
-- `bash` exports `BASH_ENV` (`~/.config/environment.d/bash.conf`) so non-interactive shells also source `~/.profile`.
-- `zsh` runs on [zsh4humans](https://github.com/romkatv/zsh4humans) v5, with `~/.zshenv` refreshed weekly
+- bash exports `BASH_ENV` (`~/.config/environment.d/bash.conf`) so non-interactive shells also source `~/.profile`.
+- zsh runs on [zsh4humans](https://github.com/romkatv/zsh4humans) v5, with `~/.zshenv` refreshed weekly
   and a few tweaks in `~/.zshrc` (pc keyboard, right arrow accepts autosuggestions, no auto-update, no tmux, no direnv).
 
 > [!tip]
-> Further tuning and custom ZSH plugins can be added in the `~/.env.zsh`.
+> Further tuning and custom zsh plugins can be added in the `~/.env.zsh`.
 
-#### Plugins ZSH
+#### Plugins zsh
 
 `~/.env.zsh` loads a handful of plugins on top of zsh4humans.
 
@@ -114,9 +114,9 @@ Desktop apps install only when `dev` is false, through apt on linux and winget o
 ### AI
 
 When at least one AI agent is selected, the selected CLIs (`claude`, `codex`, `copilot`)
-and [**apm**](https://github.com/microsoft/apm) are installed and updated on every `chezmoi apply`.
+and [apm](https://github.com/microsoft/apm) are installed and updated on every `chezmoi apply`.
 
-`apm` deploys the skill repos, each agent's marketplace installs the plugins, chezmoi handles agent-rules and the copilot LSP config.
+apm deploys the skill repos, each agent's marketplace installs the plugins, chezmoi handles agent-rules and the copilot LSP config.
 
 | Component                                                                            | Type               | Source                                                                                           | When                                                        |
 | ------------------------------------------------------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
@@ -140,33 +140,33 @@ and [**apm**](https://github.com/microsoft/apm) are installed and updated on eve
 Selected bundles land in `~/.config/mise/config.toml` and get installed, upgraded and pruned on every `chezmoi apply`.
 Deselecting `mise` removes all tool dependencies, installations and directories, leaving a cleaned machine.
 
-While **mise** has a large panel of installable tools, only the ones I use most are exposed as prompt choices.
-Any other **mise** registered tool can still be installed manually at any time without having `chezmoi apply` removing them
+While mise has a large panel of installable tools, only the ones I use most are exposed as prompt choices.
+Any other mise registered tool can still be installed manually at any time without having `chezmoi apply` removing them
 (unless those are not selected).
 
 The following table provides the list of default bundles to be installed depending on the chosen work profile.
 
-| Bundle            | Installs                                          | home | soprasteria |
-| ----------------- | ------------------------------------------------- | ---- | ----------- |
-| `bun`             | `bun`                                             | x    |             |
-| `codegraph`       | `codegraph`                                       | x    | x           |
-| `context7`        | `context7`, `context7-mcp`                        | x    | x           |
-| `gh`              | `gh`                                              | x    |             |
-| `gitlab-ci-local` | `gitlab-ci-local`                                 | x    | x           |
-| `glab`            | `glab`                                            | x    |             |
-| `go`              | `go`, `golangci-lint`                             | x    | x           |
-| `hugo`            | `dart-sass`, `hugo-extended`                      | x    | x           |
-| `incus`           | `incus`                                           | x    |             |
-| `java`            | `java` (LTS), `jdtls`                             |      | x           |
-| `just`            | `just`                                            | x    |             |
-| `k8s`             | `helm`, `helm-ct`, `krew`, `kubectl`, `kustomize` | x    | x           |
-| `kotlin`          | `kotlin`, `kotlin-lsp`                            |      |             |
-| `mempalace`       | `mempalace`                                       | x    | x           |
-| `opentofu`        | `opentofu`, `tflint`, `tofu-ls`                   | x    |             |
-| `pre-commit`      | `pre-commit`                                      | x    | x           |
-| `rtk`             | `rtk`                                             | x    | x           |
-| `shell`           | `bash-language-server`, `shellcheck`              | x    | x           |
-| `terraform`       | `terraform`, `terraform-ls`, `tflint`             |      | x           |
-| `uv`              | `uv`                                              | x    | x           |
+| Bundle            | Installs                                | home | soprasteria |
+| ----------------- | --------------------------------------- | ---- | ----------- |
+| `bun`             | bun                                     | x    |             |
+| `codegraph`       | codegraph                               | x    | x           |
+| `context7`        | context7, context7-mcp                  | x    | x           |
+| `gh`              | gh                                      | x    |             |
+| `gitlab-ci-local` | gitlab-ci-local                         | x    | x           |
+| `glab`            | glab                                    | x    |             |
+| `go`              | go, golangci-lint                       | x    | x           |
+| `hugo`            | dart-sass, hugo-extended                | x    | x           |
+| `incus`           | incus                                   | x    |             |
+| `java`            | java (LTS), jdtls                       |      | x           |
+| `just`            | just                                    | x    |             |
+| `k8s`             | helm, helm-ct, krew, kubectl, kustomize | x    | x           |
+| `kotlin`          | kotlin, kotlin-lsp                      |      |             |
+| `mempalace`       | mempalace                               | x    | x           |
+| `opentofu`        | opentofu, tflint, tofu-ls               | x    |             |
+| `pre-commit`      | pre-commit                              | x    | x           |
+| `rtk`             | rtk                                     | x    | x           |
+| `shell`           | bash-language-server, shellcheck        | x    | x           |
+| `terraform`       | terraform, terraform-ls, tflint         |      | x           |
+| `uv`              | uv                                      | x    | x           |
 
-Some tools are always installed regardless of selection due to their usefulness and usage: `age`, `cosign`, `node` 24, `sops`, `usage`.
+Some tools are always installed regardless of selection due to their usefulness and usage: age, cosign, node 24, sops, usage.

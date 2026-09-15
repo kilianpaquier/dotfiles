@@ -26,7 +26,6 @@ claude plugin list --json | jq -r '.[].id' | xargs -r -n1 claude plugin update -
 {{- if has "codex" .ai.agents }}
 
 curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
-# marketplace refresh installs the plugins declared in config.toml
 codex plugin marketplace upgrade
 {{- end }}
 
@@ -36,12 +35,11 @@ if ! command -v copilot >/dev/null 2>&1; then
   curl -fSL https://gh.io/copilot-install | PREFIX=$HOME/.local bash
 fi
 copilot update
-# copilot installs the plugins declared in settings.json on its own
 copilot plugin marketplace update
 copilot plugin update --all
 {{- end }}
 
-{{- if or (has "rtk" .tools.mise) (has "rtk" .tools.brew) }}
+{{- if has "rtk" .tools.mise }}
 
 if command -v rtk >/dev/null 2>&1; then
   rtk init -g {{ has "copilot" .ai.agents | ternary "" "--uninstall" }} --copilot --auto-patch

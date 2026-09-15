@@ -2,32 +2,25 @@
 
 {{- $bundles := dict
     "bun" (dict "bun" "latest")
-    "cavemem" (dict "npm:cavemem" "latest" "npm:node-gyp" "latest")
-    "codebase-memory-mcp" (dict "codebase-memory-mcp" "latest")
     "codegraph" (dict "codegraph" "latest")
     "context7" (dict "context7" "latest" "context7-mcp" "latest")
-    "destructive-command-guard" (dict "destructive-command-guard" "latest")
-    "git-tools" (dict "gh" "latest" "glab" "latest" "pre-commit" "latest")
+    "gh" (dict "gh" "latest")
     "gitlab-ci-local" (dict "gitlab-ci-local" "latest")
+    "glab" (dict "glab" "latest")
     "go" (dict "go" "latest" "golangci-lint" "latest")
-    "graphify" (dict "pipx:graphifyy" "latest")
     "hugo" (dict "dart-sass" "latest" "hugo-extended" "latest")
     "incus" (dict "incus" "latest")
     "java" (dict "java" "lts" "jdtls" "0.0.0")
     "just" (dict "just" "latest")
-    "k6" (dict "k6" "latest")
     "k8s" (dict "helm" "latest" "helm-ct" "latest" "krew" "latest" "kubectl" "latest" "kustomize" "latest")
     "kotlin" (dict "kotlin" "latest" "kotlin-lsp" "latest")
     "mempalace" (dict "mempalace" "latest")
-    "opentofu" (dict "opentofu" "latest" "tflint" "latest" "tofu-ls" "latest" "tflint" "latest")
-    "pnpm" (dict "pnpm" "latest")
+    "opentofu" (dict "opentofu" "latest" "tofu-ls" "latest" "tflint" "latest")
+    "pre-commit" (dict "pre-commit" "latest")
     "rtk" (dict "rtk" "latest")
     "shell" (dict "bash-language-server" "latest" "shellcheck" "latest")
-    "task" (dict "task" "latest")
     "terraform" (dict "terraform" "latest" "terraform-ls" "latest" "tflint" "latest")
-    "typescript" (dict "npm:typescript" "latest" "npm:typescript-language-server" "latest")
-    "uv" (dict "uv" "latest")
-    "yarn" (dict "yarn" "latest") }}
+    "uv" (dict "uv" "latest") }}
 
 {{- $config := dict }}
 {{- if .chezmoi.stdin }}{{ $config = fromToml .chezmoi.stdin }}{{- end }}

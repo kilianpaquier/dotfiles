@@ -1,10 +1,8 @@
 {{- $plugins := dict
     "caveman@one-for-all" (has "caveman" .ai.plugins)
     "code-simplifier@one-for-all" true
-    "codebase-memory-mcp@one-for-all" (has "codebase-memory-mcp" .tools.mise)
     "codegraph@one-for-all" (has "codegraph" .tools.mise)
     "context7@one-for-all" (has "context7" .tools.mise)
-    "dcg@one-for-all" (or (has "destructive-command-guard" .tools.brew) (has "destructive-command-guard" .tools.mise))
     "exam-drill@one-for-all" true
     "feature-dev@one-for-all" true
     "mempalace@mempalace" (has "mempalace" .tools.mise)
@@ -13,12 +11,11 @@
     "schema-converter@one-for-all" true }}
 {{- if .lsps }}
   {{- $plugins = merge $plugins (dict
-    "bash-language-server@claude-code-lsps" (or (has "shell" .tools.brew) (has "shell" .tools.mise))
-    "gopls@claude-code-lsps" (or (has "go" .tools.brew) (has "go" .tools.mise))
-    "jdtls@claude-code-lsps" (or (has "java" .tools.brew) (has "java" .tools.mise))
-    "kotlin-lsp@claude-code-lsps" (or (has "kotlin" .tools.brew) (has "kotlin" .tools.mise))
-    "terraform-ls@claude-code-lsps" (or (has "terraform" .tools.brew) (has "terraform" .tools.mise))
-    "tofu-ls@claude-code-lsps" (or (has "opentofu" .tools.brew) (has "opentofu" .tools.mise))
-    "typescript-language-server@claude-code-lsps" (or (has "typescript" .tools.brew) (has "typescript" .tools.mise))) }}
+    "bash-language-server@claude-code-lsps" (has "shell" .tools.mise)
+    "gopls@claude-code-lsps" (has "go" .tools.mise)
+    "jdtls@claude-code-lsps" (has "java" .tools.mise)
+    "kotlin-lsp@claude-code-lsps" (has "kotlin" .tools.mise)
+    "terraform-ls@claude-code-lsps" (has "terraform" .tools.mise)
+    "tofu-ls@claude-code-lsps" (has "opentofu" .tools.mise)) }}
 {{- end }}
 {{- $plugins | toJson }}

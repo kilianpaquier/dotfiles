@@ -29,6 +29,10 @@ Purpose: share computer setup via automation + shared config.
 
 - `Context7` library ID for chezmoi docs: `/websites/chezmoi_io`.
 
+## Verification
+
+- Never run `chezmoi` unless explicitely asked.
+
 ---
 
 @README.md

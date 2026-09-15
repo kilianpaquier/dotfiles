@@ -1,69 +1,72 @@
-agent_runtimes: [claude, codex, copilot]
+profiles: [home, soprasteria]
 
-managers: [mise, brew]
+managers: [mise]
+default_managers:
+  home: [mise]
+  soprasteria: [mise]
 
-bundles:
+tools:
   mise:
-    default: [context7, destructive-command-guard, git-tools, go, hugo, rtk, shell, uv]
-    available:
-      - bun
-      - cavemem
-      - codebase-memory-mcp
-      - codegraph
-      - context7
-      - destructive-command-guard
-      - git-tools
-      - gitlab-ci-local
-      - go
-      - graphify
-      - hugo
-      - incus
-      - java
-      - just
-      - k6
-      - k8s
-      - kotlin
-      - mempalace
-      - opentofu
-      - pnpm
-      - rtk
-      - shell
-      - task
-      - terraform
-      - typescript
-      - uv
-      - yarn
-  brew:
-    default: [destructive-command-guard, git-tools, go, hugo, rtk, shell, uv]
-    available:
-      - bun
-      - destructive-command-guard
-      - git-tools
-      - gitlab-ci-local
-      - go
-      - hugo
-      - incus
-      - java
-      - just
-      - k6
-      - k8s
-      - kotlin
-      - opentofu
-      - rtk
-      - shell
-      - task
-      - terraform
-      - typescript
-      - uv
-
-default_managers: [mise]
-
-profiles:
+    - bun
+    - codegraph
+    - context7
+    - gh
+    - gitlab-ci-local
+    - glab
+    - go
+    - hugo
+    - incus
+    - java
+    - just
+    - k8s
+    - kotlin
+    - mempalace
+    - opentofu
+    - pre-commit
+    - rtk
+    - shell
+    - terraform
+    - uv
+default_tools:
   home:
-    default_tools: [bun, incus, opentofu]
+    - bun
+    - codegraph
+    - context7
+    - gh
+    - gitlab-ci-local
+    - glab
+    - go
+    - hugo
+    - incus
+    - just
+    - k8s
+    - mempalace
+    - opentofu
+    - pre-commit
+    - rtk
+    - shell
+    - uv
   soprasteria:
-    default_tools: [java, k6, k8s, terraform]
+    - codegraph
+    - context7
+    - gitlab-ci-local
+    - go
+    - hugo
+    - java
+    - k8s
+    - mempalace
+    - pre-commit
+    - rtk
+    - shell
+    - terraform
+    - uv
 
-plugins:
-  default: [caveman, ponytail]
-  available: [caveman, ponytail]
+agents: [claude, codex, copilot]
+default_agents:
+  home: [claude, copilot]
+  soprasteria: [copilot]
+
+plugins: [caveman, ponytail]
+default_plugins:
+  home: [caveman, ponytail]
+  soprasteria: [caveman, ponytail]

@@ -6,22 +6,8 @@
 **/*.ps1
 {{- end }}
 
-{{- if not .dev }}
-.chezmoiscripts/*-tools.sh
-{{- end }}
-
-{{- range .managers }}
-{{- if not (has . $.tools_management) }}
-.chezmoiscripts/*-{{ . }}.sh
-{{- end }}
-{{- end }}
-
 {{- if not (has "mise" .tools_management) }}
 .config/mise
-{{- end }}
-
-{{- if not (has "brew" .tools_management) }}
-.Brewfile
 {{- end }}
 
 {{- if not .ssh.generate }}
@@ -43,14 +29,8 @@
 {{- if eq (len .ai.agents) 0 }}
 .apm
 .chezmoiscripts/*-ai.sh
-{{- end }}
-
-{{- if not (or (has "rtk" .tools.brew) (has "rtk" .tools.mise)) }}
-.config/rtk
-{{- end }}
-
-{{- if not (or (has "destructive-command-guard" .tools.brew) (has "destructive-command-guard" .tools.mise)) }}
 .config/dcg
+.config/rtk
 {{- end }}
 
 {{- if not (has "claude" .ai.agents) }}

@@ -1,0 +1,32 @@
+#!/bin/sh
+
+set -e
+
+# force remove chezmoi managed directories since .chezmoiremove can't handle them
+
+{{- if not (has "claude" .ai.agents) }}
+
+rm -rf "$HOME/.claude"
+{{- end }}
+
+{{- if not (has "codex" .ai.agents) }}
+
+rm -rf "$HOME/.codex"
+{{- end }}
+
+{{- if not (has "copilot" .ai.agents) }}
+
+rm -rf "$HOME/.copilot"
+{{- end }}
+
+{{- if eq (len .ai.agents) 0 }}
+
+rm -rf "$HOME/.apm"
+rm -rf "$HOME/.config/rtk"
+rm -rf "$HOME/.config/dcg"
+{{- end }}
+
+{{- if or (not .dev) (not (has "vscode" .ide)) }}
+
+rm -rf "$HOME/.vscode-server"
+{{- end }}

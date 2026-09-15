@@ -29,9 +29,6 @@ umask 022
 # set PATH so it includes mise shims if it exists
 [ -d "$HOME/.local/share/mise/shims" ] && PATH="$HOME/.local/share/mise/shims:$PATH"
 
-# set PATH so it includes brew if it exists
-[ -d "/home/linuxbrew/.linuxbrew/bin" ] && PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-
 # set PATH so it includes krew if it exists
 [ -d "$HOME/.krew/bin" ] && PATH="$HOME/.krew/bin:$PATH"
 
@@ -39,9 +36,6 @@ unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
 
 # source mise env and aliases
 command -v mise >/dev/null 2>&1 && eval "$(mise env | grep -v 'PATH=')"
-
-# set homebrew shellenv
-command -v brew >/dev/null 2>&1 && eval "$(brew shellenv)"
 
 # set go cache variables
 if command -v go >/dev/null 2>&1; then

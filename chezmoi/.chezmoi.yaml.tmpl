@@ -2,10 +2,10 @@
 
 {{- $dev := false }}
 {{- if ne .chezmoi.os "windows" }}
-  {{- $dev = promptBoolOnce . "dev" "Is this a development machine (full tooling, git, etc.)" }}
+  {{- $dev = promptBoolOnce . "dev" "Is this a development machine (full tooling, git, etc.)" true }}
 {{- end }}
 
-{{- $profile := promptChoiceOnce . "profile" "Which profile should apply to this machine" (keys $data.profiles | sortAlpha) }}
+{{- $profile := promptChoiceOnce . "profile" "Which profile should apply to this machine" $data.profiles }}
 
 {{- $gaming := false }}
 {{- if and (eq $profile "home") (eq .chezmoi.os "windows") }}
@@ -14,12 +14,12 @@
 
 {{- $shell := "powershell" }}
 {{- if ne .chezmoi.os "windows" }}
-  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") "bash" }}
+  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") "zsh" }}
 {{- end }}
 
 {{- $ide := promptMultichoiceOnce . "ide" "What IDE are you using to develop" (list "intellij" "vscode" "zed") (list "vscode") }}
 
-{{- $ssh_generate := promptBoolOnce . "ssh.generate" "Would you like to generate an SSH key" }}
+{{- $ssh_generate := promptBoolOnce . "ssh.generate" "Would you like to generate an SSH key" true }}
 {{- $machine_name := "" }}
 {{- if $ssh_generate }}
   {{- $machine_name = promptStringOnce . "machine_name" "What is this machine's name" .chezmoi.hostname }}
@@ -28,7 +28,7 @@
 {{- $email := "" }}
 {{- $username := "" }}
 {{- if or $dev $ssh_generate }}
-  {{- $username = promptStringOnce . "user.username" "What is your comitter username" }}
+  {{- $username = promptStringOnce . "user.username" "What is your committer username" .chezmoi.username }}
   {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
 {{- end }}
 
@@ -38,11 +38,11 @@
 {{- $bundle_summary := list }}
 {{- range $manager := $managers -}}
   {{- $_ := set $tools $manager (list) }}
-  {{- $bundle_summary = append $bundle_summary (printf "%s: %s" $manager ((index $data.bundles $manager).available | join ", ")) }}
+  {{- $bundle_summary = append $bundle_summary (printf "%s: %s" $manager ((index $data.tools $manager) | join ", ")) }}
 {{- end -}}
 
-# available agent runtimes: {{ $data.agent_runtimes | join ", " }}
-# available agent plugins: {{ $data.plugins.available | join ", " }}
+# available agent runtimes: {{ $data.agents | join ", " }}
+# available agent plugins: {{ $data.plugins | join ", " }}
 # available tools_management: {{ $managers | join ", " }}
 # available tools per manager:
 {{- range $bundle_summary }}
@@ -54,38 +54,22 @@
 {{- $plugins := list }}
 {{- $tools_management := list }}
 {{- if $dev }}
-  {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" }}
-  {{- $agents = promptMultichoiceOnce . "ai.agents" "Which AI agent(s) will you be using" $data.agent_runtimes }}
+  {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" true }}
+  {{- $agents = promptMultichoiceOnce . "ai.agents" "Which AI agent(s) will you be using" $data.agents (index $data.default_agents $profile) }}
 
   {{- if gt (len $agents) 0 }}
-    {{- $plugins = promptMultichoiceOnce . "ai.plugins" "Which agent plugin(s) would you like to install" $data.plugins.available $data.plugins.default }}
+    {{- $plugins = promptMultichoiceOnce . "ai.plugins" "Which agent plugin(s) would you like to install" $data.plugins (index $data.default_plugins $profile) }}
   {{- end }}
 
   {{- $_ := warnf "available tools per manager:\n  %s" ($bundle_summary | join "\n  ") }}
 
-  {{- $tools_management = promptMultichoiceOnce . "tools_management" "Which tool manager(s) would you like to use" $managers $data.default_managers }}
+  {{- $tools_management = promptMultichoiceOnce . "tools_management" "Which tool manager(s) would you like to use" $managers (index $data.default_managers $profile) }}
 
-  {{- $taken := list }}
   {{- range $manager := $tools_management }}
-    {{- $bundle := index $data.bundles $manager }}
-
-    {{- /* a tool an earlier manager already took is neither offered again nor preselected */ -}}
-    {{- $choices := list }}
-    {{- $preselected := list }}
-    {{- range $tool := $bundle.available }}
-      {{- if has $tool $taken }}{{- continue }}{{- end }}
-      {{- $choices = append $choices $tool }}
-      {{- if or (has $tool $bundle.default) (has $tool (index $data.profiles $profile).default_tools) }}
-        {{- $preselected = append $preselected $tool }}
-      {{- end }}
-    {{- end }}
-
     {{- $_ := set $tools $manager (promptMultichoiceOnce $
         (print "tools." $manager)
         (print "Which tools would you like to install via " $manager)
-        $choices $preselected) }}
-
-    {{- $taken = concat $taken (index $tools $manager) }}
+        (index $data.tools $manager) (index $data.default_tools $profile)) }}
   {{- end }}
 {{- end }}
 

@@ -1,5 +1,6 @@
-{{- if not (has "claude" .ai.agents) }}
+# force remove side directories not chezmoi managed
 
+{{- if not (has "claude" .ai.agents) }}
 .cache/claude
 .cache/claude-cli-nodejs
 .local/bin/claude
@@ -7,20 +8,16 @@
 {{- end }}
 
 {{- if not (has "codex" .ai.agents) }}
-
 .cache/codex
-.codex
 .local/bin/codex
 {{- end }}
 
 {{- if not (has "copilot" .ai.agents) }}
-
 .cache/copilot
 .local/bin/copilot
 {{- end }}
 
 {{- if eq (len .ai.agents) 0 }}
-
 .cache/apm
 .local/bin/apm
 .local/lib/apm

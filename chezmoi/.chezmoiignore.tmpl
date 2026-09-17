@@ -6,9 +6,7 @@
 **/*.ps1
 {{- end }}
 
-{{- if not (has "mise" .tools_management) }}
-.config/mise
-{{- end }}
+{{ includeTemplate "ignored.tmpl" . }}
 
 {{- if not .ssh.generate }}
 .chezmoiscripts/*-ssh.sh
@@ -19,34 +17,8 @@
 .ssh
 {{- end }}
 
-{{- if .dev }}
-.chezmoiscripts/*-computer.sh
-.chezmoiscripts/*-computer.ps1
-{{- else }}
-.terraformrc
-{{- end }}
-
-{{- if eq (len .ai.agents) 0 }}
-.apm
+{{- if eq (len .ai.runtimes) 0 }}
 .chezmoiscripts/*-ai.sh
-.config/dcg
-.config/rtk
-{{- end }}
-
-{{- if not (has "claude" .ai.agents) }}
-.claude
-{{- end }}
-
-{{- if not (has "codex" .ai.agents) }}
-.codex
-{{- end }}
-
-{{- if not (has "copilot" .ai.agents) }}
-.copilot
-{{- end }}
-
-{{- if or (not .dev) (not (has "vscode" .ide)) }}
-.vscode-server
 {{- end }}
 
 {{- if eq .chezmoi.os "windows" }}
@@ -58,15 +30,9 @@
 .profile
 {{- end }}
 
-{{- if ne .shell "zsh" }}
-.env.zsh
-.zlogout
-.zprofile
-.zshrc
-{{- end }}
-
 # partials
 **/*.partial.*
 
-# symlinks
+# source-only directories, reached through .chezmoi.sourceDir
+ansible
 symlinks

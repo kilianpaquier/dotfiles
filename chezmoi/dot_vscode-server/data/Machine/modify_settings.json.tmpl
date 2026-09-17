@@ -3,10 +3,10 @@
 set -e
 
 set -- "$CHEZMOI_SOURCE_DIR/dot_vscode-server/data/Machine/settings.base.partial.json"
-{{- if and (not (has "copilot" .ai.agents)) (has "vscode" .ide) }}
+{{- if and (not (has "copilot" .ai.runtimes)) (has "vscode" .ide) }}
 set -- "$@" "$CHEZMOI_SOURCE_DIR/dot_vscode-server/data/Machine/settings.no-copilot.partial.json"
 {{- end }}
-{{- if and (has "copilot" .ai.agents) (has "vscode" .ide) }}
+{{- if and (has "copilot" .ai.runtimes) (has "vscode" .ide) }}
 set -- "$@" "$CHEZMOI_SOURCE_DIR/dot_vscode-server/data/Machine/settings.copilot.partial.json"
 {{- end }}
 

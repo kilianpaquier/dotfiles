@@ -1,0 +1,24 @@
+{{- /* chezmoi:modify-template */ -}}
+
+{{- $feature_flags := dict }}
+
+{{- range $flag := (list "boost-agent-facing-redaction" "boost-claude-status-line" "boost-cli-filtering" "boost-english-abbreviation" "boost-files-optimization" "boost-html-article" "boost-mcp-toon-format") }}
+{{- $_ := set $feature_flags $flag (dict "user" true) }}
+{{- end }}
+
+{{- range $flag := (list "boost-auto-update" "boost-pr-usage-comments" "boost-share-cli-outputs") }}
+{{- $_ := set $feature_flags $flag (dict "user" false) }}
+{{- end }}
+
+{{- $config := dict }}
+{{- if .chezmoi.stdin }}{{ $config = fromToml .chezmoi.stdin }}{{- end }}
+
+{{- $_ := mergeOverwrite $config (dict
+    "accept_terms" "yes"
+    "feature_flags" $feature_flags
+    "filters" (dict "retrieve_disable_threshold" 0)
+    "mcp" (dict "toon_format" true)
+    "tracing" (dict "upload" false)
+    "update" (dict "auto_update" false)) }}
+
+{{- regexReplaceAll "(?m)^ +" (toToml $config) "" -}}

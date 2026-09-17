@@ -1,0 +1,48 @@
+{{- if not (has "mise" .tools_management) }}
+.config/mise
+{{- end }}
+
+{{- if or (eq (len .container.runtimes) 0) (not (has "gitlab-ci-local" .tools.mise)) }}
+.gitlab-ci-local
+{{- end }}
+
+{{- if eq .machine.kind "desktop" }}
+.terraformrc
+{{- end }}
+
+{{- if not (has "docker" .container.runtimes) }}
+.config/systemd/user/docker.service.d
+{{- end }}
+
+{{- if not (has "boost" .tools.mise) }}
+.boost
+{{- end }}
+
+{{- if eq (len .ai.runtimes) 0 }}
+.apm
+.config/dcg
+.config/rtk
+{{- end }}
+
+{{- if not (has "claude" .ai.runtimes) }}
+.claude
+{{- end }}
+
+{{- if not (has "codex" .ai.runtimes) }}
+.codex
+{{- end }}
+
+{{- if not (has "copilot" .ai.runtimes) }}
+.copilot
+{{- end }}
+
+{{- if or (eq .machine.kind "desktop") (not (has "vscode" .ide)) }}
+.vscode-server
+{{- end }}
+
+{{- if ne .shell "zsh" }}
+.env.zsh
+.zlogout
+.zprofile
+.zshrc
+{{- end }}

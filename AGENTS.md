@@ -1,37 +1,43 @@
 # chezmoi
 
-chezmoi repo hold dotfiles (symlink or raw file), scripts, other elements from [**chezmoi**](https://www.chezmoi.io/).
+Dotfiles repository managed by [chezmoi](https://www.chezmoi.io/). Source root is `chezmoi/` (`.chezmoiroot`).
 
-Purpose: share computer setup via automation + shared config.
+## Layout
 
-## Specificities
+### Files removal
 
-- Use `chezmoi` subfolder for chezmoi elements (per `.chezmoiroot` config)
-- Update `README.md` prompts table when add new init prompt in `.chezmoi.yaml.tmpl`
-- Update `README.md` tooling table and `.chezmoidata/tools.yaml` when add a new tool
-- Update `.ps1` + `.sh` equivalent scripts when add new script element
-- Never use `chezmoi` CLI, skip trivial verification of prompts, scripts, etc.
+- Use `.chezmoiremove.tmpl` to remove paths not managed by chezmoi.
+- Use `.chezmoitemplates/ignored.tmpl` to remove paths managed by chezmoi (cleanup glue under `.chezmoiscripts/run_onchange_after_95-cleanup.sh.tmpl`).
 
-## Agent runtimes permissions
+### Ansible integration
 
-- Trusted directories between the following files must be identical, always update them together:
+- Use `ansible/tasks` for Linux system setup (apt, desktop apps, containers, server).
+- Use `.chezmoiscripts/*.ps1.tmpl` for Windows system setup (since **ansible** is not compatible with it).
+- All properties under `data` from `chezmoi.yaml.tmpl` are loaded as machine facts within **ansible** (at runtime for drift detection).
+
+## Keep in sync
+
+- A new prompt in `.chezmoi.yaml.tmpl`: the `README.md` prompts tables.
+- A new tool: `.chezmoidata/tools.yaml` and the `README.md` tools table.
+- A linux task in `ansible/tasks/`: its windows `.ps1` counterpart.
+- Trusted directories:
   - `dot_claude/settings.partial.json`: `permissions.additionalDirectories`
   - `dot_copilot/modify_private_config.json.tmpl`: `trustedFolders`
-- URLs permissions between the following files must be identical, always update them together:
-  - `dot_claude/settings.partial.json`: `WebFetch(domain:...)`,
+- URL permissions:
+  - `dot_claude/settings.partial.json`: `WebFetch(domain:...)`
   - `dot_copilot/settings.partial.json`: `allowedUrls`
   - `dot_vscode-server/data/Machine/settings.copilot.partial.json`: `chat.tools.urls.autoApprove`
-- Tools permissions between the following files must be identical, always update them together:
+- Tool permissions:
   - `dot_claude/settings.partial.json`: `permissions.allow`, `permissions.ask`, `permissions.deny`
   - `dot_vscode-server/data/Machine/settings.copilot.partial.json`: `chat.tools.terminal.autoApprove`
 
-## Third-party
+## Boundaries
 
-- `Context7` library ID for chezmoi docs: `/websites/chezmoi_io`.
+- Never run `chezmoi` unless explicitly asked.
 
-## Verification
+## References
 
-- Never run `chezmoi` unless explicitely asked.
+- Context7 library ID for chezmoi docs: `/websites/chezmoi_io`.
 
 ---
 

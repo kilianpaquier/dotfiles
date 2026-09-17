@@ -1,0 +1,10 @@
+{{- $key := joinPath .chezmoi.homeDir ".ssh" "id_ed25519" }}
+{{- $comment := printf "%s@%s" .user.username .machine.name }}
+
+{{- if stat $key }}
+ssh-keygen -c -C "{{ $comment }}" -f "{{ $key }}"
+{{- else }}
+ssh-keygen -t ed25519 -C "{{ $comment }}" -f "{{ $key }}"
+{{- end }}
+
+cat "{{ $key }}.pub"

@@ -1,11 +1,4 @@
 #!/bin/sh
 
 set -e
-
-key="$HOME/.ssh/id_ed25519"
-if [ -f "$key" ]; then
-  echo "SSH key already exists, not generating..."
-else
-  ssh-keygen -t ed25519 -C "{{ .user.username }}@{{ .machine_name }}" -f "$key"
-  cat "$key.pub"
-fi
+{{ template "ssh.tmpl" . }}

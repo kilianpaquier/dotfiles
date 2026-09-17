@@ -1,9 +1,10 @@
 {{- $data := include ".chezmoidata/tools.yaml" | fromYaml }}
 
-{{- $dev := false }}
+{{- $machine := "desktop" }}
 {{- if ne .chezmoi.os "windows" }}
-  {{- $dev = promptBoolOnce . "dev" "Is this a development machine (full tooling, git, etc.)" true }}
+  {{- $machine = promptChoiceOnce . "machine.kind" "What kind of machine is this (desktop: apps only, workstation: dev tooling, server: dev tooling + hostname/timezone)" $data.machines "workstation" }}
 {{- end }}
+{{- $dev := ne $machine "desktop" }}
 
 {{- $profile := promptChoiceOnce . "profile" "Which profile should apply to this machine" $data.profiles }}
 
@@ -21,8 +22,13 @@
 
 {{- $ssh_generate := promptBoolOnce . "ssh.generate" "Would you like to generate an SSH key" true }}
 {{- $machine_name := "" }}
-{{- if $ssh_generate }}
-  {{- $machine_name = promptStringOnce . "machine_name" "What is this machine's name" .chezmoi.hostname }}
+{{- if or $ssh_generate (eq $machine "server") }}
+  {{- $machine_name = promptStringOnce . "machine.name" "What is this machine's name" .chezmoi.hostname }}
+{{- end }}
+
+{{- $timezone := "" }}
+{{- if eq $machine "server" }}
+  {{- $timezone = promptStringOnce . "ansible.timezone" "Which timezone should this server use" "UTC" }}
 {{- end }}
 
 {{- $email := "" }}
@@ -41,24 +47,34 @@
   {{- $bundle_summary = append $bundle_summary (printf "%s: %s" $manager ((index $data.tools $manager) | join ", ")) }}
 {{- end -}}
 
-# available agent runtimes: {{ $data.agents | join ", " }}
+# available agent runtimes: {{ $data.agent_runtimes | join ", " }}
 # available agent plugins: {{ $data.plugins | join ", " }}
+# available containers: {{ $data.container_runtimes | join ", " }}
 # available tools_management: {{ $managers | join ", " }}
 # available tools per manager:
 {{- range $bundle_summary }}
 #   - {{ . }}
 {{- end }}
 
-{{- $agents := list }}
+{{- $agent_runtimes := list }}
+{{- $container_engine := "" }}
+{{- $container_runtimes := list }}
 {{- $git_ssh := false }}
 {{- $plugins := list }}
 {{- $tools_management := list }}
 {{- if $dev }}
   {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" true }}
-  {{- $agents = promptMultichoiceOnce . "ai.agents" "Which AI agent(s) will you be using" $data.agents (index $data.default_agents $profile) }}
+  {{- $agent_runtimes = promptMultichoiceOnce . "ai.runtimes" "Which agent runtimes will you be using" $data.agent_runtimes (index $data.default_agent_runtimes $profile) }}
 
-  {{- if gt (len $agents) 0 }}
+  {{- if gt (len $agent_runtimes) 0 }}
     {{- $plugins = promptMultichoiceOnce . "ai.plugins" "Which agent plugin(s) would you like to install" $data.plugins (index $data.default_plugins $profile) }}
+  {{- end }}
+
+  {{- $container_runtimes = promptMultichoiceOnce . "container.runtimes" "Which container runtime(s) would you like to install" $data.container_runtimes (index $data.default_container_runtimes $profile) }}
+  {{- if eq (len $container_runtimes) 1 }}
+    {{- $container_engine = first $container_runtimes | default "" }}
+  {{- else }}
+    {{- $container_engine = promptChoiceOnce . "container.engine" "Which container engine should tools default to" $container_runtimes }}
   {{- end }}
 
   {{- $_ := warnf "available tools per manager:\n  %s" ($bundle_summary | join "\n  ") }}
@@ -75,16 +91,51 @@
 
 umask: 0o22
 
+{{- if ne .chezmoi.os "windows" }}
+
+# run custom pager to run Ansible drift check too
+#
+# the user of a custom pager instead of a 'diff.post' hook with Ansible is a workaround Ansible logs
+# and check appearing during 'chezmoi diff' review
+diff:
+  pager: {{ .chezmoi.sourceDir }}/ansible/scripts/pager.sh
+
+# run sudo -v to avoid Ansible asking sudo permissions
+hooks:
+  apply:
+    pre:
+      command: sudo
+      args: [-v]
+    post:
+      command: {{ .chezmoi.sourceDir }}/ansible/scripts/play.sh
+  diff:
+    pre:
+      command: sudo
+      args: [-v]
+{{- end }}
+
 data:
   ai:
-    agents:{{ $agents | toYaml | trim | nindent 6 }}
+    runtimes:{{ $agent_runtimes | toYaml | trim | nindent 6 }}
     plugins:{{ $plugins | toYaml | trim | nindent 6 }}
-  dev: {{ $dev }}
+{{- if ne .chezmoi.os "windows" }}
+  # machine facts for the ansible playbook, gathered here so the play skips gather_facts and stays root-only
+  ansible:
+    codename: {{ .chezmoi.osRelease.versionCodename }}
+    home: {{ .chezmoi.homeDir }}
+    timezone: {{ $timezone }}
+    username: {{ .chezmoi.username }}
+{{- end }}
+  container:
+    engine: {{ $container_engine }}
+    runtimes:{{ $container_runtimes | toYaml | trim | nindent 6 }}
   gaming: {{ $gaming }}
   git:
     ssh: {{ $git_ssh }}
   ide:{{ $ide | toYaml | trim | nindent 4 }}
-  machine_name: {{ $machine_name }}
+  machine:
+    kind: {{ $machine }}
+    name: {{ $machine_name }}
   profile: {{ $profile }}
   shell: {{ $shell }}
   ssh:

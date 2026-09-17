@@ -9,6 +9,40 @@
 
 ---
 
+- [Install](#install)
+- [Day to day](#day-to-day)
+- [Machine kind](#machine-kind)
+- [Profile](#profile)
+- [Prompts](#prompts)
+  - [Every machine](#every-machine)
+  - [Workstation and server](#workstation-and-server)
+  - [Server only](#server-only)
+- [Deep dive](#deep-dive)
+  - [Shell](#shell)
+  - [Desktop apps](#desktop-apps)
+  - [Tooling](#tooling)
+  - [Container runtimes](#container-runtimes)
+  - [Agent components](#agent-components)
+  - [Servers](#servers)
+
+My own dotfiles repository, it provides dotfiles (obviously) but also user tools installation (using **mise**)
+and machine level tooling and setup (apt tools, container engines, hostname, timezone).
+
+Drift detection and reconciliation is managed with **chezmoi** for dotfiles
+and **ansible** for machine tooling and setup.
+
+To improve the usage experience, **ansible** commands are directly integrated within **chezmoi** ones,
+offering a uniform experience to review drift and reapply the configuration.
+
+The repository offers the following main features:
+- Shell choice for Linux (`bash` or `zsh`)
+- Basic desktop apps for Windows and Linux (see #TBD)
+- User dev tools for Linux
+- Generation of an SSH key (ed25519) and **git** identity setup
+
+Of course to avoid a painful maintenance, the setup is not completely *à la carte*.
+Setup is based on [prompts](#prompts) with predefined machine typologies and work profiles.
+
 ## Install
 
 ```sh
@@ -20,153 +54,212 @@ sh -c "$(curl -sSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch
 iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '~/.local/bin' -- init --branch 'main' --apply 'https://gitlab.com/kilianpaquier/dotfiles.git'"
 ```
 
-In case you'd want to change your initial responses to prompts:
+## Day to day
 
-```sh
-chezmoi init --prompt
-```
+- Detect and review drift with `chezmoi diff` or `chezmoi diff /path/to/file` (*e.g.* `~/.env.zsh`)
+- Apply a change in your configuration (`chezmoi cat-config` and `chezmoi edit-config`) with `chezmoi apply`
+- Retrieve new features and upstream modifications with `chezmoi update -a=false` (the option disables the auto-apply)
+- Reanswer all prompts with `chezmoi init --prompt`
+
+Any tool you add by hand stays put, machines can extend beyond the preset list.
+
+## Machine kind
+
+The repository filters what's installed on a specific machine based on its kind:
+- `desktop`: shell and desktop apps
+- `workstation`: shell and dev tooling
+- `server`: shell, dev tooling, hostname and timezone
+
+*Windows machines are always desktops.*
+
+## Profile
+
+The repository also filters default values to prompts based on profiles, to ease reinstallation and successive installs.
+Two profiles exist, `home` and `soprasteria`.
 
 ## Prompts
 
-| Description                                                                           | Default                                              | When                                                 | Key                |
-| ------------------------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- | ------------------ |
-| Development machine (enables git, agents, tool managers, skips desktop apps and IDEs) | `true`                                               | non-windows                                          | `dev`              |
-| Work profile: `home` or `soprasteria`                                                 |                                                      |                                                      | `profile`          |
-| Gaming machine (installs EA, Epic, Steam, Ubisoft...)                                 | `false`                                              | windows and `profile` == `home`                      | `gaming`           |
-| Shell to configure: `bash` or `zsh`                                                   | `zsh`                                                | non-windows                                          | `shell`            |
-| IDEs in use: `intellij` (windows only), `vscode`, `zed`                               | `vscode`                                             |                                                      | `ide`              |
-| Generate an SSH key (`id_ed25519`)                                                    | `true`                                               |                                                      | `ssh.generate`     |
-| Computer name (used in the SSH key comment)                                           | hostname                                             | `ssh.generate`                                       | `machine_name`     |
-| Committer email address                                                               |                                                      | `dev` or `ssh.generate`                              | `user.email`       |
-| Username                                                                              | OS username                                          | `dev` or `ssh.generate`                              | `user.username`    |
-| Sign commits with SSH key                                                             | `true`                                               | non-windows and `dev`                                | `git.ssh`          |
-| AI agents to configure: `claude`, `codex`, `copilot`                                  | `claude`, `copilot` (home) / `copilot` (soprasteria) | non-windows and `dev`                                | `ai.agents`        |
-| Agent plugins to install: `caveman`, `ponytail`                                       | `caveman`, `ponytail`                                | non-windows and `ai.agents` non-empty                | `ai.plugins`       |
-| Tool manager(s) to use: `mise`. See [Tooling](#tooling) below                         | `mise`                                               | non-windows and `dev`                                | `tools_management` |
-| Tools to install with mise. See [Tooling](#tooling) below                             |                                                      | non-windows, `dev` and `tools_management` has `mise` | `tools.mise`       |
+### Every machine
 
-## Tooling
+| Prompt                                                                | Default       | When                           | Key             |
+| --------------------------------------------------------------------- | ------------- | ------------------------------ | --------------- |
+| What kind of machine this is (`desktop`, `workstation`, `server`)     | `workstation` | Linux                          | `machine.kind`  |
+| Which work profile applies (`home` or `soprasteria`)                  |               |                                | `profile`       |
+| Whether this is a gaming machine (adds EA, Epic, Steam, Ubisoft...)   | `false`       | Windows, `home` profile        | `gaming`        |
+| Which shell to use day to day (`bash` or `zsh`)                       | `zsh`         | Linux                          | `shell`         |
+| Which IDEs to install (`intellij`, `vscode`, `zed`)                   | `vscode`      |                                | `ide`           |
+| Whether to generate an SSH key (`id_ed25519`)                         | `true`        |                                | `ssh.generate`  |
+| Name for this machine, used as the SSH key comment or server hostname | hostname      | SSH key or server              | `machine.name`  |
+| Username to use as git committer                                      | OS username   | SSH key, workstation or server | `user.username` |
+| Email to use as git committer                                         |               | SSH key, workstation or server | `user.email`    |
+
+### Workstation and server
+
+| Prompt                                                            | Default                | When                  | Key                  |
+| ----------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
+| Whether to sign commits with the SSH key                          | `true`                 |                       | `git.ssh`            |
+| Which AI agent runtimes to install (`claude`, `codex`, `copilot`) | Depends on the profile |                       | `ai.runtimes`        |
+| Which agent plugins to enable (`caveman`, `ponytail`)             | Depends on the profile | at least one agent    | `ai.plugins`         |
+| Which container runtimes to install (`docker` rootless, `podman`) | Depends on the profile |                       | `container.runtimes` |
+| Which container engine gitlab-ci-local should use                 |                        | two runtimes selected | `container.engine`   |
+| Which tool manager to use (`mise`)                                | `mise`                 |                       | `tools_management`   |
+| Which tool bundles to install, see [Tooling](#tooling)            | Depends on the profile | `mise` selected       | `tools.mise`         |
+
+### Server only
+
+| Prompt                        | Default | Key                |
+| ----------------------------- | ------- | ------------------ |
+| Timezone to set on the server | `UTC`   | `ansible.timezone` |
+
+## Deep dive
 
 ### Shell
 
-The `shell` prompt picks `bash` or `zsh` (selecting the latter also provide the setup for the former),
-installed through apt with base packages (bash-completion, curl, git, jq, make, ripgrep, vim, yq, etc.).
-Dotfiles are symlinks into the chezmoi source, editing them in place edits the repository (easier for maintenance and updatability).
+Either `bash` or `zsh` can be chosen as shell.
 
-What both shells get:
+Two particularities:
+- `bash` is by default provided when choosing `zsh`
+- `zsh` is always enriched with [zsh4humans](https://github.com/romkatv/zsh4humans)
 
-- `~/.profile` sets `umask 022`, builds the PATH (`~/bin`, `~/.local/bin`, bun, mise shims, krew, `GOBIN`), loads `mise env` and points Go caches to `~/.cache`.
-- `~/.bash_aliases` colors `ls` and `grep`, adds `ll`, `la`, `lla`, `l`, and short names for tools when they are installed: `dc` (docker compose), `gcl` (gitlab-ci-local), `k` (kubectl), `tf` (terraform).
+Shell 'rc' files are configured as symlinks since they are the most susceptible ones to be modified per user preferences.
+Having symlinks is as such convenient since **chezmoi** will not detect drift and use **git** to apply changes (stash > pull > stash pop).
 
-On top of that:
+Below the list of shell files configuration and what they bring to the table.
 
-- bash exports `BASH_ENV` (`~/.config/environment.d/bash.conf`) so non-interactive shells also source `~/.profile`.
-- zsh runs on [zsh4humans](https://github.com/romkatv/zsh4humans) v5, with `~/.zshenv` refreshed weekly
-  and a few tweaks in `~/.zshrc` (pc keyboard, right arrow accepts autosuggestions, no auto-update, no tmux, no direnv).
+```tree
+~/
+│   # shell aliases, used by both bash and zsh
+│   # edit this file when modifying, removing or adding new aliases
+├── .bash_aliases
+├── .bash_logout   # bash login cleanup
+├── .bashenv       # sources .profile
+├── .bashrc        # bash interactive config
+│   # zsh plugins
+│   # edit this file when modifying, removing or adding zsh plugins
+├── .env.zsh
+│   # PATH, umask, mise env, used by both bash and zsh
+│   # edit this file when adding new paths to PATH
+│   # or when exporting new dev tool environment variables (prefer mise for other environment variables)
+├── .profile
+├── .zlogout       # zsh login cleanup
+├── .zprofile      # sources .profile
+└── .zshrc         # zsh interactive config
+```
 
-> [!tip]
-> Further tuning and custom zsh plugins can be added in the `~/.env.zsh`.
+#### zsh plugins
 
-#### Plugins zsh
+The advantage of zsh is its capability to be extended with plugins.
+When choosing zsh here, the following plugins are provided by default within `~/.env.zsh`.
 
-`~/.env.zsh` loads a handful of plugins on top of zsh4humans.
+| Plugin             | Source                                                      | Purpose                                                                                              |
+| ------------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `ssh-agent`        | [ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)               | Starts ssh-agent on shell start and loads your SSH keys into it                                      |
+| `history`          | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Timestamps each command, writes it immediately, and shares it live across sessions, deduping repeats |
+| `disk-cleanup`     | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Adds a `disk-cleanup` command that clears dev-tool caches and old installed versions                 |
+| `docker-rootless`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Exports `DOCKER_HOST` so the docker CLI targets your rootless daemon                                 |
+| `gitlab-ci-local`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches `gitlab-ci-local`'s shell completion so it loads instantly                                    |
+| `highlight-styles` | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Removes the underline zsh's syntax highlighting puts on commands                                     |
+| `just-completion`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches `just`'s shell completion so it loads instantly                                               |
+| `mise-completion`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches `mise`'s shell completion so it loads instantly                                               |
+| `release-sync`     | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Adds a `release-sync` command that syncs releases between GitHub and GitLab                          |
+| `task-completion`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches `task`'s shell completion so it loads instantly                                               |
 
-| Plugin             | Source                                                      | Purpose                                                           |
-| ------------------ | ----------------------------------------------------------- | ----------------------------------------------------------------- |
-| `ssh-agent`        | [ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)               | starts ssh-agent and loads keys                                   |
-| `history`          | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | timestamps, immediate write, shared history, dedup                |
-| `disk-cleanup`     | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | `disk-cleanup` command: clears dev-tool caches and stale versions |
-| `docker-rootless`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | exports `DOCKER_HOST` for rootless docker                         |
-| `gitlab-ci-local`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | cached completion                                                 |
-| `highlight-styles` | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | removes underline from syntax highlighting                        |
-| `just-completion`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | cached completion                                                 |
-| `mise-completion`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | cached completion                                                 |
-| `release-sync`     | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | `release-sync` command: sync releases between GitHub and GitLab   |
-| `task-completion`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | cached completion                                                 |
+### Desktop apps
 
-### Desktop
+As stated above in machine kinds part, when choosing a `desktop` kind,
+you would most likely want some applications to be installed, the repository extends that to a limited list of apps.
 
-Desktop apps install only when `dev` is false, through apt on linux and winget on windows.
+| App                             | Linux | Windows | When                  |
+| ------------------------------- | ----- | ------- | --------------------- |
+| LibreOffice                     | x     | x       | always                |
+| Spotify                         | x     | x       | always                |
+| wayland-scroll-factor           | x     |         | always                |
+| Git, 7zip                       |       | x       | always                |
+| VS Code                         | x     | x       | `vscode` in `ide`     |
+| Zed                             | x     | x       | `zed` in `ide`        |
+| IntelliJ IDEA Ultimate          |       | x       | `intellij` in `ide`   |
+| Brave                           | x     | x       | `home` profile        |
+| Discord                         | x     | x       | `home` profile        |
+| NetBird                         | x     | x       | `home` profile        |
+| Nextcloud                       | x     | x       | `home` profile        |
+| Yubico Authenticator            | x     | x       | `home` profile        |
+| pcscd                           | x     |         | `home` profile        |
+| Filen, VeraCrypt, G HUB         |       | x       | `home` profile        |
+| .NET runtimes 8, 10             |       | x       | `home` profile        |
+| YubiKey Manager, minidriver     |       | x       | `home` profile        |
+| CPU-Z, OCCT, HWiNFO             |       | x       | `gaming`              |
+| Afterburner, RTSS               |       | x       | `gaming`              |
+| EA, Epic, Ubisoft, Steam, WeMod |       | x       | `gaming`              |
+| Office, Teams, WSL, Obsidian    |       | x       | `soprasteria` profile |
 
-| App                             | linux | windows | When                       |
-| ------------------------------- | ----- | ------- | -------------------------- |
-| LibreOffice                     | x     | x       | always                     |
-| Spotify                         | x     | x       | always                     |
-| wayland-scroll-factor           | x     |         | always                     |
-| Git, 7zip                       |       | x       | always                     |
-| VS Code                         | x     | x       | `ide` has `vscode`         |
-| Zed                             | x     | x       | `ide` has `zed`            |
-| IntelliJ IDEA Ultimate          |       | x       | `ide` has `intellij`       |
-| Brave                           | x     | x       | `profile` == `home`        |
-| Discord                         | x     | x       | `profile` == `home`        |
-| NetBird                         | x     | x       | `profile` == `home`        |
-| Nextcloud                       | x     | x       | `profile` == `home`        |
-| Yubico Authenticator            | x     | x       | `profile` == `home`        |
-| pcscd                           | x     |         | `profile` == `home`        |
-| Filen, VeraCrypt, G HUB         |       | x       | `profile` == `home`        |
-| .NET runtimes 8, 10             |       | x       | `profile` == `home`        |
-| YubiKey Manager, minidriver     |       | x       | `profile` == `home`        |
-| CPU-Z, OCCT, HWiNFO             |       | x       | `gaming`                   |
-| Afterburner, RTSS               |       | x       | `gaming`                   |
-| EA, Epic, Ubisoft, Steam, WeMod |       | x       | `gaming`                   |
-| Office, Teams, WSL, Obsidian    |       | x       | `profile` == `soprasteria` |
+### Tooling
 
-### AI
+Dev tools are grouped into bundles, each bundle is a set of tools installed through [**mise**](https://mise.jdx.dev).
+Selected, unselected, added, removed tools from the **chezmoi** configuration are reconciled in the next apply.
+Tools added by hand with **mise** always stay to ease customization per user, unless such tool is managed by **chezmoi**.
 
-When at least one AI agent is selected, the selected CLIs (`claude`, `codex`, `copilot`)
-and [apm](https://github.com/microsoft/apm) are installed and updated on every `chezmoi apply`.
+The following tools are always installed without capability to skip them: age, cosign, node 24, sops, usage.
 
-apm deploys the skill repos, each agent's marketplace installs the plugins, chezmoi handles agent-rules and the copilot LSP config.
+| Bundle            | Installs                                | Home profile defaults | Sopra Steria profile defaults |
+| ----------------- | --------------------------------------- | --------------------- | ----------------------------- |
+| `boost`           | jfrog-boost                             | x                     | x                             |
+| `bun`             | bun                                     | x                     |                               |
+| `codegraph`       | codegraph                               | x                     | x                             |
+| `context7`        | context7, context7-mcp                  | x                     | x                             |
+| `gh`              | gh                                      | x                     |                               |
+| `gitlab-ci-local` | gitlab-ci-local                         | x                     | x                             |
+| `glab`            | glab                                    | x                     |                               |
+| `go`              | go, golangci-lint                       | x                     | x                             |
+| `hugo`            | dart-sass, hugo-extended                | x                     | x                             |
+| `incus`           | incus                                   | x                     |                               |
+| `java`            | java (LTS), jdtls                       |                       | x                             |
+| `just`            | just                                    | x                     |                               |
+| `k8s`             | helm, helm-ct, krew, kubectl, kustomize | x                     | x                             |
+| `kotlin`          | kotlin, kotlin-lsp                      |                       |                               |
+| `mempalace`       | mempalace                               | x                     | x                             |
+| `opentofu`        | opentofu, tflint, tofu-ls               | x                     |                               |
+| `pre-commit`      | pre-commit                              | x                     | x                             |
+| `rtk`             | rtk                                     |                       |                               |
+| `shell`           | bash-language-server, shellcheck        | x                     | x                             |
+| `terraform`       | terraform, terraform-ls, tflint         |                       | x                             |
+| `uv`              | uv                                      | x                     | x                             |
 
-| Component                                                                            | Type               | Source                                                                                           | When                                                        |
-| ------------------------------------------------------------------------------------ | ------------------ | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| `agent-rules`                                                                        | Instructions       | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules), refreshed daily                     | `claude` and `copilot` only                                 |
-| `code-simplifier`                                                                    | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                      |
-| `exam-drill`                                                                         | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                      |
-| `feature-dev`                                                                        | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                      |
-| `find-skills`                                                                        | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)                                      | always                                                      |
-| `grill-me`, `grilling`                                                               | Skills             | [mattpocock/skills](https://github.com/mattpocock/skills)                                        | always                                                      |
-| `protected-paths`                                                                    | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                      |
-| `schema-converter`                                                                   | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                      |
-| `caveman`                                                                            | Hooks, Skills      | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `ai.plugins` has it                                         |
-| `ponytail`                                                                           | Hooks, Skills      | [ponytail](https://github.com/DietrichGebert/ponytail)                                           | `ai.plugins` has it                                         |
-| `codegraph`                                                                          | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `tools.mise` has it                                         |
-| `context7`                                                                           | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `tools.mise` has it                                         |
-| `mempalace`                                                                          | Hooks, MCP, Skills | [mempalace](https://github.com/mempalace/mempalace)                                              | `tools.mise` has it                                         |
-| `bash-language-server`, `gopls`, `jdtls`, `kotlin-lsp`, `terraform-ls`, `tofu-ls`    | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | matching `tools.mise` bundle, `claude` and `copilot` only   |
+### Container runtimes
 
-### Mise
+Two main container runtimes can be installed:
+- `docker`: rootless docker-ce on the pasta network driver.
+- `podman`: podman and podman-compose, rootless by default.
 
-Selected bundles land in `~/.config/mise/config.toml` and get installed, upgraded and pruned on every `chezmoi apply`.
-Deselecting `mise` removes all tool dependencies, installations and directories, leaving a cleaned machine.
+### Agent components
 
-While mise has a large panel of installable tools, only the ones I use most are exposed as prompt choices.
-Any other mise registered tool can still be installed manually at any time without having `chezmoi apply` removing them
-(unless those are not selected).
+To improve agent generation, responses and consumption, the following components are provided
+and installed depending on the chosen runtime, installed tools with **mise** or even prompt choices.
 
-The following table provides the list of default bundles to be installed depending on the chosen work profile.
+| Component              | Type               | Source                                                                                           | When                                                     |
+| ---------------------- | ------------------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| `agent-rules`          | Instructions       | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules), refreshed daily                     | `claude` and `copilot` only                              |
+| `code-simplifier`      | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
+| `exam-drill`           | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
+| `feature-dev`          | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
+| `find-skills`          | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)                                      | always                                                   |
+| `grill-me`, `grilling` | Skills             | [mattpocock/skills](https://github.com/mattpocock/skills)                                        | always                                                   |
+| `protected-paths`      | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
+| `schema-converter`     | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
+| `caveman`              | Hooks, Skills      | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `caveman` in `ai.plugins`                                |
+| `ponytail`             | Hooks, Skills      | [ponytail](https://github.com/DietrichGebert/ponytail)                                           | `ponytail` in `ai.plugins`                               |
+| `codegraph`            | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `codegraph` in `tools.mise`                              |
+| `context7`             | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `context7` in `tools.mise`                               |
+| `mempalace`            | Hooks, MCP, Skills | [mempalace](https://github.com/mempalace/mempalace)                                              | `mempalace` in `tools.mise`                              |
+| `bash-language-server` | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `shell` in `tools.mise`, `claude` and `copilot` only     |
+| `gopls`                | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `go` in `tools.mise`, `claude` and `copilot` only        |
+| `jdtls`                | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `java` in `tools.mise`, `claude` and `copilot` only      |
+| `kotlin-lsp`           | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `kotlin` in `tools.mise`, `claude` and `copilot` only    |
+| `terraform-ls`         | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `terraform` in `tools.mise`, `claude` and `copilot` only |
+| `tofu-ls`              | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `opentofu` in `tools.mise`, `claude` and `copilot` only  |
 
-| Bundle            | Installs                                | home | soprasteria |
-| ----------------- | --------------------------------------- | ---- | ----------- |
-| `bun`             | bun                                     | x    |             |
-| `codegraph`       | codegraph                               | x    | x           |
-| `context7`        | context7, context7-mcp                  | x    | x           |
-| `gh`              | gh                                      | x    |             |
-| `gitlab-ci-local` | gitlab-ci-local                         | x    | x           |
-| `glab`            | glab                                    | x    |             |
-| `go`              | go, golangci-lint                       | x    | x           |
-| `hugo`            | dart-sass, hugo-extended                | x    | x           |
-| `incus`           | incus                                   | x    |             |
-| `java`            | java (LTS), jdtls                       |      | x           |
-| `just`            | just                                    | x    |             |
-| `k8s`             | helm, helm-ct, krew, kubectl, kustomize | x    | x           |
-| `kotlin`          | kotlin, kotlin-lsp                      |      |             |
-| `mempalace`       | mempalace                               | x    | x           |
-| `opentofu`        | opentofu, tflint, tofu-ls               | x    |             |
-| `pre-commit`      | pre-commit                              | x    | x           |
-| `rtk`             | rtk                                     | x    | x           |
-| `shell`           | bash-language-server, shellcheck        | x    | x           |
-| `terraform`       | terraform, terraform-ls, tflint         |      | x           |
-| `uv`              | uv                                      | x    | x           |
+### Servers
 
-Some tools are always installed regardless of selection due to their usefulness and usage: age, cosign, node 24, sops, usage.
+When choosing `server` as machine kind, small modifications can be done onto the OS configuration itself:
+- The hostname can be changed, retrieved from `machine.name`, mirrored in `/etc/hosts`.
+- The timezone can be changed, retrieved from `ansible.timezone`.
+- IPv4 forwarding (`net.ipv4.conf.all.forwarding=1`) is configured since needed by NetBird routing peers and CIS hardened images.

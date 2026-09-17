@@ -1,6 +1,7 @@
 {{- /* chezmoi:modify-template */ -}}
 
 {{- $bundles := dict
+    "boost" (dict "jfrog-boost" "latest")
     "bun" (dict "bun" "latest")
     "codegraph" (dict "codegraph" "latest")
     "context7" (dict "context7" "latest" "context7-mcp" "latest")

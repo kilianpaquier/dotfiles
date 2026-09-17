@@ -1,0 +1,55 @@
+# same rules as mise: install selected, uninstall deselected, leave unknown packages alone
+
+$wanted = @(
+  'Git.Git', 'Spotify.Spotify', '7zip.7zip'
+{{- if has "vscode" .ide }}
+  'Microsoft.VisualStudioCode'
+{{- end }}
+{{- if has "intellij" .ide }}
+  'JetBrains.IntelliJIDEA.Ultimate'
+{{- end }}
+{{- if has "zed" .ide }}
+  'ZedIndustries.Zed'
+{{- end }}
+{{- if eq .profile "home" }}
+  'Brave.Brave', 'Discord.Discord', 'Netbird.Netbird', 'FilenCloud.FilenSync', 'Nextcloud.NextcloudDesktop', 'TheDocumentFoundation.LibreOffice'
+  'Microsoft.DotNet.DesktopRuntime.10', 'Microsoft.DotNet.DesktopRuntime.8'
+  'IDRIX.VeraCrypt', 'Logitech.GHUB'
+  'Yubico.Authenticator', 'Yubico.YubiKeyManagerCLI', 'Yubico.YubiKeySmartCardMinidriver'
+{{- end }}
+{{- if .gaming }}
+  'CPUID.CPU-Z', 'OCBase.OCCT.Personal', 'REALiX.HWiNFO', 'Guru3D.Afterburner', 'Guru3D.RTSS'
+  'ElectronicArts.EADesktop', 'EpicGames.EpicGamesLauncher', 'Ubisoft.Connect', 'Valve.Steam', 'WeMod.WeMod'
+{{- end }}
+{{- if eq .profile "soprasteria" }}
+  'Microsoft.Office', 'Microsoft.Teams', 'Microsoft.WSL', 'Obsidian.Obsidian'
+{{- end }}
+)
+
+# every package a condition above can select, the only ones this script may uninstall
+$managed = @(
+  'Git.Git', 'Spotify.Spotify', '7zip.7zip'
+  'Microsoft.VisualStudioCode', 'JetBrains.IntelliJIDEA.Ultimate', 'ZedIndustries.Zed'
+  'Brave.Brave', 'Discord.Discord', 'Netbird.Netbird', 'FilenCloud.FilenSync', 'Nextcloud.NextcloudDesktop', 'TheDocumentFoundation.LibreOffice'
+  'Microsoft.DotNet.DesktopRuntime.10', 'Microsoft.DotNet.DesktopRuntime.8'
+  'IDRIX.VeraCrypt', 'Logitech.GHUB'
+  'Yubico.Authenticator', 'Yubico.YubiKeyManagerCLI', 'Yubico.YubiKeySmartCardMinidriver'
+  'CPUID.CPU-Z', 'OCBase.OCCT.Personal', 'REALiX.HWiNFO', 'Guru3D.Afterburner', 'Guru3D.RTSS'
+  'ElectronicArts.EADesktop', 'EpicGames.EpicGamesLauncher', 'Ubisoft.Connect', 'Valve.Steam', 'WeMod.WeMod'
+  'Microsoft.Office', 'Microsoft.Teams', 'Microsoft.WSL', 'Obsidian.Obsidian'
+)
+
+$export = Join-Path $env:TEMP 'winget-export.json'
+winget export -o $export --accept-source-agreements --nowarn | Out-Null
+$installed = @((Get-Content $export | ConvertFrom-Json).Sources.Packages.PackageIdentifier)
+
+$missing = @($wanted | Where-Object { $_ -notin $installed })
+if ($missing) {
+  winget install -e -i @missing
+}
+
+foreach ($id in $managed | Where-Object { $_ -notin $wanted -and $_ -in $installed }) {
+  winget uninstall -e -i --id $id
+}
+
+winget upgrade --all

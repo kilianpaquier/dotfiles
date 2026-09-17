@@ -1,3 +1,4 @@
+machines: [desktop, server, workstation]
 profiles: [home, soprasteria]
 
 managers: [mise]
@@ -5,8 +6,14 @@ default_managers:
   home: [mise]
   soprasteria: [mise]
 
+container_runtimes: [docker, podman]
+default_container_runtimes:
+  home: [podman]
+  soprasteria: [podman]
+
 tools:
   mise:
+    - boost
     - bun
     - codegraph
     - context7
@@ -29,6 +36,7 @@ tools:
     - uv
 default_tools:
   home:
+    - boost
     - bun
     - codegraph
     - context7
@@ -43,10 +51,10 @@ default_tools:
     - mempalace
     - opentofu
     - pre-commit
-    - rtk
     - shell
     - uv
   soprasteria:
+    - boost
     - codegraph
     - context7
     - gitlab-ci-local
@@ -56,13 +64,12 @@ default_tools:
     - k8s
     - mempalace
     - pre-commit
-    - rtk
     - shell
     - terraform
     - uv
 
-agents: [claude, codex, copilot]
-default_agents:
+agent_runtimes: [claude, codex, copilot]
+default_agent_runtimes:
   home: [claude, copilot]
   soprasteria: [copilot]
 

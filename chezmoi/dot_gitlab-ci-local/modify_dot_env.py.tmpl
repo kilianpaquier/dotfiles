@@ -1,0 +1,2 @@
+{{- includeTemplate "scripts/env-merge.py" (dict
+  "set" (dict "CONTAINER_EXECUTABLE" .container.engine)) }}

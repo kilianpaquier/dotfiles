@@ -1,0 +1,23 @@
+{{- $marketplaces := dict }}
+{{- range $name, $source := dict
+    "mempalace" "https://github.com/mempalace/mempalace.git"
+    "one-for-all" "https://github.com/kilianpaquier/ai-integration.git"
+    "ponytail" "https://github.com/DietrichGebert/ponytail.git" }}
+{{- $_ := set $marketplaces $name (dict "source" $source "source_type" "git") }}
+{{- end }}
+
+{{- $plugins := dict }}
+{{- $unset := list }}
+
+{{- range $id, $enabled := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" false) .) | fromJson }}
+{{- if $enabled }}
+{{- $_ := set $plugins $id (dict "enabled" true) }}
+{{- else }}
+{{- $unset = append $unset (list "plugins" $id) }}
+{{- end }}
+{{- end }}
+
+{{- includeTemplate "scripts/toml-merge.py" (dict
+  "set" (dict "marketplaces" $marketplaces "plugins" $plugins)
+  "sort" list
+  "unset" $unset) }}

@@ -1,0 +1,7 @@
+{{- $set := include "dot_claude/settings.partial.json" | fromJson }}
+{{- $_ := mergeOverwrite $set (includeTemplate "claude-plugins.json.tmpl" . | fromJson) }}
+
+{{- includeTemplate "scripts/json-merge.py" (dict
+  "indent" 2
+  "set" $set
+  "sort" (list (list "permissions" "allow") (list "permissions" "deny") (list "permissions" "ask"))) }}

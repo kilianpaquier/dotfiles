@@ -18,4 +18,10 @@ gitlab_keys() {
   done
 }
 
-{ awk 1; github_keys; gitlab_keys; } | sort -u
+# fetch a host's keys only when known_hosts has none for it, a rotation needs the host lines removed by hand
+known=$(cat)
+{
+  [ -z "$known" ] || printf '%s\n' "$known"
+  printf '%s\n' "$known" | grep -q '^github.com ' || github_keys
+  printf '%s\n' "$known" | grep -q '^gitlab.com ' || gitlab_keys
+} | sort -u

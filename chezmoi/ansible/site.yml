@@ -6,7 +6,7 @@
   gather_facts: false
   vars:
     # renovate: datasource=github-tags packageName=daniel-g-carrasco/wayland-scroll-factor depName=wayland-scroll-factor
-    wayland_version: 0.3.5
+    wayland_version: 1.0.0
 
   tasks:
     - name: Chezmoi config

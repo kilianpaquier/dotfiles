@@ -1,5 +1,3 @@
-{{- /* chezmoi:modify-template */ -}}
-
 {{- $bundles := dict
     "boost" (dict "jfrog-boost" "latest")
     "bun" (dict "bun" "latest")
@@ -23,17 +21,18 @@
     "terraform" (dict "terraform" "latest" "terraform-ls" "latest" "tflint" "latest")
     "uv" (dict "uv" "latest") }}
 
-{{- $config := dict }}
-{{- if .chezmoi.stdin }}{{ $config = fromToml .chezmoi.stdin }}{{- end }}
-{{- $tools := $config.tools | default dict }}
+{{- $tools := dict "age" "latest" "cosign" "latest" "node" "24" "sops" "latest" "usage" "latest" }}
 
 {{- range $bundle, $specs := $bundles }}
-{{- range $id, $spec := $specs }}
-{{- $_ := unset $tools $id }}
-{{- if has $bundle $.tools.mise }}{{ $_ := set $tools $id $spec }}{{- end }}
+{{- if has $bundle $.tools.mise }}{{ $_ := mergeOverwrite $tools $specs }}{{- end }}
+{{- end }}
+
+{{- /* a tool shared by two bundles stays as long as one of them is selected */ -}}
+{{- $unset := list }}
+{{- range $bundle, $specs := $bundles }}
+{{- range $id, $_ := $specs }}
+{{- if not (hasKey $tools $id) }}{{ $unset = append $unset (list "tools" $id) }}{{- end }}
 {{- end }}
 {{- end }}
 
-{{- $_ := mergeOverwrite $tools (dict "age" "latest" "cosign" "latest" "node" "24" "sops" "latest" "usage" "latest") }}
-{{- $_ := set $config "tools" $tools }}
-{{- regexReplaceAll "(?m)^ +" (toToml $config) "" -}}
+{{- includeTemplate "scripts/toml-merge.py" (dict "set" (dict "tools" $tools) "sort" (list (list "tools")) "unset" $unset) -}}

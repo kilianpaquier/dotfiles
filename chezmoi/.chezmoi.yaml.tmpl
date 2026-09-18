@@ -93,25 +93,23 @@ umask: 0o22
 
 {{- if ne .chezmoi.os "windows" }}
 
-# run custom pager to run Ansible drift check too
-#
-# the user of a custom pager instead of a 'diff.post' hook with Ansible is a workaround Ansible logs
-# and check appearing during 'chezmoi diff' review
+# custom pager for ansible check integration, verbose apply and ansible skip with '-x scripts'
 diff:
-  pager: {{ .chezmoi.sourceDir }}/ansible/scripts/pager.sh
+  pager: {{ .chezmoi.sourceDir }}/scripts/pager.sh
 
-# run sudo -v to avoid Ansible asking sudo permissions
+# ansible integration with chezmoi
 hooks:
   apply:
     pre:
-      command: sudo
-      args: [-v]
+      command: {{ .chezmoi.sourceDir }}/scripts/pre-chezmoi.sh
     post:
-      command: {{ .chezmoi.sourceDir }}/ansible/scripts/play.sh
+      command: {{ .chezmoi.sourceDir }}/scripts/ansible.sh
   diff:
     pre:
-      command: sudo
-      args: [-v]
+      command: {{ .chezmoi.sourceDir }}/scripts/pre-chezmoi.sh
+    post:
+      # handle cases where there's no chezmoi diff or --no-pager argument is provided
+      command: {{ .chezmoi.sourceDir }}/scripts/post-diff.sh
 {{- end }}
 
 data:

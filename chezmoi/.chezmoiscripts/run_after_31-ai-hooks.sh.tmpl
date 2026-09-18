@@ -1,0 +1,33 @@
+#!/bin/sh
+
+set -e
+
+{{- if has "rtk" .tools.mise }}
+
+if command -v rtk >/dev/null 2>&1; then
+  if [ {{ if has "copilot" .ai.runtimes }}! {{ end }}-f "$HOME/.copilot/hooks/rtk-rewrite.json" ]; then
+    rtk init -g {{ has "copilot" .ai.runtimes | ternary "" "--uninstall" }} --copilot --auto-patch
+  fi
+  if {{ if has "claude" .ai.runtimes }}! {{ end }}grep -qs 'rtk hook claude' "$HOME/.claude/settings.json"; then
+    rtk init -g {{ has "claude" .ai.runtimes | ternary "" "--uninstall" }} --auto-patch
+  fi
+  if {{ if has "codex" .ai.runtimes }}! {{ end }}grep -qs 'rtk hook codex' "$HOME/.codex/hooks.json"; then
+    rtk init -g {{ has "codex" .ai.runtimes | ternary "" "--uninstall" }} --codex
+  fi
+fi
+{{- end }}
+
+{{- if has "boost" .tools.mise }}
+
+if command -v boost >/dev/null 2>&1; then
+  if [ {{ if has "copilot" .ai.runtimes }}! {{ end }}-f "$HOME/.copilot/hooks/boost.json" ]; then
+    boost init --accept-terms {{ has "copilot" .ai.runtimes | ternary "" "--uninstall" }} --copilot
+  fi
+  if {{ if has "claude" .ai.runtimes }}! {{ end }}grep -qs boost-hook-claude "$HOME/.claude/settings.json"; then
+    boost init --accept-terms {{ has "claude" .ai.runtimes | ternary "" "--uninstall" }} --claude
+  fi
+  if {{ if has "codex" .ai.runtimes }}! {{ end }}grep -qs boost-hook-codex "$HOME/.codex/hooks.json"; then
+    boost init --accept-terms {{ has "codex" .ai.runtimes | ternary "" "--uninstall" }} --codex
+  fi
+fi
+{{- end }}

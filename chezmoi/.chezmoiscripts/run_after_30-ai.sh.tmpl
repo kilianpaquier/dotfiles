@@ -39,22 +39,4 @@ copilot plugin marketplace update
 copilot plugin update --all
 {{- end }}
 
-{{- if has "rtk" .tools.mise }}
-
-if command -v rtk >/dev/null 2>&1; then
-  rtk init -g {{ has "copilot" .ai.runtimes | ternary "" "--uninstall" }} --copilot --auto-patch
-  rtk init -g {{ has "claude" .ai.runtimes | ternary "" "--uninstall" }} --auto-patch
-  rtk init -g {{ has "codex" .ai.runtimes | ternary "" "--uninstall" }} --codex
-fi
-{{- end }}
-
-{{- if has "boost" .tools.mise }}
-
-if command -v boost >/dev/null 2>&1; then
-  boost init --accept-terms {{ has "copilot" .ai.runtimes | ternary "" "--uninstall" }} --copilot
-  boost init --accept-terms {{ has "claude" .ai.runtimes | ternary "" "--uninstall" }} --claude
-  boost init --accept-terms {{ has "codex" .ai.runtimes | ternary "" "--uninstall" }} --codex
-fi
-{{- end }}
-
 apm update -g -y

@@ -1,0 +1,5 @@
+{{- $set := dict "trustedFolders" (list
+    (joinPath .chezmoi.homeDir ".local" "share" "chezmoi")
+    (joinPath .chezmoi.homeDir "workspaces")) }}
+
+{{- includeTemplate "scripts/json-merge.py" (dict "indent" 2 "set" $set "sort" list) }}

@@ -1,7 +1,0 @@
-#!/bin/sh
-
-set -e
-
-set -- "$CHEZMOI_SOURCE_DIR/dot_claude/settings.partial.json"
-
-jq -s --indent 2 'reduce .[] as $x ({}; . + $x) | . * {{ includeTemplate "claude-plugins.json.tmpl" . }}' - "$@"

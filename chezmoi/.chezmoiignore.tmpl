@@ -19,6 +19,7 @@
 
 {{- if eq (len .ai.runtimes) 0 }}
 .chezmoiscripts/*-ai.sh
+.chezmoiscripts/*-ai-hooks.sh
 {{- end }}
 
 {{- if eq .chezmoi.os "windows" }}
@@ -35,4 +36,5 @@
 
 # source-only directories, reached through .chezmoi.sourceDir
 ansible
+scripts
 symlinks

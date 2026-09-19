@@ -15,7 +15,7 @@ sudo apt-get update && sudo apt-get install -y pcscd
 hostname=$(hostname)
 if [ "$hostname" != "{{ .machine.name }}" ]; then
   # hostnamectl leaves /etc/hosts alone, replace the whitespace-bounded old name
-  sudo sed -Ei "s#(^|\s)$hostname(\s|$)#\1{{ .machine.name }}\2#g" /etc/hosts
+  sed -E "s#(^|\s)$hostname(\s|$)#\1{{ .machine.name }}\2#g" /etc/hosts | sudo tee /etc/hosts >/dev/null
   sudo hostnamectl set-hostname "{{ .machine.name }}"
 fi
 

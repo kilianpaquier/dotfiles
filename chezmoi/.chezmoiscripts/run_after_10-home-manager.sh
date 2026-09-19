@@ -6,5 +6,5 @@ set -e
 [ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
 
 nix-channel --update
-home-manager switch
-nix-collect-garbage --delete-older-than 30d
+home-manager switch --log-format bar
+nix-collect-garbage --quiet --delete-older-than 30d

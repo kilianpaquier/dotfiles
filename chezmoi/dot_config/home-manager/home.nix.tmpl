@@ -72,6 +72,9 @@
     # EDITOR = "emacs";
   };
 
+  # disable news on switch (spams logs for nothing)
+  news.display = "silent";
+
   # home-manager auto install and self management
   programs.home-manager.enable = true;
 }

@@ -14,6 +14,10 @@
 .config/systemd/user/docker.service.d
 {{- end }}
 
+{{- if not (has "podman" .container.runtimes) }}
+.config/containers
+{{- end }}
+
 {{- if not (has "boost" .tools.mise) }}
 .boost
 {{- end }}

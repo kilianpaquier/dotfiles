@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 
-{{- $packages := list .shell "bash-completion" "cacert" "curl" "file" "gettext" "git" "gnumake" "jq" "man" "python3" "ripgrep" "socat" "tree" "unzip" "vim" "wget" }}
+{{- $packages := list .shell "bash-completion" "file" "gettext" "git" "gnumake" "jq" "python3" "ripgrep" "socat" "tree" "unzip" "vim" }}
 
 {{- if has "mise" .tools_management }}{{- $packages = append $packages "mise" }}{{- end }}
 

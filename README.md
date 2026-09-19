@@ -36,7 +36,7 @@ offering a uniform experience to review drift and reapply the configuration.
 
 The repository offers the following main features:
 - Shell choice for Linux (`bash` or `zsh`)
-- Basic desktop apps for Windows and Linux (see #TBD)
+- Basic desktop apps for Windows and Linux (see [desktop apps](#desktop-apps))
 - User dev tools for Linux
 - Generation of an SSH key (ed25519) and **git** identity setup
 
@@ -48,6 +48,11 @@ Setup is based on [prompts](#prompts) with predefined machine typologies and wor
 ```sh
 umask 022
 sh -c "$(curl -sSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main --apply https://gitlab.com/kilianpaquier/dotfiles.git
+```
+
+```sh
+umask 022
+sh -c "$(wget -qO- https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main --apply https://gitlab.com/kilianpaquier/dotfiles.git
 ```
 
 ```ps1

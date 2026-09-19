@@ -10,7 +10,14 @@ multi=/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 # a pre-existing multi-user nix must not trigger the single-user installer
 if [ ! -f "$single" ] && [ ! -f "$multi" ]; then
-  curl -L https://nixos.org/nix/install | sh -s -- --no-daemon --no-modify-profile
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL https://nixos.org/nix/install | sh -s -- --no-daemon --no-modify-profile
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO- https://nixos.org/nix/install | sh -s -- --no-daemon --no-modify-profile
+  else
+    echo "Neither curl nor wget is installed, one is needed to install nix" >&2
+    exit 1
+  fi
 fi
 
 # shellcheck disable=SC1090

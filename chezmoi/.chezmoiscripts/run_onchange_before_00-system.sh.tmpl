@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -e
+
+# root-only setup home-manager cannot own: system daemons and host identity
+
+{{- if and (eq .machine.kind "desktop") (eq .profile "home") }}
+
+# PC/SC daemon for yubioath-flutter
+sudo apt-get update && sudo apt-get install -y pcscd
+{{- end }}
+
+{{- if eq .machine.kind "server" }}
+
+hostname=$(hostname)
+if [ "$hostname" != "{{ .machine.name }}" ]; then
+  # hostnamectl leaves /etc/hosts alone, replace the whitespace-bounded old name
+  sudo sed -Ei "s#(^|\s)$hostname(\s|$)#\1{{ .machine.name }}\2#g" /etc/hosts
+  sudo hostnamectl set-hostname "{{ .machine.name }}"
+fi
+
+timezone=$(timedatectl show -p Timezone --value)
+if [ "$timezone" != "{{ .machine.timezone }}" ]; then
+  sudo timedatectl set-timezone "{{ .machine.timezone }}"
+  # long-running daemons cache the timezone
+  for service in cron rsyslog; do
+    ! systemctl is-active --quiet "$service" || sudo systemctl restart "$service"
+  done
+fi
+{{- end }}

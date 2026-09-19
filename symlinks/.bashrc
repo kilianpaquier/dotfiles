@@ -85,9 +85,9 @@ esac
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # shellcheck disable=SC1091
-[ -z "$PROFILE_SOURCED" ] && [ -f "$HOME/.profile" ] && . "$HOME/.profile"
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
 # shellcheck disable=SC1091
-[ -f "$HOME/.bash_aliases" ] && . "$HOME/.bash_aliases"
+[ ! -f "$HOME/.bash_aliases" ] || . "$HOME/.bash_aliases"
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile

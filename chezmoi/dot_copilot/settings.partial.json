@@ -41,6 +41,26 @@
         "rubberDuckAutoInvoke": false
     },
     "deniedUrls": [],
+    "extraKnownMarketplaces": {
+        "mempalace": {
+            "source": {
+                "repo": "mempalace/mempalace",
+                "source": "github"
+            }
+        },
+        "one-for-all": {
+            "source": {
+                "repo": "kilianpaquier/ai-integration",
+                "source": "github"
+            }
+        },
+        "ponytail": {
+            "source": {
+                "repo": "DietrichGebert/ponytail",
+                "source": "github"
+            }
+        }
+    },
     "effortLevel": "medium",
     "logLevel": "info",
     "remoteExport": false,

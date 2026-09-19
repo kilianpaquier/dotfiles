@@ -7,19 +7,20 @@ Dotfiles repository managed by [chezmoi](https://www.chezmoi.io/). Source root i
 ### Files removal
 
 - Use `.chezmoiremove.tmpl` to remove paths not managed by chezmoi.
-- Use `.chezmoitemplates/ignored.tmpl` to remove paths managed by chezmoi (cleanup glue under `.chezmoiscripts/run_onchange_after_95-cleanup.sh.tmpl`).
+- Use `.chezmoitemplates/chezmoiignore.tmpl` to remove paths managed by chezmoi (cleanup glue under `.chezmoiscripts/run_onchange_after_60-cleanup.sh.tmpl`).
 
-### Ansible integration
+### Home-manager integration
 
-- Use `ansible/tasks` for Linux system setup (apt, desktop apps, containers, server).
-- Use `.chezmoiscripts/*.ps1.tmpl` for Windows system setup (since **ansible** is not compatible with it).
-- All properties under `data` from `chezmoi.yaml.tmpl` are loaded as machine facts within **ansible** (at runtime for drift detection).
+- Use `dot_config/home-manager/home.nix.tmpl` for Linux packages (CLI tools, desktop apps, containers, agent runtimes, mise). Every attr must exist in `nixpkgs-unstable`.
+- `scripts/bootstrap.sh` is the `read-source-state` pre hook: installs nix, home-manager and a GC-rooted env (`~/.local/state/chezmoi/env`: jq, python with tomlkit) so `modify_*.py.tmpl` render on a fresh machine.
+- Root-only steps (pcscd, server hostname, timezone) live in `.chezmoiscripts/run_onchange_before_00-system.sh.tmpl` with `sudo`.
+- Use `.chezmoiscripts/*.ps1.tmpl` for Windows system setup (winget).
 
 ## Keep in sync
 
 - A new prompt in `.chezmoi.yaml.tmpl`: the `README.md` prompts tables.
 - A new tool: `.chezmoidata/tools.yaml` and the `README.md` tools table.
-- A linux task in `ansible/tasks/`: its windows `.ps1` counterpart.
+- A desktop app in `dot_config/home-manager/home.nix.tmpl`: its windows counterpart in `run_after_10-desktop.ps1.tmpl` and the `README.md` desktop apps table.
 - Trusted directories:
   - `dot_claude/settings.partial.json`: `permissions.additionalDirectories`
   - `dot_copilot/modify_private_config.json.tmpl`: `trustedFolders`

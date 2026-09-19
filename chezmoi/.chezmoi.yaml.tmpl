@@ -28,7 +28,7 @@
 
 {{- $timezone := "" }}
 {{- if eq $machine "server" }}
-  {{- $timezone = promptStringOnce . "ansible.timezone" "Which timezone should this server use" "UTC" }}
+  {{- $timezone = promptStringOnce . "machine.timezone" "Which timezone should this server use" "UTC" }}
 {{- end }}
 
 {{- $email := "" }}
@@ -93,37 +93,22 @@ umask: 0o22
 
 {{- if ne .chezmoi.os "windows" }}
 
-# custom pager for ansible check integration, verbose apply and ansible skip with '-x scripts'
-diff:
-  pager: {{ .chezmoi.sourceDir }}/scripts/pager.sh
-
-# ansible integration with chezmoi
+# nix, home-manager and python must exist before any source state read
 hooks:
-  apply:
+  read-source-state:
     pre:
-      command: {{ .chezmoi.sourceDir }}/scripts/pre-chezmoi.sh
-    post:
-      command: {{ .chezmoi.sourceDir }}/scripts/ansible.sh
-  diff:
-    pre:
-      command: {{ .chezmoi.sourceDir }}/scripts/pre-chezmoi.sh
-    post:
-      # handle cases where there's no chezmoi diff or --no-pager argument is provided
-      command: {{ .chezmoi.sourceDir }}/scripts/post-diff.sh
+      command: {{ .chezmoi.sourceDir }}/scripts/bootstrap.sh
+
+# python built by scripts/bootstrap.sh
+interpreters:
+  py:
+    command: {{ .chezmoi.homeDir }}/.local/state/chezmoi/env/bin/python3
 {{- end }}
 
 data:
   ai:
     runtimes:{{ $agent_runtimes | toYaml | trim | nindent 6 }}
     plugins:{{ $plugins | toYaml | trim | nindent 6 }}
-{{- if ne .chezmoi.os "windows" }}
-  # machine facts for the ansible playbook, gathered here so the play skips gather_facts and stays root-only
-  ansible:
-    codename: {{ .chezmoi.osRelease.versionCodename }}
-    home: {{ .chezmoi.homeDir }}
-    timezone: {{ $timezone }}
-    username: {{ .chezmoi.username }}
-{{- end }}
   container:
     engine: {{ $container_engine }}
     runtimes:{{ $container_runtimes | toYaml | trim | nindent 6 }}
@@ -134,6 +119,7 @@ data:
   machine:
     kind: {{ $machine }}
     name: {{ $machine_name }}
+    timezone: {{ $timezone }}
   profile: {{ $profile }}
   shell: {{ $shell }}
   ssh:

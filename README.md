@@ -26,12 +26,12 @@
   - [Servers](#servers)
 
 My own dotfiles repository, it provides dotfiles (obviously) but also user tools installation (using **mise**)
-and machine level tooling and setup (apt tools, container engines, hostname, timezone).
+and user level packages (CLI tools, desktop apps, container engines, agent runtimes).
 
 Drift detection and reconciliation is managed with **chezmoi** for dotfiles
-and **ansible** for machine tooling and setup.
+and **home-manager** (nix) for packages.
 
-To improve the usage experience, **ansible** commands are directly integrated within **chezmoi** ones,
+To improve the usage experience, **home-manager** commands are directly integrated within **chezmoi** ones,
 offering a uniform experience to review drift and reapply the configuration.
 
 The repository offers the following main features:
@@ -109,7 +109,7 @@ Two profiles exist, `home` and `soprasteria`.
 
 | Prompt                        | Default | Key                |
 | ----------------------------- | ------- | ------------------ |
-| Timezone to set on the server | `UTC`   | `ansible.timezone` |
+| Timezone to set on the server | `UTC`   | `machine.timezone` |
 
 ## Deep dive
 
@@ -173,7 +173,6 @@ you would most likely want some applications to be installed, the repository ext
 | ------------------------------- | ----- | ------- | --------------------- |
 | LibreOffice                     | x     | x       | always                |
 | Spotify                         | x     | x       | always                |
-| wayland-scroll-factor           | x     |         | always                |
 | Git, 7zip                       |       | x       | always                |
 | VS Code                         | x     | x       | `vscode` in `ide`     |
 | Zed                             | x     | x       | `zed` in `ide`        |
@@ -227,7 +226,7 @@ The following tools are always installed without capability to skip them: age, c
 ### Container runtimes
 
 Two main container runtimes can be installed:
-- `docker`: rootless docker-ce on the pasta network driver.
+- `docker`: rootless docker on the pasta network driver.
 - `podman`: podman and podman-compose, rootless by default.
 
 ### Agent components
@@ -259,7 +258,6 @@ and installed depending on the chosen runtime, installed tools with **mise** or 
 
 ### Servers
 
-When choosing `server` as machine kind, small modifications can be done onto the OS configuration itself:
-- The hostname can be changed, retrieved from `machine.name`, mirrored in `/etc/hosts`.
-- The timezone can be changed, retrieved from `ansible.timezone`.
-- IPv4 forwarding (`net.ipv4.conf.all.forwarding=1`) is configured since needed by NetBird routing peers and CIS hardened images.
+When choosing `server` as machine kind, small modifications can be done onto the OS configuration itself (`sudo` is needed in such cases):
+- The hostname can be changed, retrieved from `machine.name`.
+- The timezone can be changed, retrieved from `machine.timezone`.

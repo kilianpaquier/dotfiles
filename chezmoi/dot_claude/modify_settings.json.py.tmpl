@@ -1,5 +1,10 @@
 {{- $set := include "dot_claude/settings.partial.json" | fromJson }}
-{{- $_ := mergeOverwrite $set (includeTemplate "claude-plugins.json.tmpl" . | fromJson) }}
+
+{{- $enabled_plugins := dict }}
+{{- range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" true) .) | fromJson }}
+{{- if $on }}{{- $_ := set $enabled_plugins $id true }}{{- end }}
+{{- end }}
+{{- $_ := set $set "enabledPlugins" $enabled_plugins }}
 
 {{- includeTemplate "scripts/json-merge.py" (dict
   "indent" 2

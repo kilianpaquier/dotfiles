@@ -1,12 +1,13 @@
 {{- if eq .chezmoi.os "windows" }}
 **/*.sh
 .config/environment.d
+.config/home-manager
 {{- else }}
 .inputrc
 **/*.ps1
 {{- end }}
 
-{{ includeTemplate "ignored.tmpl" . }}
+{{ includeTemplate "chezmoiignore.tmpl" . }}
 
 {{- if not .ssh.generate }}
 .chezmoiscripts/*-ssh.sh
@@ -22,6 +23,14 @@
 .chezmoiscripts/*-ai-hooks.sh
 {{- end }}
 
+{{- if not (has "mise" .tools_management) }}
+.chezmoiscripts/*-mise.sh
+{{- end }}
+
+{{- if not (or (eq .machine.kind "server") (and (eq .machine.kind "desktop") (eq .profile "home"))) }}
+.chezmoiscripts/*-system.sh
+{{- end }}
+
 {{- if eq .chezmoi.os "windows" }}
 .config/environment.d/bash.conf
 .bash_aliases
@@ -35,6 +44,4 @@
 **/*.partial.*
 
 # source-only directories, reached through .chezmoi.sourceDir
-ansible
 scripts
-symlinks

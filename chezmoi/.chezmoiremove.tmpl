@@ -3,24 +3,25 @@
 {{- if not (has "claude" .ai.runtimes) }}
 .cache/claude
 .cache/claude-cli-nodejs
-.local/bin/claude
 .local/share/claude
 {{- end }}
 
 {{- if not (has "codex" .ai.runtimes) }}
 .cache/codex
-.local/bin/codex
 {{- end }}
 
 {{- if not (has "copilot" .ai.runtimes) }}
 .cache/copilot
-.local/bin/copilot
 {{- end }}
 
 {{- if eq (len .ai.runtimes) 0 }}
 .cache/apm
-.local/bin/apm
-.local/lib/apm
+{{- end }}
+
+{{- if not (has "mise" .tools_management) }}
+.cache/mise
+.local/share/mise
+.local/state/mise
 {{- end }}
 
 {{- if not (has "docker" .container.runtimes) }}

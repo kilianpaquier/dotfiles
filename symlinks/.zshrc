@@ -40,8 +40,8 @@ z4h source "$HOME/.env.zsh"
 
 # Extend environment (aliases and PATH).
 # path=(~/bin $path)
-[ -z "$PROFILE_SOURCED" ] && [ -f "$HOME/.zprofile" ] && . "$HOME/.zprofile"
-[ -f "$HOME/.bash_aliases" ] && . "$HOME/.bash_aliases"
+[ ! -f "$HOME/.zprofile" ] || . "$HOME/.zprofile"
+[ ! -f "$HOME/.bash_aliases" ] || . "$HOME/.bash_aliases"
 
 # Export environment variables.
 export GPG_TTY=$TTY

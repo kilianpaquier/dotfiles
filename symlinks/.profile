@@ -6,6 +6,9 @@
 # see /usr/share/doc/bash/examples/startup-files for examples.
 # the files are located in the bash-doc package.
 
+# sourced once per shell (or child process)
+[ "$PROFILE_SOURCED" != "$$" ] || return 0
+
 # the default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
 
@@ -32,6 +35,10 @@ umask 022
 # set PATH so it includes krew if it exists
 [ -d "$HOME/.krew/bin" ] && PATH="$HOME/.krew/bin:$PATH"
 
+# shellcheck disable=SC1091
+# source nix
+[ ! -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ] || . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+
 unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
 
 # source mise env and aliases
@@ -50,5 +57,4 @@ if command -v go >/dev/null 2>&1; then
   export GOLANGCI_LINT_CACHE="$HOME/.cache/golangci-lint"
 fi
 
-# shellcheck disable=SC2034
-PROFILE_SOURCED=1
+export PROFILE_SOURCED=$$

@@ -1,11 +1,57 @@
 {
     "$schema": "https://json.schemastore.org/claude-code-settings.json",
-    "respectGitignore": true,
+
+    "alwaysThinkingEnabled": true,
     "attribution": {
         "commit": "",
         "pr": ""
     },
+    "autoCompactEnabled": false,
+    "autoCompactWindow": 180000,
+    "autoMemoryEnabled": false,
+    "autoUploadSessions": false,
+    "cleanupPeriodDays": 60,
+    "defaultView": "chat",
+    "effortLevel": "medium",
+    "extraKnownMarketplaces": {
+        "claude-code-lsps": {
+            "source": {
+                "repo": "piebald-ai/claude-code-lsps",
+                "source": "github"
+            }
+        },
+        "claude-plugins-official": {
+            "source": {
+                "repo": "anthropics/claude-plugins-official",
+                "source": "github"
+            }
+        },
+        "mempalace": {
+            "source": {
+                "repo": "mempalace/mempalace",
+                "source": "github"
+            }
+        },
+        "one-for-all": {
+            "source": {
+                "repo": "kilianpaquier/ai-integration",
+                "source": "github"
+            }
+        },
+        "ponytail": {
+            "source": {
+                "repo": "DietrichGebert/ponytail",
+                "source": "github"
+            }
+        }
+    },
+    "fileCheckpointingEnabled": true,
+    "inputNeededNotifEnabled": true,
     "permissions": {
+        "additionalDirectories": [
+            "~/.local/share/chezmoi",
+            "~/workspaces"
+        ],
         "allow": [
             "Agent",
             "Bash(awk *)",
@@ -73,10 +119,10 @@
             "WebFetch(domain:agent-plugins.org)",
             "WebFetch(domain:ai.kilianpaquier.dev)",
             "WebFetch(domain:antigravity.google)",
+            "WebFetch(domain:chezmoi.io)",
             "WebFetch(domain:cli.netlify.com)",
             "WebFetch(domain:code.claude.com)",
             "WebFetch(domain:code.visualstudio.com)",
-            "WebFetch(domain:chezmoi.io)",
             "WebFetch(domain:cursor.com)",
             "WebFetch(domain:developer.atlassian.com)",
             "WebFetch(domain:developers.openai.com)",
@@ -103,43 +149,6 @@
             "WebFetch(domain:registry.npmjs.org)",
             "WebFetch(domain:schemastore.org)",
             "WebSearch"
-        ],
-        "deny": [
-            "Bash(bun exec *)",
-            "Bash(bun run *)",
-            "Bash(bun test*)",
-            "Bash(bunx *)",
-            "Bash(chezmoi *)",
-            "Bash(curl *)",
-            "Bash(gh *)",
-            "Bash(git *)",
-            "Bash(glab *)",
-            "Bash(go *)",
-            "Bash(just *)",
-            "Bash(make *)",
-            "Bash(npm exec *)",
-            "Bash(npm run *)",
-            "Bash(npx *)",
-            "Bash(pnpm dlx *)",
-            "Bash(pnpm run *)",
-            "Bash(rtk gh agent-task *)",
-            "Bash(rtk gh attestation *)",
-            "Bash(rtk gh codespace *)",
-            "Bash(rtk gh copilot *)",
-            "Bash(rtk gh preview *)",
-            "Bash(rtk gh skill *)",
-            "Bash(rtk glab artifact-registry *)",
-            "Bash(rtk glab cluster *)",
-            "Bash(rtk glab dependency-firewall *)",
-            "Bash(rtk glab duo *)",
-            "Bash(rtk glab mcp *)",
-            "Bash(rtk glab orbit *)",
-            "Bash(rtk glab runner-controller *)",
-            "Bash(rtk glab stack *)",
-            "Bash(rtk just --fmt*)",
-            "Bash(rtk just --init*)",
-            "Bash(tofu *)",
-            "Bash(wget *)"
         ],
         "ask": [
             "Bash(awk *>*)",
@@ -249,12 +258,12 @@
             "mcp__github__request_copilot_review",
             "mcp__github__run_secret_scanning",
             "mcp__github__sub_issue_write",
-            "mcp__github__update_pull_request_branch",
             "mcp__github__update_pull_request",
+            "mcp__github__update_pull_request_branch",
             "mcp__gitlab__attach_scan_profile",
             "mcp__gitlab__create_issue",
-            "mcp__gitlab__create_merge_request_note",
             "mcp__gitlab__create_merge_request",
+            "mcp__gitlab__create_merge_request_note",
             "mcp__gitlab__create_workitem_note",
             "mcp__gitlab__link_work_items",
             "mcp__gitlab__manage_pipeline",
@@ -279,12 +288,12 @@
             "mcp__plugin_github_github__request_copilot_review",
             "mcp__plugin_github_github__run_secret_scanning",
             "mcp__plugin_github_github__sub_issue_write",
-            "mcp__plugin_github_github__update_pull_request_branch",
             "mcp__plugin_github_github__update_pull_request",
+            "mcp__plugin_github_github__update_pull_request_branch",
             "mcp__plugin_gitlab_gitlab__attach_scan_profile",
             "mcp__plugin_gitlab_gitlab__create_issue",
-            "mcp__plugin_gitlab_gitlab__create_merge_request_note",
             "mcp__plugin_gitlab_gitlab__create_merge_request",
+            "mcp__plugin_gitlab_gitlab__create_merge_request_note",
             "mcp__plugin_gitlab_gitlab__create_workitem_note",
             "mcp__plugin_gitlab_gitlab__link_work_items",
             "mcp__plugin_gitlab_gitlab__manage_pipeline",
@@ -295,34 +304,54 @@
             "mcp__plugin_mempalace_mempalace__mempalace_kg_invalidate"
         ],
         "defaultMode": "default",
-        "disableBypassPermissionsMode": "disable",
-        "additionalDirectories": [
-            "~/.local/share/chezmoi",
-            "~/workspaces"
-        ]
+        "deny": [
+            "Bash(bun exec *)",
+            "Bash(bun run *)",
+            "Bash(bun test*)",
+            "Bash(bunx *)",
+            "Bash(chezmoi *)",
+            "Bash(curl *)",
+            "Bash(gh *)",
+            "Bash(git *)",
+            "Bash(glab *)",
+            "Bash(go *)",
+            "Bash(just *)",
+            "Bash(make *)",
+            "Bash(npm exec *)",
+            "Bash(npm run *)",
+            "Bash(npx *)",
+            "Bash(pnpm dlx *)",
+            "Bash(pnpm run *)",
+            "Bash(rtk gh agent-task *)",
+            "Bash(rtk gh attestation *)",
+            "Bash(rtk gh codespace *)",
+            "Bash(rtk gh copilot *)",
+            "Bash(rtk gh preview *)",
+            "Bash(rtk gh skill *)",
+            "Bash(rtk glab artifact-registry *)",
+            "Bash(rtk glab cluster *)",
+            "Bash(rtk glab dependency-firewall *)",
+            "Bash(rtk glab duo *)",
+            "Bash(rtk glab mcp *)",
+            "Bash(rtk glab orbit *)",
+            "Bash(rtk glab runner-controller *)",
+            "Bash(rtk glab stack *)",
+            "Bash(rtk just --fmt*)",
+            "Bash(rtk just --init*)",
+            "Bash(tofu *)",
+            "Bash(wget *)"
+        ],
+        "disableBypassPermissionsMode": "disable"
     },
+    "preferredNotifChannel": "auto",
     "remoteControlAtStartup": false,
+    "respectGitignore": true,
     "sandbox": {
         "allowUnsandboxedCommands": false,
         "autoAllowBashIfSandboxed": true,
         "enabled": false,
         "failIfUnavailable": true
     },
-    "worktree": {
-        "baseRef": "head",
-        "bgIsolation": "worktree"
-    },
-    "alwaysThinkingEnabled": true,
-    "autoCompactEnabled": false,
-    "autoCompactWindow": 180000,
-    "autoMemoryEnabled": false,
-    "autoUploadSessions": false,
-    "cleanupPeriodDays": 60,
-    "defaultView": "chat",
-    "effortLevel": "medium",
-    "fileCheckpointingEnabled": true,
-    "inputNeededNotifEnabled": true,
-    "preferredNotifChannel": "auto",
     "showMessageTimestamps": true,
     "showTurnDuration": true,
     "syntaxHighlightingDisabled": false,
@@ -331,5 +360,9 @@
     "tui": "fullscreen",
     "useAutoModeDuringPlan": false,
     "verbose": false,
-    "viewMode": "focus"
+    "viewMode": "focus",
+    "worktree": {
+        "baseRef": "head",
+        "bgIsolation": "worktree"
+    }
 }

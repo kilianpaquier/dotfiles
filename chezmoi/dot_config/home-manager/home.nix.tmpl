@@ -1,0 +1,77 @@
+{ config, pkgs, ... }:
+
+{{- $packages := list .shell "bash-completion" "cacert" "curl" "file" "gettext" "git" "gnumake" "jq" "man" "python3" "ripgrep" "socat" "tree" "unzip" "vim" "wget" }}
+
+{{- if has "mise" .tools_management }}{{- $packages = append $packages "mise" }}{{- end }}
+
+{{- if gt (len .ai.runtimes) 0 }}{{- $packages = append $packages "apm-cli" }}{{- end }}
+{{- if has "claude" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "claude-code") }}{{- end }}
+{{- if has "codex" .ai.runtimes }}{{- $packages = append $packages "codex" }}{{- end }}
+{{- if has "copilot" .ai.runtimes }}{{- $packages = append $packages "github-copilot-cli" }}{{- end }}
+
+{{- if has "docker" .container.runtimes }}{{- $packages = concat $packages (list "docker" "passt") }}{{- end }}
+{{- if has "podman" .container.runtimes }}{{- $packages = concat $packages (list "podman" "podman-compose") }}{{- end }}
+
+{{- if eq .machine.kind "desktop" }}
+  {{- $packages = concat $packages (list "libreoffice" "spotify") }}
+  {{- if has "vscode" .ide }}{{- $packages = append $packages "vscode" }}{{- end }}
+  {{- if has "zed" .ide }}{{- $packages = append $packages "zed-editor" }}{{- end }}
+  {{- if eq .profile "home" }}{{- $packages = concat $packages (list "brave" "discord" "netbird-ui" "nextcloud-client" "yubioath-flutter") }}{{- end }}
+{{- end }}
+
+{
+  # user extension point, a symlink into the dotfiles repo
+  imports = [ ./local.nix ];
+
+  home.username = "{{ .chezmoi.username }}";
+  home.homeDirectory = "{{ .chezmoi.homeDir }}";
+
+  # home-manager state version, all updates must be done carefully to avoid breakage
+  home.stateVersion = "26.05";
+
+  # packages to install
+  home.packages = with pkgs; [
+{{- range $packages | sortAlpha }}
+    {{ . }}
+{{- end }}
+  ];
+
+{{- if or (eq .machine.kind "desktop") (has "claude" .ai.runtimes) (has "copilot" .ai.runtimes) }}
+
+  # proprietary packages (claude-code, discord, github-copilot-cli, spotify, vscode) are refused by nixpkgs unless unfree is allowed.
+  nixpkgs.config.allowUnfree = true;
+{{- end }}
+
+{{- if has "docker" .container.runtimes }}
+
+  # nixpkgs docker needs to have its service defined
+  systemd.user.services.docker = {
+    Install.WantedBy = [ "default.target" ];
+    Service = {
+      # the user manager PATH has newuidmap but not the nix profile, pasta lives there
+      Environment = [
+        "DOCKERD_ROOTLESS_ROOTLESSKIT_NET=pasta"
+        "DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=implicit"
+        "PATH=%h/.nix-profile/bin:/usr/bin:/bin"
+      ];
+      ExecStart = "${pkgs.docker}/bin/dockerd-rootless";
+    };
+  };
+{{- end }}
+
+  # dotfiles management
+  home.file = {
+    # all dotfiles are managed by chezmoi for easier combination and drift review
+  };
+
+  # home-manager environment variables, one of the following files must be sourced for it to work:
+  #   - ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+  #   - ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
+  #   - /etc/profiles/per-user/{{ .chezmoi.username }}/etc/profile.d/hm-session-vars.sh
+  home.sessionVariables = {
+    # EDITOR = "emacs";
+  };
+
+  # home-manager auto install and self management
+  programs.home-manager.enable = true;
+}

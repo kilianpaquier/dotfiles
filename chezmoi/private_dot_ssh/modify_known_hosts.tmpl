@@ -1,8 +1,11 @@
 #!/bin/sh
 
+chezmoi_jq="$HOME/.local/state/chezmoi/env/bin/jq"
+
 # use GitHub keys instead of SSH checks to ensure it's verified by default (SSL/TLS retrieval).
 github_keys() {
-  curl -fsSL https://api.github.com/meta | jq -r '.ssh_keys[] | "github.com " + .'
+  # jq from the bootstrap env, home.nix packages are not on PATH during the file phase
+  curl -fsSL https://api.github.com/meta | "$chezmoi_jq" -r '.ssh_keys[] | "github.com " + .'
 }
 
 # verify keys fingerprint with GitLab registered ones https://docs.gitlab.com/user/gitlab_com/#ssh-host-keys-fingerprints.

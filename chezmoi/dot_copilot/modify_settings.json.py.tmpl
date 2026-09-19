@@ -1,4 +1,9 @@
 {{- $set := include "dot_copilot/settings.partial.json" | fromJson }}
-{{- $_ := mergeOverwrite $set (includeTemplate "copilot-plugins.json.tmpl" . | fromJson) }}
+
+{{- $enabled_plugins := dict }}
+{{- range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" false) .) | fromJson }}
+{{- if $on }}{{- $_ := set $enabled_plugins $id true }}{{- end }}
+{{- end }}
+{{- $_ := set $set "enabledPlugins" $enabled_plugins }}
 
 {{- includeTemplate "scripts/json-merge.py" (dict "indent" 2 "set" $set "sort" list) }}

@@ -2,17 +2,11 @@
 
 set -e
 
-if ! command -v apm >/dev/null 2>&1; then
-  curl -sSL https://aka.ms/apm-unix | APM_INSTALL_DIR=$HOME/.local/bin sh
-fi
-apm self-update
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
 
 {{- if has "claude" .ai.runtimes }}
 
-if ! command -v claude >/dev/null 2>&1; then
-  curl -fSL https://claude.ai/install.sh | bash
-fi
-claude update
 claude plugin marketplace update || true
 
 installed=" $(claude plugin list --json | jq -r '.[].id' | tr '\n' ' ')"
@@ -25,16 +19,11 @@ claude plugin list --json | jq -r '.[].id' | xargs -r -n1 claude plugin update -
 
 {{- if has "codex" .ai.runtimes }}
 
-curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
 codex plugin marketplace upgrade
 {{- end }}
 
 {{- if has "copilot" .ai.runtimes }}
 
-if ! command -v copilot >/dev/null 2>&1; then
-  curl -fSL https://gh.io/copilot-install | PREFIX=$HOME/.local bash
-fi
-copilot update
 copilot plugin marketplace update
 copilot plugin update --all
 {{- end }}

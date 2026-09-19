@@ -10,10 +10,6 @@
 .terraformrc
 {{- end }}
 
-{{- if not (has "docker" .container.runtimes) }}
-.config/systemd/user/docker.service.d
-{{- end }}
-
 {{- if not (has "podman" .container.runtimes) }}
 .config/containers
 {{- end }}

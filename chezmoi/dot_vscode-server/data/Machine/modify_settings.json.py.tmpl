@@ -8,4 +8,8 @@
 {{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.copilot.partial.json" | fromJson) }}
 {{- end }}
 
-{{- includeTemplate "scripts/json-merge.py" (dict "indent" 4 "set" $set "sort" list) }}
+{{- includeTemplate "scripts/json-merge.py" (dict
+  "indent" 4
+  "override" (list (list "chat.tools.terminal.autoApprove") (list "chat.tools.urls.autoApprove"))
+  "set" $set
+  "sort" (list (list "chat.tools.terminal.autoApprove") (list "chat.tools.urls.autoApprove"))) }}

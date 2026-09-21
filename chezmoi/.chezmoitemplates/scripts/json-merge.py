@@ -4,6 +4,8 @@ import itertools
 import json
 import sys
 
+from functools import reduce
+
 def merge(table, wanted):
     for key, value in wanted.items():
         if isinstance(value, dict) and isinstance(table.get(key), dict):
@@ -22,16 +24,29 @@ def main():
 
     text = "".join(lines[len(head):])
     doc = json.loads(text) if text.strip() else {}
-    merge(doc, json.loads(r'''{{ toJson .set }}'''))
+    wanted = json.loads(r'''{{ toJson .set }}''')
 
-    # sort merged list values in place, e.g. permission arrays
+    # assign overridden paths in place, delete+reinsert would move the key to the dict's end
+    for path in json.loads(r'''{{ toJson (.override | default list) }}'''):
+        *parents, key = path
+        src = reduce(lambda d, k: d[k], parents, wanted)
+        dst = reduce(lambda d, k: d.setdefault(k, {}), parents, doc)
+        dst[key] = src[key]
+        del src[key]
+
+    merge(doc, wanted)
+
+    # sort merged list values or dict keys in place; the sentinel sorts a string after any longer string it prefixes
+    sort_key = lambda item: str(item).lower() + "￿"
     for path in json.loads(r'''{{ toJson (.sort | default list) }}'''):
         *parents, key = path
         table = doc
         for parent in parents:
             table = table[parent]
-        # append a sentinel above every char so a string sorts after any longer string it prefixes
-        table[key].sort(key=lambda item: str(item).lower() + "￿")
+        if isinstance(table[key], dict):
+            table[key] = {k: table[key][k] for k in sorted(table[key], key=sort_key)}
+        else:
+            table[key].sort(key=sort_key)
 
     sys.stdout.write("".join(head))
     json.dump(doc, sys.stdout, indent={{ .indent }}, ensure_ascii=False)

@@ -204,29 +204,30 @@ Tools added by hand with **mise** always stay to ease customization per user, un
 
 The following tools are always installed without capability to skip them: age, cosign, node 24, sops, usage.
 
-| Bundle            | Installs                                | Home profile defaults | Sopra Steria profile defaults |
-| ----------------- | --------------------------------------- | --------------------- | ----------------------------- |
-| `boost`           | jfrog-boost                             | x                     | x                             |
-| `bun`             | bun                                     | x                     |                               |
-| `codegraph`       | codegraph                               | x                     | x                             |
-| `context7`        | context7, context7-mcp                  | x                     | x                             |
-| `gh`              | gh                                      | x                     |                               |
-| `gitlab-ci-local` | gitlab-ci-local                         | x                     | x                             |
-| `glab`            | glab                                    | x                     |                               |
-| `go`              | go, golangci-lint                       | x                     | x                             |
-| `hugo`            | dart-sass, hugo-extended                | x                     | x                             |
-| `incus`           | incus                                   | x                     |                               |
-| `java`            | java (LTS), jdtls                       |                       | x                             |
-| `just`            | just                                    | x                     |                               |
-| `k8s`             | helm, helm-ct, krew, kubectl, kustomize | x                     | x                             |
-| `kotlin`          | kotlin, kotlin-lsp                      |                       |                               |
-| `mempalace`       | mempalace                               | x                     | x                             |
-| `opentofu`        | opentofu, tflint, tofu-ls               | x                     |                               |
-| `pre-commit`      | pre-commit                              | x                     | x                             |
-| `rtk`             | rtk                                     |                       |                               |
-| `shell`           | bash-language-server, shellcheck        | x                     | x                             |
-| `terraform`       | terraform, terraform-ls, tflint         |                       | x                             |
-| `uv`              | uv                                      | x                     | x                             |
+| Bundle                      | Installs                                | Home profile defaults | Sopra Steria profile defaults |
+| --------------------------- | --------------------------------------- | --------------------- | ----------------------------- |
+| `boost`                     | jfrog-boost                             | x                     | x                             |
+| `bun`                       | bun                                     | x                     |                               |
+| `codegraph`                 | codegraph                               | x                     | x                             |
+| `context7`                  | context7, context7-mcp                  | x                     | x                             |
+| `destructive-command-guard` | destructive-command-guard               | x                     | x                             |
+| `gh`                        | gh                                      | x                     |                               |
+| `gitlab-ci-local`           | gitlab-ci-local                         | x                     | x                             |
+| `glab`                      | glab                                    | x                     |                               |
+| `go`                        | go, golangci-lint                       | x                     | x                             |
+| `hugo`                      | dart-sass, hugo-extended                | x                     | x                             |
+| `incus`                     | incus                                   | x                     |                               |
+| `java`                      | java (LTS), jdtls                       |                       | x                             |
+| `just`                      | just                                    | x                     |                               |
+| `k8s`                       | helm, helm-ct, krew, kubectl, kustomize | x                     | x                             |
+| `kotlin`                    | kotlin, kotlin-lsp                      |                       |                               |
+| `mempalace`                 | mempalace                               | x                     | x                             |
+| `opentofu`                  | opentofu, tflint, tofu-ls               | x                     |                               |
+| `pre-commit`                | pre-commit                              | x                     | x                             |
+| `rtk`                       | rtk                                     |                       |                               |
+| `shell`                     | bash-language-server, shellcheck        | x                     | x                             |
+| `terraform`                 | terraform, terraform-ls, tflint         |                       | x                             |
+| `uv`                        | uv                                      | x                     | x                             |
 
 ### Container runtimes
 
@@ -239,27 +240,28 @@ Two main container runtimes can be installed:
 To improve agent generation, responses and consumption, the following components are provided
 and installed depending on the chosen runtime, installed tools with **mise** or even prompt choices.
 
-| Component              | Type               | Source                                                                                           | When                                                     |
-| ---------------------- | ------------------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| `agent-rules`          | Instructions       | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules), refreshed daily                     | `claude` and `copilot` only                              |
-| `code-simplifier`      | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
-| `exam-drill`           | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
-| `feature-dev`          | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
-| `find-skills`          | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)                                      | always                                                   |
-| `grill-me`, `grilling` | Skills             | [mattpocock/skills](https://github.com/mattpocock/skills)                                        | always                                                   |
-| `protected-paths`      | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
-| `schema-converter`     | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
-| `caveman`              | Hooks, Skills      | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `caveman` in `ai.plugins`                                |
-| `ponytail`             | Hooks, Skills      | [ponytail](https://github.com/DietrichGebert/ponytail)                                           | `ponytail` in `ai.plugins`                               |
-| `codegraph`            | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `codegraph` in `tools.mise`                              |
-| `context7`             | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `context7` in `tools.mise`                               |
-| `mempalace`            | Hooks, MCP, Skills | [mempalace](https://github.com/mempalace/mempalace)                                              | `mempalace` in `tools.mise`                              |
-| `bash-language-server` | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `shell` in `tools.mise`, `claude` and `copilot` only     |
-| `gopls`                | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `go` in `tools.mise`, `claude` and `copilot` only        |
-| `jdtls`                | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `java` in `tools.mise`, `claude` and `copilot` only      |
-| `kotlin-lsp`           | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `kotlin` in `tools.mise`, `claude` and `copilot` only    |
-| `terraform-ls`         | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `terraform` in `tools.mise`, `claude` and `copilot` only |
-| `tofu-ls`              | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `opentofu` in `tools.mise`, `claude` and `copilot` only  |
+| Component                   | Type               | Source                                                                                           | When                                                     |
+| --------------------------- | ------------------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
+| `agent-rules`               | Instructions       | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules), refreshed daily                     | `claude` and `copilot` only                              |
+| `bash-language-server`      | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `shell` in `tools.mise`, `claude` and `copilot` only     |
+| `caveman`                   | Hooks, Skills      | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `caveman` in `ai.plugins`                                |
+| `code-simplifier`           | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
+| `codegraph`                 | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `codegraph` in `tools.mise`                              |
+| `context7`                  | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `context7` in `tools.mise`                               |
+| `destructive-command-guard` | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `destructive-command-guard` in `tools.mise`              |
+| `exam-drill`                | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
+| `feature-dev`               | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
+| `find-skills`               | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)                                      | always                                                   |
+| `gopls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `go` in `tools.mise`, `claude` and `copilot` only        |
+| `grill-me`, `grilling`      | Skills             | [mattpocock/skills](https://github.com/mattpocock/skills)                                        | always                                                   |
+| `jdtls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `java` in `tools.mise`, `claude` and `copilot` only      |
+| `kotlin-lsp`                | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `kotlin` in `tools.mise`, `claude` and `copilot` only    |
+| `mempalace`                 | Hooks, MCP, Skills | [mempalace](https://github.com/mempalace/mempalace)                                              | `mempalace` in `tools.mise`                              |
+| `ponytail`                  | Hooks, Skills      | [ponytail](https://github.com/DietrichGebert/ponytail)                                           | `ponytail` in `ai.plugins`                               |
+| `protected-paths`           | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
+| `schema-converter`          | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
+| `terraform-ls`              | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `terraform` in `tools.mise`, `claude` and `copilot` only |
+| `tofu-ls`                   | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `opentofu` in `tools.mise`, `claude` and `copilot` only  |
 
 ### Servers
 

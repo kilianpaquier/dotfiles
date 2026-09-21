@@ -64,14 +64,6 @@
     # all dotfiles are managed by chezmoi for easier combination and drift review
   };
 
-  # home-manager environment variables, one of the following files must be sourced for it to work:
-  #   - ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #   - ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #   - /etc/profiles/per-user/{{ .chezmoi.username }}/etc/profile.d/hm-session-vars.sh
-  home.sessionVariables = {
-    # EDITOR = "emacs";
-  };
-
   # disable news on switch (spams logs for nothing)
   news.display = "silent";
 

@@ -17,6 +17,7 @@ tools:
     - bun
     - codegraph
     - context7
+    - destructive-command-guard
     - gh
     - gitlab-ci-local
     - glab
@@ -40,6 +41,7 @@ default_tools:
     - bun
     - codegraph
     - context7
+    - destructive-command-guard
     - gh
     - gitlab-ci-local
     - glab
@@ -57,6 +59,7 @@ default_tools:
     - boost
     - codegraph
     - context7
+    - destructive-command-guard
     - gitlab-ci-local
     - go
     - hugo

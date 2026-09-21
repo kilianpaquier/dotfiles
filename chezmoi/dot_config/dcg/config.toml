@@ -2,23 +2,231 @@
 trust_level = "low"
 disabled_allowlist = true
 
+[general]
+fail_closed = true
+unverified_decision = "ask"
+
+[heredoc]
+enabled = true # enable scanning for heredocs and inline scripts (python -c, bash -c, etc.).
+timeout_ms = 50
+max_body_bytes = 1048576
+max_body_lines = 10000
+max_heredocs = 10
+fallback_on_parse_error = true
+fallback_on_timeout = true
+
 [packs]
 enabled = [
-    "cicd",
+    "cicd.github_actions",
+    "cicd.gitlab_ci",
     "cloud",
     "containers",
     "core",
-    "database",
+    "database.bigquery",
+    "database.mongodb",
+    "database.mysql",
+    "database.postgresql",
+    "database.redis",
+    "database.sqlite",
+    "dns",
     "infrastructure",
     "kubernetes",
     "loadbalancer",
+    "messaging.kafka",
+    "messaging.rabbitmq",
     "monitoring",
     "package_managers",
-    "platform",
+    "platform.github",
+    "platform.gitlab",
     "remote",
+    "search.elasticsearch",
+    "search.opensearch",
     "secret_disclosure",
     "secrets",
     "storage",
     "strict_git",
     "system"
 ]
+custom_paths = [
+    "~/.config/dcg/packs/*.yaml"
+]
+
+[policy.rules]
+# severity: high
+"chezmoi.build_tools:go-exec" = "ask" # Runs code, fetches deps, generates files, clears a cache or writes the go env
+"chezmoi.build_tools:go-mod-write" = "ask" # Fetches dependencies or rewrites go.mod
+"chezmoi.build_tools:just-destructive" = "ask" # Destructive just target
+"chezmoi.build_tools:make-destructive" = "ask" # Destructive make target
+"chezmoi.build_tools:mise-run-destructive" = "ask" # Destructive mise task
+"chezmoi.build_tools:mvn-destructive" = "ask" # Publishes artifacts or wipes the local maven repository
+"chezmoi.build_tools:task-destructive" = "ask" # Destructive task target
+"chezmoi.devtools:chezmoi-mutating" = "ask" # Writes to the target machine, the source repo, or chezmoi's own config
+"chezmoi.exec:bash-script" = "ask" # Runs a shell script file
+"chezmoi.exec:deno-run" = "ask" # Runs a script or inline code
+"chezmoi.exec:node-script" = "ask" # Runs a script file
+"chezmoi.exec:perl-script" = "ask" # Runs a script file
+"chezmoi.exec:python-script" = "ask" # Runs a script file or a module
+"chezmoi.exec:relative-exec" = "ask" # Runs a local executable by relative path
+"chezmoi.exec:ruby-script" = "ask" # Runs a script file
+"chezmoi.exec:sh-script" = "ask" # Runs a shell script file
+"chezmoi.exec:source" = "ask" # Sources a shell script into the current shell
+"chezmoi.exec:zsh-script" = "ask" # Runs a shell script file
+"chezmoi.git:git-config-set" = "ask" # Writes git config through the legacy key value form
+"chezmoi.git:git-config-write" = "ask" # Writes git config through a flag or the set/unset verb
+"chezmoi.git:git-mutating" = "ask" # Changes refs, history or the working tree
+"chezmoi.git:git-stash-mutating" = "ask" # Creates, applies or clears a stash
+"chezmoi.git:git-submodule-write" = "ask" # Fetches, rewires or runs code in submodules
+"chezmoi.github:gh-api-write" = "ask" # gh api call with a mutating HTTP method, a request body or a GraphQL mutation
+"chezmoi.github:gh-mutating" = "ask" # Mutating gh subcommand
+"chezmoi.gitlab:glab-api-write" = "ask" # glab api call with a mutating HTTP method, a request body or a GraphQL mutation
+"chezmoi.gitlab:glab-mutating" = "ask" # Mutating glab subcommand
+"chezmoi.package_managers:bun-run-destructive" = "ask" # Destructive package script
+"chezmoi.package_managers:bun-script" = "ask" # Runs inline code or a script file dcg cannot inspect
+"chezmoi.package_managers:bun-write" = "ask" # Mutates bun dependencies or registry state
+"chezmoi.package_managers:npm-run-destructive" = "ask" # Destructive package script
+"chezmoi.package_managers:npm-write" = "ask" # Mutates npm dependencies
+"chezmoi.package_managers:pnpm-run-destructive" = "ask" # Destructive package script
+"chezmoi.package_managers:pnpm-write" = "ask" # Mutates pnpm dependencies
+"chezmoi.package_managers:uv-run" = "ask" # Runs a script or command in the project environment
+"chezmoi.remote:curl-output" = "ask" # curl writing fetched content, headers or cookies to a local file
+"chezmoi.remote:wget-output" = "ask" # wget writing fetched content to a local file (wget's default behavior)
+"chezmoi.filesystem:awk-redirect" = "ask" # awk writing a file or piping to a command
+"chezmoi.filesystem:awk-system" = "ask" # awk running a command or a program file dcg cannot inspect
+"chezmoi.filesystem:cp" = "ask" # Copies a file, can overwrite the destination silently
+"chezmoi.filesystem:mv" = "ask" # Moves a file, can overwrite the destination silently
+"chezmoi.filesystem:rm-plain" = "ask" # Deletes a file
+"chezmoi.filesystem:sed-inplace" = "ask" # Edits a file in place
+
+# severity: critical
+"infrastructure.ansible:shell-rm-rf" = "ask" # Ansible shell/command with 'rm -rf' is destructive. Review carefully.
+"kubernetes.helm:uninstall" = "ask" # helm uninstall removes the release and all its resources. Use --dry-run first.
+"remote.ssh:ssh-remote-rm-rf" = "ask" # SSH remote execution contains destructive rm -rf command.
+
+# severity: high
+"core.filesystem:mv-dynamic-path" = "ask" # mv with a shell-expanded or escaped path cannot be verified before execution.
+"core.filesystem:rm-glob-home" = "ask" # rm with an unexpanded glob under a home directory deletes an unbounded, shell-chosen file set and requires human approval.
+"core.filesystem:rm-r-f-separate" = "ask" # rm with separate -r -f flags is destructive and requires human approval.
+"core.filesystem:rm-recursive-force-long" = "ask" # rm --recursive --force is destructive and requires human approval.
+"core.filesystem:rm-rf-general" = "ask" # rm -rf is destructive and requires human approval. Explain what you want to delete and why, then ask the user to run the command manually.
+"core.filesystem:sed-exec-unverified" = "ask" # GNU sed executes shell input that dcg cannot statically verify.
+"core.filesystem:tar-remove-files-general" = "ask" # tar --remove-files deletes source paths after archiving and requires human approval.
+"core.filesystem:truncate-zero-general" = "ask" # truncate with an absolute or shrinking size can destroy file content and requires human approval.
+"core.filesystem:unlink-general" = "ask" # unlink is destructive (POSIX equivalent of rm on a single file) and requires human approval.
+"core.git:branch-force-delete" = "ask" # git branch deletion or forced ref updates require explicit user approval.
+"database.mongodb:stdin-unverified" = "ask" # mongosh receives indirect input that dcg cannot statically verify.
+"database.mysql:stdin-unverified" = "ask" # mysql/mariadb receives indirect input that dcg cannot statically verify.
+"database.postgresql:pg-dump-clean" = "ask" # pg_dump --clean drops objects before creating them. This can be destructive on restore.
+"database.postgresql:stdin-unverified" = "ask" # psql receives indirect input that dcg cannot statically verify.
+"database.redis:stdin-unverified" = "ask" # redis-cli receives indirect input that dcg cannot statically verify.
+"database.sqlite:sqlite3-stdin" = "ask" # Running SQL from file could contain destructive commands. Review the file first.
+"database.sqlite:stdin-unverified" = "ask" # sqlite3 receives indirect input that dcg cannot statically verify.
+"infrastructure.ansible:playbook-all-hosts" = "ask" # ansible-playbook without --check or --limit may affect all hosts. Use --check first.
+"infrastructure.ansible:shell-reboot" = "ask" # Ansible shell/command with reboot/shutdown affects system availability.
+"kubernetes.helm:rollback" = "ask" # helm rollback reverts to a previous release. Use --dry-run to preview changes.
+"kubernetes.helm:upgrade-reset-values" = "ask" # helm upgrade --reset-values discards all previously set values.
+"kubernetes.kubectl:drain-node" = "ask" # kubectl drain evicts all pods from a node. Ensure proper pod disruption budgets.
+"kubernetes.kubectl:scale-to-zero" = "ask" # kubectl scale --replicas=0 stops all pods for the workload.
+"kubernetes.kubectl:taint-noexecute" = "ask" # kubectl taint with NoExecute evicts existing pods that don't tolerate the taint.
+"package_managers:brew-uninstall" = "ask" # brew uninstall removes packages. Verify no dependent packages are affected.
+"package_managers:cargo-publish" = "ask" # cargo publish releases a crate to crates.io. Use --dry-run first.
+"package_managers:cargo-yank" = "ask" # cargo yank marks a version as unavailable. This can break dependent projects.
+"package_managers:gem-push" = "ask" # gem push releases a gem to rubygems.org. Verify before publishing.
+"package_managers:gradle-publish" = "ask" # gradle publish uploads artifacts. Use --dry-run first when possible.
+"package_managers:maven-deploy" = "ask" # mvn deploy publishes artifacts to a remote repository. Verify target repository.
+"package_managers:maven-release-perform" = "ask" # mvn release:perform publishes a release. Verify version and repository.
+"package_managers:npm-publish" = "ask" # npm publish releases a package publicly. Use --dry-run first.
+"package_managers:npm-unpublish" = "ask" # npm unpublish removes a published package. This can break dependent projects.
+"package_managers:pip-system" = "ask" # pip install to system directories requires careful review.
+"package_managers:pip-uninstall" = "ask" # pip uninstall removes installed packages. Verify dependencies before removing.
+"package_managers:pip-url" = "ask" # pip install from URL can install unvetted code. Verify the source first.
+"package_managers:pnpm-publish" = "ask" # pnpm publish releases a package publicly.
+"package_managers:poetry-publish" = "ask" # poetry publish releases a package. Use --dry-run first.
+"package_managers:poetry-remove" = "ask" # poetry remove uninstalls a dependency. Verify no critical packages are affected.
+"package_managers:yarn-publish" = "ask" # yarn publish releases a package publicly. Verify package.json first.
+"package_managers:yum-remove" = "ask" # yum/dnf remove removes packages. Verify no critical packages are affected.
+"platform.github:gh-run-cancel" = "ask" # gh run cancel stops a workflow run and may interrupt deployments.
+"remote.rsync:rsync-del-short" = "ask" # rsync --del is a short alias for --delete and is destructive.
+"remote.rsync:rsync-delete" = "ask" # rsync --delete removes destination files not present in source.
+"remote.scp:scp-destination-unverified" = "ask" # scp/pscp has a runtime-dependent or malformed destination that cannot be verified before execution.
+"remote.ssh:ssh-remote-git-clean" = "ask" # SSH remote execution contains destructive git clean -f command.
+"storage.azure_blob:az-storage-blob-delete-batch" = "ask" # az storage blob delete-batch removes multiple blobs from Azure storage.
+"storage.azure_blob:azcopy-remove" = "ask" # azcopy remove deletes files from Azure storage.
+"storage.azure_blob:azcopy-sync-delete" = "ask" # azcopy sync --delete-destination removes destination files not in source.
+"storage.gcs:gcloud-storage-objects-delete" = "ask" # gcloud storage objects delete removes objects from GCS.
+"storage.gcs:gcloud-storage-rm" = "ask" # gcloud storage rm removes objects from GCS.
+"storage.gcs:gsutil-rm" = "ask" # gsutil rm deletes objects from GCS.
+"storage.gcs:gsutil-rsync-delete" = "ask" # gsutil rsync -d deletes destination objects not in source.
+"storage.minio:mc-mirror-remove" = "ask" # mc mirror --remove deletes destination objects not in source.
+"storage.minio:mc-rm" = "ask" # mc rm deletes objects from MinIO.
+"storage.s3:s3-rm" = "ask" # aws s3 rm deletes S3 objects and is destructive.
+"storage.s3:s3-sync-delete" = "ask" # aws s3 sync --delete removes destination objects not in source.
+"storage.s3:s3api-delete-objects" = "ask" # aws s3api delete-objects permanently deletes multiple objects.
+"strict_git:add-all-dot" = "ask" # git add . stages everything including secrets, .env files, and build artifacts. Use 'git add <specific-files>' instead.
+"strict_git:add-all-flag" = "ask" # git add -A/--all stages all changes including secrets, .env files, and build artifacts. Use 'git add <specific-files>' instead.
+"strict_git:cherry-pick" = "ask" # git cherry-pick can introduce duplicate commits. Review carefully.
+"strict_git:commit-amend" = "ask" # git commit --amend rewrites the last commit. Disabled in strict mode.
+"strict_git:push-dynamic-argument" = "ask" # Force push risk: a shell-expanded or escaped git push argument cannot be verified as non-forcing. Use literal remote and refspec arguments in strict mode.
+"strict_git:push-main" = "ask" # Direct push to main is blocked. Use a feature branch and open a Pull Request.
+"strict_git:rebase" = "ask" # git rebase rewrites commit history. Disabled in strict mode.
+"strict_git:submodule-deinit" = "ask" # git submodule deinit removes submodule configuration.
+"system.disk:pvmove" = "ask" # pvmove migrates data between physical volumes. Do NOT interrupt or data may be lost.
+
+# severity: medium
+"cicd.github_actions:gh-actions-api-delete-variables" = "ask" # gh api DELETE against /actions/variables deletes GitHub Actions variables.
+"cicd.github_actions:gh-actions-variable-remove" = "ask" # gh variable delete/remove deletes GitHub Actions variables. This can break workflows.
+"cicd.gitlab_ci:glab-ci-delete" = "ask" # glab ci delete removes pipeline artifacts or pipelines.
+"cloud.aws:athena-delete-named-query" = "ask" # aws athena delete-named-query permanently removes a saved query.
+"cloud.aws:ecr-delete-lifecycle-policy" = "ask" # aws ecr delete-lifecycle-policy removes the repository lifecycle policy.
+"cloud.aws:glue-delete-crawler" = "ask" # aws glue delete-crawler removes the crawler configuration.
+"cloud.aws:glue-delete-dev-endpoint" = "ask" # aws glue delete-dev-endpoint tears down the development endpoint and any attached SageMaker notebook configuration.
+"cloud.azure:account-clear" = "ask" # az account clear wipes every cached subscription and credential from the local CLI profile.
+"cloud.azure:acr-repository-untag" = "ask" # az acr repository untag removes tags from images.
+"containers.compose:rm-force" = "ask" # docker-compose rm -f forcibly removes containers without confirmation.
+"containers.docker:container-prune" = "ask" # docker container prune removes ALL stopped containers.
+"containers.docker:image-prune" = "ask" # docker image prune removes unused images. Use 'docker images' to review first.
+"containers.podman:container-prune" = "ask" # podman container prune removes ALL stopped containers.
+"containers.podman:image-prune" = "ask" # podman image prune removes unused images. Use 'podman images' to review first.
+"containers.podman:pod-prune" = "ask" # podman pod prune removes ALL stopped pods.
+"core.git:lfs-prune" = "ask" # git lfs prune deletes local LFS objects; with --force it deletes objects the remote does not have.
+"core.git:lfs-uninstall" = "ask" # git lfs uninstall removes the LFS filters and hooks, so LFS files check out as pointer text.
+"core.git:stash-drop" = "ask" # git stash drop deletes a single stash. Recoverable via `git fsck` (unreachable objects).
+"database.bigquery:alter-table-rename" = "ask" # ALTER TABLE RENAME TO breaks every reference to the old table name.
+"database.bigquery:bq-cancel" = "ask" # bq cancel stops a running job, which may leave a partial load or export.
+"database.bigquery:bq-mk-force" = "ask" # bq mk -f overwrites an existing table definition.
+"database.bigquery:create-or-replace-routine" = "ask" # CREATE OR REPLACE FUNCTION/PROCEDURE overwrites an existing routine definition.
+"database.bigquery:drop-materialized-view-or-external-table" = "ask" # DROP MATERIALIZED VIEW / EXTERNAL TABLE removes a derived or federated object.
+"database.bigquery:drop-search-index" = "ask" # DROP SEARCH INDEX removes an index that must be fully rebuilt.
+"database.bigquery:drop-view" = "ask" # DROP VIEW removes a view definition.
+"database.bigquery:export-data-overwrite" = "ask" # EXPORT DATA with overwrite=true replaces files at the destination URI.
+"database.mysql:drop-user" = "ask" # DROP USER permanently removes the user account and all their privileges.
+"database.mysql:mysqldump-add-drop-table" = "ask" # mysqldump --add-drop-table drops tables before creating them on restore.
+"database.redis:config-resetstat" = "ask" # CONFIG RESETSTAT clears Redis runtime counters and can hide recent incidents.
+"database.sqlite:vacuum-into" = "ask" # VACUUM INTO overwrites the target file if it exists.
+"dns.generic:dns-dig-zone-transfer" = "ask" # dig AXFR/IXFR zone transfers can exfiltrate full zone data.
+"dns.generic:dns-nsupdate-local" = "ask" # nsupdate -l applies local updates which can modify DNS records.
+"dns.route53:route53-delete-query-logging-config" = "ask" # aws route53 delete-query-logging-config removes a Route53 query logging configuration.
+"infrastructure.ansible:extra-vars-delete" = "ask" # Ansible extra-vars contains potentially destructive keywords. Review carefully.
+"infrastructure.atmos:atmos-plan-destroy" = "ask" # atmos terraform plan -destroy previews destruction. Review carefully before deploying.
+"infrastructure.atmos:atmos-workspace-delete" = "ask" # atmos terraform workspace delete removes a workspace and its state.
+"infrastructure.pulumi:refresh-yes" = "ask" # pulumi refresh -y auto-approves state changes. Review changes first.
+"infrastructure.terraform:plan-destroy" = "ask" # terraform/tofu plan -destroy shows what would be destroyed. Review carefully before applying.
+"infrastructure.terraform:workspace-delete" = "ask" # terraform/tofu workspace delete removes a workspace. Ensure it's not in use.
+"kubernetes.kubectl:cordon-node" = "ask" # kubectl cordon marks a node unschedulable. Existing pods continue running.
+"platform.github:gh-release-delete-asset" = "ask" # gh release delete-asset permanently deletes an uploaded release asset.
+"remote.ssh:ssh-add-delete-all" = "ask" # ssh-add -d/-D removes identities from the SSH agent.
+"remote.ssh:ssh-keygen-remove-host" = "ask" # ssh-keygen -R removes entries from known_hosts file.
+"search.elasticsearch:es-curl-delete-doc" = "ask" # curl -X DELETE against /_doc deletes a document from Elasticsearch.
+"search.elasticsearch:es-http-delete-doc" = "ask" # http DELETE against /_doc deletes a document from Elasticsearch.
+"search.opensearch:aws-opensearch-delete-package" = "ask" # aws opensearch delete-package removes an OpenSearch package.
+"search.opensearch:os-curl-delete-doc" = "ask" # curl -X DELETE against /_doc deletes a document from OpenSearch.
+"search.opensearch:os-http-delete-doc" = "ask" # http DELETE against /_doc deletes a document from OpenSearch.
+"secrets.aws_secrets:aws-secretsmanager-put-secret-value" = "ask" # aws secretsmanager put-secret-value creates a new secret version and can break clients.
+"secrets.aws_secrets:aws-secretsmanager-update-secret" = "ask" # aws secretsmanager update-secret overwrites secret metadata or value.
+"secrets.onepassword:op-group-delete" = "ask" # op group delete removes a group.
+"storage.azure_blob:az-storage-blob-delete" = "ask" # az storage blob delete removes a blob from Azure storage.
+"storage.minio:mc-admin-policy-remove" = "ask" # mc admin policy remove/unset modifies access policies.
+"storage.s3:s3api-delete-object" = "ask" # aws s3api delete-object permanently deletes an object.
+
+# severity: low
+"cicd.github_actions:gh-actions-run-cancel" = "ask" # gh run cancel cancels a running workflow. This is reversible, but may disrupt deployments.
+"cicd.github_actions:gh-actions-workflow-disable" = "ask" # gh workflow disable disables workflows. This is reversible, but can disrupt CI.

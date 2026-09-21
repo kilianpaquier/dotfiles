@@ -6,4 +6,8 @@
 {{- end }}
 {{- $_ := set $set "enabledPlugins" $enabled_plugins }}
 
-{{- includeTemplate "scripts/json-merge.py" (dict "indent" 2 "set" $set "sort" list) }}
+{{- includeTemplate "scripts/json-merge.py" (dict
+  "indent" 2
+  "override" (list (list "allowedUrls") (list "deniedUrls"))
+  "set" $set
+  "sort" (list (list "enabledPlugins"))) }}

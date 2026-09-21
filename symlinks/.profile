@@ -36,8 +36,17 @@ umask 022
 [ -d "$HOME/.krew/bin" ] && PATH="$HOME/.krew/bin:$PATH"
 
 # shellcheck disable=SC1091
-# source nix
-[ ! -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ] || . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+# source nix to expand PATH with home-manager installed tools
+[ ! -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] || . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+
+# source nix defined environment variables
+if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+  # shellcheck disable=SC1091
+  . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+elif [ -f "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" ]; then
+  # shellcheck disable=SC1090
+  . "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
+fi
 
 unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
 
@@ -51,9 +60,7 @@ if command -v go >/dev/null 2>&1; then
   # set PATH so it includes go global installations
   PATH="$GOBIN:$PATH"
 
-  # shellcheck disable=SC2034
   export GOCACHE="$HOME/.cache/go-build"
-  # shellcheck disable=SC2034
   export GOLANGCI_LINT_CACHE="$HOME/.cache/golangci-lint"
 fi
 

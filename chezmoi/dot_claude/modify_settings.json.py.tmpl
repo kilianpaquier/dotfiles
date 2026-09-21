@@ -8,5 +8,6 @@
 
 {{- includeTemplate "scripts/json-merge.py" (dict
   "indent" 2
+  "override" (list (list "permissions" "allow") (list "permissions" "deny") (list "permissions" "ask"))
   "set" $set
-  "sort" (list (list "permissions" "allow") (list "permissions" "deny") (list "permissions" "ask"))) }}
+  "sort" (list (list "enabledPlugins") (list "permissions" "allow") (list "permissions" "deny") (list "permissions" "ask"))) }}

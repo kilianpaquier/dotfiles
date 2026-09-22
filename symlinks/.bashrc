@@ -10,13 +10,8 @@ case $- in
 *) return ;;
 esac
 
-# Set the "umask" (see "man umask"):
-# umask 002 # relaxed   -rwxrwxr-x
-# umask 022 # cautious  -rwxr-xr-x
-# umask 027 # uptight   -rwxr-x---
-# umask 077 # paranoid  -rwx------
-# umask 066 # bofh-like -rw-------
-umask 022
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -84,8 +79,6 @@ esac
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-# shellcheck disable=SC1091
-[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
 # shellcheck disable=SC1091
 [ ! -f "$HOME/.bash_aliases" ] || . "$HOME/.bash_aliases"
 

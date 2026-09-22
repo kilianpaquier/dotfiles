@@ -67,4 +67,7 @@ if command -v go >/dev/null 2>&1; then
   export GOLANGCI_LINT_CACHE="$HOME/.cache/golangci-lint"
 fi
 
+# set convenient variable ssh keys lifetime within ssh-agent (e.g. ssh-add -t "$SSH_AGENT_TIMEOUT")
+export SSH_AGENT_TIMEOUT=3600
+
 export PROFILE_SOURCED=$$

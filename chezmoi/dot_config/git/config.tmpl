@@ -1,8 +1,10 @@
-{{- /* git reads this file before ~/.gitconfig, so `git config --global` additions there keep winning */ -}}
 {{- if .user.username }}
 [user]
 	name = {{ .user.username }}
 	email = {{ .user.email }}
+{{- if .git.ssh }}
+	signingKey = ~/.ssh/id_ed25519
+{{- end }}
 {{- end }}
 {{- if has "vscode" .ide }}
 [core]
@@ -19,6 +21,7 @@
 	format = ssh
 [gpg "ssh"]
 	defaultKeyCommand = ssh-add -L
+	program = ~/.config/git/ssh-sign.sh
 [tag]
 	gpgsign = true
 {{- end }}

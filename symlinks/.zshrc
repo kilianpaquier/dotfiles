@@ -7,13 +7,7 @@
 #
 # Documentation: https://github.com/romkatv/zsh4humans/blob/v5/README.md.
 
-# Set the "umask" (see "man umask"):
-# umask 002 # relaxed   -rwxrwxr-x
-# umask 022 # cautious  -rwxr-xr-x
-# umask 027 # uptight   -rwxr-x---
-# umask 077 # paranoid  -rwx------
-# umask 066 # bofh-like -rw-------
-umask 022
+[ ! -f "$HOME/.zprofile" ] || . "$HOME/.zprofile"
 
 # Periodic auto-update on Zsh startup: 'ask' or 'no'.
 # You can manually run `z4h update` to update everything.
@@ -40,7 +34,6 @@ z4h source "$HOME/.env.zsh"
 
 # Extend environment (aliases and PATH).
 # path=(~/bin $path)
-[ ! -f "$HOME/.zprofile" ] || . "$HOME/.zprofile"
 [ ! -f "$HOME/.bash_aliases" ] || . "$HOME/.bash_aliases"
 
 # Export environment variables.

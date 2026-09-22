@@ -4,6 +4,7 @@
 .config/home-manager
 {{- else }}
 .inputrc
+.wslconfig
 **/*.ps1
 {{- end }}
 
@@ -25,6 +26,10 @@
 
 {{- if not (has "mise" .tools_management) }}
 .chezmoiscripts/*-mise.sh
+{{- end }}
+
+{{- if not (contains "microsoft" (.chezmoi.kernel.osrelease | lower)) }}
+.chezmoiscripts/*-wsl.sh
 {{- end }}
 
 {{- if not (or (eq .machine.kind "server") (and (eq .machine.kind "desktop") (eq .profile "home"))) }}

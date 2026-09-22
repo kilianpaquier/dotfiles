@@ -24,6 +24,7 @@
   - [Container runtimes](#container-runtimes)
   - [Agent components](#agent-components)
   - [Servers](#servers)
+  - [WSL](#wsl)
 
 My own dotfiles repository, it provides dotfiles (obviously) but also user tools installation (using **mise**)
 and user level packages (CLI tools, desktop apps, container engines, agent runtimes).
@@ -268,3 +269,15 @@ and installed depending on the chosen runtime, installed tools with **mise** or 
 When choosing `server` as machine kind, small modifications can be done onto the OS configuration itself (`sudo` is needed in such cases):
 - The hostname can be changed, retrieved from `machine.name`.
 - The timezone can be changed, retrieved from `machine.timezone`.
+
+### WSL
+
+Running inside a WSL2 distribution is auto-detected (no prompt), by checking whether `microsoft` appears in the running kernel release.
+It configures an isolated distro, cut off from the Windows host, sized like a small VPS (Virtual Private Server):
+
+| File         | Side                      | Scope               | Sets                                                                                                   |
+| ------------ | ------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------ |
+| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | `memory=8GB`, `processors=4`, `defaultVhdSize=60GB`                                                    |
+| `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount` off (no `/mnt/c`, `/mnt/d`), `interop` off (no Windows process launch, no Windows `$PATH`) |
+
+A `wsl.conf` change only takes effect after `wsl.exe --shutdown` from Windows and reopening the distro.

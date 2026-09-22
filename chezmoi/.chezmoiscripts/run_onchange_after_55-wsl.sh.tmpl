@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+# setup wsl.conf within the WSL distribution
+
+conf="{{ includeTemplate "wsl.conf.tmpl" . }}"
+if [ "$(cat /etc/wsl.conf 2>/dev/null)" != "$conf" ]; then
+  printf '%s\n' "$conf" | sudo tee /etc/wsl.conf >/dev/null
+  echo "wsl.conf updated, run 'wsl.exe --shutdown' from Windows and reopen this distro to apply"
+fi

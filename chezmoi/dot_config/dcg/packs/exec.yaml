@@ -19,11 +19,17 @@ keywords:
   - ruby
   - sh
   - source
+  - sudo
   - zsh
   - ./
   - ". "
 
 destructive_patterns:
+  # runs a command with elevated privileges
+  - name: sudo-any
+    pattern: "(?<![\\w-])sudo\\b"
+    severity: critical
+    description: Runs a command with elevated privileges
   # runs a shell script file
   - name: bash-script
     pattern: "(?<![\\w-])bash\\b(?: -[^c\\s]\\S*)* [^-\\s<]"

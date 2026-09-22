@@ -52,6 +52,9 @@ custom_paths = [
 ]
 
 [policy.rules]
+# severity: critical
+"chezmoi.exec:sudo-any" = "ask" # Any sudo command requires elevated privileges and human approval
+
 # severity: high
 "chezmoi.build_tools:go-exec" = "ask" # Runs code, fetches deps, generates files, clears a cache or writes the go env
 "chezmoi.build_tools:go-mod-write" = "ask" # Fetches dependencies or rewrites go.mod

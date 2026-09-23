@@ -280,4 +280,8 @@ It configures an isolated distro, cut off from the Windows host, sized like a sm
 | `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | `memory=8GB`, `processors=4`, `defaultVhdSize=60GB`                                                    |
 | `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount` off (no `/mnt/c`, `/mnt/d`), `interop` off (no Windows process launch, no Windows `$PATH`) |
 
-A `wsl.conf` change only takes effect after `wsl.exe --shutdown` from Windows and reopening the distro.
+> [!note]
+> A `wsl.conf` change only takes effect after `wsl.exe --shutdown` from Windows and reopening the distro.
+
+> [!note]
+> When using **VSCode**, the setting `"remote.WSL.experimental.scriptLessStartup": true` must be defined in the *User Settings*.

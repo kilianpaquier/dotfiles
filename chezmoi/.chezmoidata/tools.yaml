@@ -31,6 +31,7 @@ tools:
     - mempalace
     - opentofu
     - pre-commit
+    - pulumi
     - rtk
     - shell
     - terraform

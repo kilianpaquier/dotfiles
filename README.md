@@ -225,6 +225,7 @@ The following tools are always installed without capability to skip them: age, c
 | `mempalace`                 | mempalace                               | x                     | x                             |
 | `opentofu`                  | opentofu, tflint, tofu-ls               | x                     |                               |
 | `pre-commit`                | pre-commit                              | x                     | x                             |
+| `pulumi`                    | pulumi                                  |                       |                               |
 | `rtk`                       | rtk                                     |                       |                               |
 | `shell`                     | bash-language-server, shellcheck        | x                     | x                             |
 | `terraform`                 | terraform, terraform-ls, tflint         |                       | x                             |

@@ -6,6 +6,12 @@ disabled_allowlist = true
 fail_closed = true
 unverified_decision = "ask"
 
+[history]
+enabled = true
+redaction_mode = "pattern"
+retention_days = 90
+max_size_mb = 500
+
 [heredoc]
 enabled = true # enable scanning for heredocs and inline scripts (python -c, bash -c, etc.).
 timeout_ms = 50

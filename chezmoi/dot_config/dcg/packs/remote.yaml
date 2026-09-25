@@ -4,7 +4,7 @@ schema_version: 1
 
 id: chezmoi.remote
 name: system
-version: 1.2.0
+version: 2.0.0
 description: Network commands not covered by dcg's built-in core/system packs
 
 # gates pattern evaluation: dcg skips this pack entirely unless one of these appears in the command
@@ -13,51 +13,57 @@ keywords:
   - wget
 
 destructive_patterns:
-  # curl/wget targeting loopback (ipv4 in any notation, hostname, or ipv6)
-  - name: network-loopback
-    pattern: "(?<![\\w-])(curl|wget)\\b.*((?:^|[^.\\d])127(?:\\.\\d{1,3}){1,3}\\b|localhost|0\\.0\\.0\\.0|\\[::1?\\]|\\[::ffff:7f00:1\\]|0x7f[0-9a-fA-F]{6}\\b|\\b2130706433\\b|\\b0177(?:\\.\\d{1,4}){1,3}\\b|\\b017700000001\\b|//0(?::\\d+)?(?:/|\\s|$))"
+  # any curl/wget call, WebFetch returns better quality content faster
+  - name: curl-wget
+    pattern: "(?<![\\w-])(curl|wget)(?![\\w-])"
     severity: critical
-    description: curl/wget targeting loopback (ipv4 in any notation, hostname, or ipv6)
-  # curl/wget targeting a cloud provider's instance-metadata endpoint (aws, ecs, alibaba, gcp)
-  - name: network-cloud-metadata
-    pattern: "(?<![\\w-])(curl|wget)\\b.*(169\\.254\\.169\\.254|169\\.254\\.170\\.2|100\\.100\\.100\\.200|metadata\\.google\\.internal|fd00:ec2::254|0xa9fea9fe|\\b2852039166\\b|fe80::a9fe:a9fe|a9fe:a9fe|//metadata(?:[:/]|\\s|$))"
-    severity: critical
-    description: curl/wget targeting a cloud provider's instance-metadata endpoint (aws, ecs, alibaba, gcp)
-  # curl/wget targeting an RFC1918 private ipv4 range (10/8, 172.16/12, 192.168/16)
-  - name: network-private-ipv4
-    pattern: "(?<![\\w-])(curl|wget)\\b.*(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|172\\.(1[6-9]|2\\d|3[01])\\.\\d{1,3}\\.\\d{1,3}|192\\.168\\.\\d{1,3}\\.\\d{1,3})"
-    severity: critical
-    description: curl/wget targeting an RFC1918 private ipv4 range (10/8, 172.16/12, 192.168/16)
+    description: curl and wget are denied, use the WebFetch tool instead
 
-  # curl uploading local file content to a remote destination
-  - name: curl-upload
-    pattern: "(?<![\\w-])curl\\b.*(?:\\s(?:-d|--data(?:-binary|-ascii)?|--json)(?:=|\\s*)@|\\s--data-urlencode(?:=|\\s*)\\S*@|\\s(?:-F|--form)(?:=|\\s*)\\S*=[@<]|\\s-[a-zA-Z]*T\\b|\\s--upload-file\\b)"
-    severity: critical
-    description: curl uploading local file content to a remote destination
-  # wget posting local file content to a remote destination
-  - name: wget-upload
-    pattern: "(?<![\\w-])wget\\b.*(--post-file(?:=|\\s)|--body-file(?:=|\\s))"
-    severity: critical
-    description: wget posting local file content to a remote destination
+#   # curl/wget targeting loopback (ipv4 in any notation, hostname, or ipv6)
+#   - name: network-loopback
+#     pattern: "(?<![\\w-])(curl|wget)\\b.*((?:^|[^.\\d])127(?:\\.\\d{1,3}){1,3}\\b|localhost|0\\.0\\.0\\.0|\\[::1?\\]|\\[::ffff:7f00:1\\]|0x7f[0-9a-fA-F]{6}\\b|\\b2130706433\\b|\\b0177(?:\\.\\d{1,4}){1,3}\\b|\\b017700000001\\b|//0(?::\\d+)?(?:/|\\s|$))"
+#     severity: critical
+#     description: curl/wget targeting loopback (ipv4 in any notation, hostname, or ipv6)
+#   # curl/wget targeting a cloud provider's instance-metadata endpoint (aws, ecs, alibaba, gcp)
+#   - name: network-cloud-metadata
+#     pattern: "(?<![\\w-])(curl|wget)\\b.*(169\\.254\\.169\\.254|169\\.254\\.170\\.2|100\\.100\\.100\\.200|metadata\\.google\\.internal|fd00:ec2::254|0xa9fea9fe|\\b2852039166\\b|fe80::a9fe:a9fe|a9fe:a9fe|//metadata(?:[:/]|\\s|$))"
+#     severity: critical
+#     description: curl/wget targeting a cloud provider's instance-metadata endpoint (aws, ecs, alibaba, gcp)
+#   # curl/wget targeting an RFC1918 private ipv4 range (10/8, 172.16/12, 192.168/16)
+#   - name: network-private-ipv4
+#     pattern: "(?<![\\w-])(curl|wget)\\b.*(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|172\\.(1[6-9]|2\\d|3[01])\\.\\d{1,3}\\.\\d{1,3}|192\\.168\\.\\d{1,3}\\.\\d{1,3})"
+#     severity: critical
+#     description: curl/wget targeting an RFC1918 private ipv4 range (10/8, 172.16/12, 192.168/16)
 
-  # curl writing fetched content, headers or cookies to a local file
-  - name: curl-output
-    pattern: "(?<![\\w-])curl\\b.*(?:\\s-(?!X|-)[a-zA-Z]*[oODc]|\\s--(?:output(?:-dir)?|remote-name(?:-all)?|dump-header|cookie-jar|trace(?:-ascii)?|etag-save)\\b)"
-    severity: high
-    description: curl writing fetched content, headers or cookies to a local file
-  # wget writing fetched content to a local file (wget's default behavior)
-  - name: wget-output
-    pattern: "(?<![\\w-])wget\\b(?!.*(?:\\s-[a-zA-Z]*O\\s*-|\\s--output-document(?:=|\\s+)-)(?:\\s|$))"
-    severity: high
-    description: wget writing fetched content to a local file (wget's default behavior)
+#   # curl uploading local file content to a remote destination
+#   - name: curl-upload
+#     pattern: "(?<![\\w-])curl\\b.*(?:\\s(?:-d|--data(?:-binary|-ascii)?|--json)(?:=|\\s*)@|\\s--data-urlencode(?:=|\\s*)\\S*@|\\s(?:-F|--form)(?:=|\\s*)\\S*=[@<]|\\s-[a-zA-Z]*T\\b|\\s--upload-file\\b)"
+#     severity: critical
+#     description: curl uploading local file content to a remote destination
+#   # wget posting local file content to a remote destination
+#   - name: wget-upload
+#     pattern: "(?<![\\w-])wget\\b.*(--post-file(?:=|\\s)|--body-file(?:=|\\s))"
+#     severity: critical
+#     description: wget posting local file content to a remote destination
 
-  # arbitrary network request, output to stdout only
-  - name: curl-fetch
-    pattern: "(?<![\\w-])curl "
-    severity: low
-    description: Arbitrary network request, output to stdout only
-  # wget forced to stdout, no file written
-  - name: wget-stdout
-    pattern: "(?<![\\w-])wget\\b.*(?:\\s-[a-zA-Z]*O\\s*-|\\s--output-document(?:=|\\s+)-)(?:\\s|$)"
-    severity: low
-    description: wget forced to stdout, no file written
+#   # curl writing fetched content, headers or cookies to a local file
+#   - name: curl-output
+#     pattern: "(?<![\\w-])curl\\b.*(?:\\s-(?!X|-)[a-zA-Z]*[oODc]|\\s--(?:output(?:-dir)?|remote-name(?:-all)?|dump-header|cookie-jar|trace(?:-ascii)?|etag-save)\\b)"
+#     severity: high
+#     description: curl writing fetched content, headers or cookies to a local file
+#   # wget writing fetched content to a local file (wget's default behavior)
+#   - name: wget-output
+#     pattern: "(?<![\\w-])wget\\b(?!.*(?:\\s-[a-zA-Z]*O\\s*-|\\s--output-document(?:=|\\s+)-)(?:\\s|$))"
+#     severity: high
+#     description: wget writing fetched content to a local file (wget's default behavior)
+
+#   # arbitrary network request, output to stdout only
+#   - name: curl-fetch
+#     pattern: "(?<![\\w-])curl "
+#     severity: low
+#     description: Arbitrary network request, output to stdout only
+#   # wget forced to stdout, no file written
+#   - name: wget-stdout
+#     pattern: "(?<![\\w-])wget\\b.*(?:\\s-[a-zA-Z]*O\\s*-|\\s--output-document(?:=|\\s+)-)(?:\\s|$)"
+#     severity: low
+#     description: wget forced to stdout, no file written

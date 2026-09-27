@@ -17,6 +17,8 @@
 {{- if .git.ssh }}
 [commit]
 	gpgsign = true
+[core]
+	sshCommand = ssh -o AddKeysToAgent=$SSH_AGENT_TIMEOUT
 [gpg]
 	format = ssh
 [gpg "ssh"]

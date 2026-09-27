@@ -2,7 +2,7 @@
 
 {{- $enabled_plugins := dict }}
 {{- range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" true) .) | fromJson }}
-{{- if $on }}{{- $_ := set $enabled_plugins $id true }}{{- end }}
+{{- $_ := set $enabled_plugins $id $on }}
 {{- end }}
 {{- $_ := set $set "enabledPlugins" $enabled_plugins }}
 

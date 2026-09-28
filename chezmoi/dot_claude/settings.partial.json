@@ -25,6 +25,12 @@
                 "source": "github"
             }
         },
+        "docker": {
+            "source": {
+                "repo": "docker/skills",
+                "source": "github"
+            }
+        },
         "mempalace": {
             "source": {
                 "repo": "mempalace/mempalace",

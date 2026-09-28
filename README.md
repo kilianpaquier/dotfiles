@@ -251,6 +251,7 @@ and installed depending on the chosen runtime, installed tools with **mise** or 
 | `codegraph`                 | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `codegraph` in `tools.mise`                              |
 | `context7`                  | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `context7` in `tools.mise`                               |
 | `destructive-command-guard` | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `destructive-command-guard` in `tools.mise`              |
+| `docker`                    | Skills             | [docker/skills](https://github.com/docker/skills)                                                | At least one `container.runtimes` selected               |
 | `exam-drill`                | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
 | `feature-dev`               | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
 | `find-skills`               | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)                                      | always                                                   |

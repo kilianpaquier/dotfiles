@@ -25,6 +25,12 @@ codex plugin marketplace upgrade
 {{- if has "copilot" .ai.runtimes }}
 
 copilot plugin marketplace update
+
+installed=" $(copilot plugin list --json | jq -r '.[] | .name + "@" + .marketplace' | tr '\n' ' ')"
+for plugin in $(jq -r '.enabledPlugins | to_entries[] | select(.value) | .key' "$HOME/.copilot/settings.json"); do
+  case "$installed" in *" $plugin "*) continue ;; esac
+  copilot plugin install "$plugin" || true
+done
 copilot plugin update --all
 {{- end }}
 

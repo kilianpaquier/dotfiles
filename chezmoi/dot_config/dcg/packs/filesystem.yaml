@@ -40,6 +40,8 @@ destructive_patterns:
     pattern: "(?<![\\w-])mv\\b"
     severity: high
     description: Moves a file, can overwrite the destination silently
+    executables:
+      - mv
   # edits a file in place
   - name: sed-inplace
     pattern: "(?<![\\w-])sed\\b.*\\s(?:-[a-zA-Z]*i|--in-place)"
@@ -52,6 +54,8 @@ destructive_patterns:
     pattern: "(?<![\\w-])rm "
     severity: high
     description: Deletes a file
+    executables:
+      - rm
 
 # The risk in cp/mv/sed -i is a silent overwrite, so the forms that cannot overwrite
 # or that keep the previous content pass without a prompt.

@@ -121,7 +121,6 @@ custom_paths = [
 "core.filesystem:tar-remove-files-general" = "ask" # tar --remove-files deletes source paths after archiving and requires human approval.
 "core.filesystem:truncate-zero-general" = "ask" # truncate with an absolute or shrinking size can destroy file content and requires human approval.
 "core.filesystem:unlink-general" = "ask" # unlink is destructive (POSIX equivalent of rm on a single file) and requires human approval.
-"core.git:branch-force-delete" = "ask" # git branch deletion or forced ref updates require explicit user approval.
 "database.mongodb:stdin-unverified" = "ask" # mongosh receives indirect input that dcg cannot statically verify.
 "database.mysql:stdin-unverified" = "ask" # mysql/mariadb receives indirect input that dcg cannot statically verify.
 "database.postgresql:pg-dump-clean" = "ask" # pg_dump --clean drops objects before creating them. This can be destructive on restore.

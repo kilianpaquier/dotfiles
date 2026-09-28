@@ -12,9 +12,19 @@ keywords:
   - git
 
 destructive_patterns:
+  # deletes or moves tracked files, not recoverable through git status or a soft reset alone
+  - name: git-rm-mv
+    pattern: "(?<![\\w-])git\\b(?: -\\S+(?: [^-\\s]\\S*)?)* (mv|rm)\\b"
+    severity: critical
+    description: Deletes or moves tracked files
+  # rewrites what a commit SHA resolves to for anyone who fetches it, same blast radius as filter-branch
+  - name: git-replace
+    pattern: "(?<![\\w-])git\\b(?: -\\S+(?: [^-\\s]\\S*)?)* replace\\b"
+    severity: critical
+    description: Rewrites what a commit resolves to
   # changes refs, history or the working tree
   - name: git-mutating
-    pattern: "(?<![\\w-])git\\b(?: -\\S+(?: [^-\\s]\\S*)?)* (add|am|apply|branch|checkout|commit|fetch|merge|mv|notes|pull|push|remote|replace|reset|restore|revert|rm|switch|tag|update-ref)\\b"
+    pattern: "(?<![\\w-])git\\b(?: -\\S+(?: [^-\\s]\\S*)?)* (add|am|apply|branch|checkout|commit|fetch|merge|notes|pull|push|remote|reset|restore|revert|switch|tag|update-ref)\\b"
     severity: high
     description: Changes refs, history or the working tree
   # creates, applies or clears a stash

@@ -32,7 +32,8 @@
 .chezmoiscripts/*-wsl.sh
 {{- end }}
 
-{{- if not (or (eq .machine.kind "server") (and (eq .machine.kind "desktop") (eq .profile "home"))) }}
+{{- $system := or (has "docker" .container.runtimes) (eq .machine.kind "server") (and (eq .machine.kind "desktop") (eq .profile "home")) }}
+{{- if not $system }}
 .chezmoiscripts/*-system.sh
 {{- end }}
 

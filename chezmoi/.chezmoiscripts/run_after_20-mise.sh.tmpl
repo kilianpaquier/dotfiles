@@ -1,0 +1,32 @@
+#!/bin/sh
+
+set -eu
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+# shellcheck disable=SC1091
+. "{{ .chezmoi.sourceDir }}/scripts/log.sh"
+
+# run every step regardless so a single broken tool doesn't also skip pruning
+# and reshimming the ones that succeeded.
+status=0
+
+if mise install -y; then :; else
+  status=$?
+  warn "'mise install -y' failed (exit $status)"
+fi
+if mise upgrade -y; then :; else
+  status=$?
+  warn "'mise upgrade -y' failed (exit $status)"
+fi
+if mise prune -y; then :; else
+  status=$?
+  warn "'mise prune -y' failed (exit $status)"
+fi
+if mise reshim --force -y; then :; else
+  status=$?
+  warn "'mise reshim --force -y' failed (exit $status)"
+fi
+
+exit "$status"

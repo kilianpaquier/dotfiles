@@ -4,6 +4,9 @@
 
 set -e
 
+# shellcheck disable=SC1091
+. "$(dirname "$0")/log.sh"
+
 env="$HOME/.local/state/chezmoi/env"
 single="$HOME/.nix-profile/etc/profile.d/nix.sh"
 multi=/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
@@ -15,8 +18,7 @@ if [ ! -f "$single" ] && [ ! -f "$multi" ]; then
   elif command -v wget >/dev/null 2>&1; then
     wget -qO- https://nixos.org/nix/install | sh -s -- --no-daemon --no-modify-profile
   else
-    echo "Neither curl nor wget is installed, one is needed to install nix" >&2
-    exit 1
+    error "Neither curl nor wget is installed, one is needed to install nix"
   fi
 fi
 

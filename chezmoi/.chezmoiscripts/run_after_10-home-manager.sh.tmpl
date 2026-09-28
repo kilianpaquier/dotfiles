@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -e
+
+# shellcheck disable=SC3040
+(set -o pipefail >/dev/null 2>&1) && set -o pipefail
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+# shellcheck disable=SC1091
+. "{{ .chezmoi.sourceDir }}/scripts/log.sh"
+
+# nix-channel --update is slow and occasionally fails behind a proxy (connection reset),
+# throttling and allowing update to fail
+channels="$HOME/.local/state/nix/profiles/channels"
+now=$(date +%s)
+last=$(stat -c %Y "$channels" 2>/dev/null || echo 0)
+if [ $((now - last)) -gt 3600 ]; then
+  info "updating nix channels"
+  if ! nix-channel --quiet --update; then
+    warn "nix-channel --update failed, continuing with the existing channel"
+  fi
+fi
+
+home-manager switch --log-format bar
+nix-collect-garbage --quiet --delete-older-than 30d

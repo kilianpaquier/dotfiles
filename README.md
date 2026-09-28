@@ -218,7 +218,7 @@ The following tools are always installed without capability to skip them: age, c
 | `go`                        | go, golangci-lint                       | x                     | x                             |
 | `hugo`                      | dart-sass, hugo-extended                | x                     | x                             |
 | `incus`                     | incus                                   | x                     |                               |
-| `java`                      | java (LTS), jdtls                       |                       | x                             |
+| `java`                      | java (LTS), jdtls, maven                |                       | x                             |
 | `just`                      | just                                    | x                     |                               |
 | `k8s`                       | helm, helm-ct, krew, kubectl, kustomize | x                     | x                             |
 | `kotlin`                    | kotlin, kotlin-lsp                      |                       |                               |
@@ -236,6 +236,11 @@ The following tools are always installed without capability to skip them: age, c
 Two main container runtimes can be installed:
 - `docker`: rootless docker on the pasta network driver.
 - `podman`: podman and podman-compose, rootless by default.
+
+#### Limitations
+
+- Rootless docker can't bind ports below 1024 by default, updates can be done in `/proc/sys/net/ipv4/ip_unprivileged_port_start`.
+- Rootless docker can't publish a port inside the kernel's ephemeral range (`/proc/sys/net/ipv4/ip_local_port_range`, usually `32768 60999`).
 
 ### Agent components
 

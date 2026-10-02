@@ -235,7 +235,7 @@ The following tools are always installed without capability to skip them: age, c
 
 Two main container runtimes can be installed:
 - `docker`: rootless docker on the pasta network driver.
-- `podman`: podman and podman-compose, rootless by default.
+- `podman`: podman, podman-compose (default compose provider) and docker-compose (opt-in with `PODMAN_COMPOSE_PROVIDER=docker-compose`), rootless by default.
 
 #### Limitations
 

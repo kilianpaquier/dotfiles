@@ -10,7 +10,7 @@
 {{- if has "copilot" .ai.runtimes }}{{- $packages = append $packages "github-copilot-cli" }}{{- end }}
 
 {{- if has "docker" .container.runtimes }}{{- $packages = concat $packages (list "docker" "passt") }}{{- end }}
-{{- if has "podman" .container.runtimes }}{{- $packages = concat $packages (list "podman" "podman-compose") }}{{- end }}
+{{- if has "podman" .container.runtimes }}{{- $packages = concat $packages (list "podman" "podman-compose" "docker-compose") }}{{- end }}
 
 {{- if eq .machine.kind "desktop" }}
   {{- $packages = concat $packages (list "libreoffice" "spotify") }}

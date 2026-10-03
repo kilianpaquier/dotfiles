@@ -6,6 +6,7 @@
 
 {{- if and (has "copilot" .ai.runtimes) (has "vscode" .ide) }}
 {{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.copilot.partial.json" | fromJson) }}
+{{- $_ := set $set "github.copilot.chat.additionalReadAccessPaths" (list (joinPath .chezmoi.homeDir ".copilot" "instructions")) }}
 {{- end }}
 
 {{- includeTemplate "scripts/json-merge.py" (dict

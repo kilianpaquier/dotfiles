@@ -112,6 +112,7 @@
             "WebFetch(domain:docs.gitlab.com)",
             "WebFetch(domain:docs.mistral.ai)",
             "WebFetch(domain:docs.podman.io)",
+            "WebFetch(domain:docs.renovatebot.com)",
             "WebFetch(domain:docs.rs)",
             "WebFetch(domain:en.wikipedia.org)",
             "WebFetch(domain:git-scm.com)",

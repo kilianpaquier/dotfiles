@@ -14,6 +14,9 @@ for plugin in $(jq -r '.enabledPlugins | to_entries[] | select(.value) | .key' "
   case "$installed" in *" $plugin "*) continue ;; esac
   claude plugin install "$plugin" || true
 done
+for plugin in $(jq -r '.enabledPlugins | to_entries[] | select(.value | not) | .key' "$HOME/.claude/settings.json"); do
+  case "$installed" in *" $plugin "*) claude plugin uninstall "$plugin" || true ;; esac
+done
 claude plugin list --json | jq -r '.[].id' | xargs -r -n1 claude plugin update -y
 {{- end }}
 
@@ -30,6 +33,9 @@ installed=" $(copilot plugin list --json | jq -r '.[] | .name + "@" + .marketpla
 for plugin in $(jq -r '.enabledPlugins | to_entries[] | select(.value) | .key' "$HOME/.copilot/settings.json"); do
   case "$installed" in *" $plugin "*) continue ;; esac
   copilot plugin install "$plugin" || true
+done
+for plugin in $(jq -r '.enabledPlugins | to_entries[] | select(.value | not) | .key' "$HOME/.copilot/settings.json"); do
+  case "$installed" in *" $plugin "*) copilot plugin uninstall "$plugin" || true ;; esac
 done
 copilot plugin update --all
 {{- end }}

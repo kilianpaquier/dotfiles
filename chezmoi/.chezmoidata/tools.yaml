@@ -77,7 +77,7 @@ default_agent_runtimes:
   home: [claude, copilot]
   soprasteria: [copilot]
 
-plugins: [caveman, ponytail]
+plugins: [cave-talk, ponytail]
 default_plugins:
-  home: [caveman, ponytail]
-  soprasteria: [caveman, ponytail]
+  home: [cave-talk, ponytail]
+  soprasteria: [cave-talk, ponytail]

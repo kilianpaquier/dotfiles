@@ -105,7 +105,7 @@ Two profiles exist, `home` and `soprasteria`.
 | ----------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
 | Whether to sign commits with the SSH key                          | `true`                 |                       | `git.ssh`            |
 | Which AI agent runtimes to install (`claude`, `codex`, `copilot`) | Depends on the profile |                       | `ai.runtimes`        |
-| Which agent plugins to enable (`caveman`, `ponytail`)             | Depends on the profile | at least one agent    | `ai.plugins`         |
+| Which agent plugins to enable (`cave-talk`, `ponytail`)           | Depends on the profile | at least one agent    | `ai.plugins`         |
 | Which container runtimes to install (`docker` rootless, `podman`) | Depends on the profile |                       | `container.runtimes` |
 | Which container engine gitlab-ci-local should use                 |                        | two runtimes selected | `container.engine`   |
 | Which tool manager to use (`mise`)                                | `mise`                 |                       | `tools_management`   |
@@ -251,7 +251,7 @@ and installed depending on the chosen runtime, installed tools with **mise** or 
 | --------------------------- | ------------------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
 | `agent-rules`               | Instructions       | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules), refreshed daily                     | `claude` and `copilot` only                              |
 | `bash-language-server`      | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `shell` in `tools.mise`, `claude` and `copilot` only     |
-| `caveman`                   | Hooks, Skills      | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `caveman` in `ai.plugins`                                |
+| `cave-talk`                 | Hooks, Skills      | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `cave-talk` in `ai.plugins`                              |
 | `code-simplifier`           | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
 | `codegraph`                 | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `codegraph` in `tools.mise`                              |
 | `context7`                  | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `context7` in `tools.mise`                               |

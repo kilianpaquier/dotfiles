@@ -110,6 +110,7 @@
             "WebFetch(domain:docs.docker.com)",
             "WebFetch(domain:docs.github.com)",
             "WebFetch(domain:docs.gitlab.com)",
+            "WebFetch(domain:docs.google.com)",
             "WebFetch(domain:docs.mistral.ai)",
             "WebFetch(domain:docs.podman.io)",
             "WebFetch(domain:docs.renovatebot.com)",
@@ -155,8 +156,10 @@
             "WebFetch(domain:registry.terraform.io)",
             "WebFetch(domain:sass-lang.com)",
             "WebFetch(domain:schemastore.org)",
+            "WebFetch(domain:services.google.com)",
             "WebFetch(domain:shellcheck.net)",
             "WebFetch(domain:stackoverflow.com)",
+            "WebFetch(domain:university.gitlab.com)",
             "WebFetch(domain:www.schemastore.org)",
             "WebSearch"
         ],

@@ -34,6 +34,7 @@
         "https://docs.docker.com": true,
         "https://docs.github.com": true,
         "https://docs.gitlab.com": true,
+        "https://docs.google.com": true,
         "https://docs.mistral.ai": true,
         "https://docs.podman.io": true,
         "https://docs.renovatebot.com": true,
@@ -79,8 +80,10 @@
         "https://registry.terraform.io": true,
         "https://sass-lang.com": true,
         "https://schemastore.org": true,
+        "https://services.google.com": true,
         "https://shellcheck.net": true,
         "https://stackoverflow.com": true,
+        "https://university.gitlab.com": true,
         "https://www.schemastore.org": true
     },
     "github.copilot.enable": {

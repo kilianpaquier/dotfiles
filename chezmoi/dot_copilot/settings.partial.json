@@ -26,6 +26,7 @@
         "docs.docker.com",
         "docs.github.com",
         "docs.gitlab.com",
+        "docs.google.com",
         "docs.mistral.ai",
         "docs.podman.io",
         "docs.renovatebot.com",
@@ -71,8 +72,10 @@
         "registry.terraform.io",
         "sass-lang.com",
         "schemastore.org",
+        "services.google.com",
         "shellcheck.net",
         "stackoverflow.com",
+        "university.gitlab.com",
         "www.schemastore.org"
     ],
     "askUser": true,

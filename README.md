@@ -2,10 +2,12 @@
 
 <div align="center">
 
+<!-- BEGIN_KICKR_BADGES -->
 [![GitLab Issues](https://img.shields.io/gitlab/issues/open/kilianpaquier%2Fdotfiles?gitlab_url=https%3A%2F%2Fgitlab.com&style=for-the-badge)](https://gitlab.com/kilianpaquier/dotfiles/-/work_items)
 [![GitLab License](https://img.shields.io/gitlab/license/kilianpaquier%2Fdotfiles?gitlab_url=https%3A%2F%2Fgitlab.com&style=for-the-badge)](https://gitlab.com/kilianpaquier/dotfiles/-/blob/HEAD/LICENSE)
 [![GitLab CICD](https://img.shields.io/gitlab/pipeline-status/kilianpaquier%2Fdotfiles?gitlab_url=https%3A%2F%2Fgitlab.com&branch=main&style=for-the-badge)](https://gitlab.com/kilianpaquier/dotfiles/-/pipelines?ref=main)
 [![Plumber Score](https://img.shields.io/endpoint?url=https%3A%2F%2Fscore.getplumber.io%2Fgitlab.com%2Fkilianpaquier%2Fdotfiles.json&style=for-the-badge)](https://score.getplumber.io/gitlab.com/kilianpaquier/dotfiles)
+<!-- END_KICKR_BADGES -->
 
 </div>
 
@@ -222,7 +224,7 @@ The following tools are always installed without capability to skip them: age, c
 | `incus`                     | incus                                   | x                     |                               |
 | `java`                      | java (LTS), jdtls, maven                |                       | x                             |
 | `just`                      | just                                    | x                     |                               |
-| `k8s`                       | helm, helm-ct, krew, kubectl, kustomize | x                     | x                             |
+| `k8s`                       | helm, helm-ct, helmfile, krew, kubectl, kustomize | x                     | x                             |
 | `kotlin`                    | kotlin, kotlin-lsp                      |                       |                               |
 | `mempalace`                 | mempalace                               | x                     | x                             |
 | `opentofu`                  | opentofu, tflint, tofu-ls               | x                     |                               |

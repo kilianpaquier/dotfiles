@@ -105,15 +105,15 @@ Two profiles exist, `home` and `soprasteria`.
 
 ### Workstation and server
 
-| Prompt                                                            | Default                | When                  | Key                  |
-| ----------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
-| Whether to sign commits with the SSH key                          | `true`                 |                       | `git.ssh`            |
-| Which AI agent runtimes to install (`claude`, `codex`, `copilot`) | Depends on the profile |                       | `ai.runtimes`        |
-| Which agent plugins to enable (`cave-talk`, `ponytail`)           | Depends on the profile | at least one agent    | `ai.plugins`         |
-| Which container runtimes to install (`docker` rootless, `podman`) | Depends on the profile |                       | `container.runtimes` |
-| Which container engine gitlab-ci-local should use                 |                        | two runtimes selected | `container.engine`   |
-| Which tool manager to use (`mise`)                                | `mise`                 |                       | `tools_management`   |
-| Which tool bundles to install, see [Tooling](#tooling)            | Depends on the profile | `mise` selected       | `tools.mise`         |
+| Prompt                                                               | Default                | When                  | Key                  |
+| -------------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
+| Whether to sign commits with the SSH key                             | `true`                 |                       | `git.ssh`            |
+| Which AI agent runtimes to install (`claude`, `codex`, `copilot`)    | Depends on the profile |                       | `ai.runtimes`        |
+| Which agent plugins to enable (`cave-talk`, `humanizer`, `ponytail`) | Depends on the profile | at least one agent    | `ai.plugins`         |
+| Which container runtimes to install (`docker` rootless, `podman`)    | Depends on the profile |                       | `container.runtimes` |
+| Which container engine gitlab-ci-local should use                    |                        | two runtimes selected | `container.engine`   |
+| Which tool manager to use (`mise`)                                   | `mise`                 |                       | `tools_management`   |
+| Which tool bundles to install, see [Tooling](#tooling)               | Depends on the profile | `mise` selected       | `tools.mise`         |
 
 ### Server only
 
@@ -209,31 +209,31 @@ Tools added by hand with **mise** always stay to ease customization per user, un
 
 The following tools are always installed without capability to skip them: age, cosign, node 24, sops, usage.
 
-| Bundle                      | Installs                                | Home profile defaults | Sopra Steria profile defaults |
-| --------------------------- | --------------------------------------- | --------------------- | ----------------------------- |
-| `boost`                     | jfrog-boost                             | x                     | x                             |
-| `bun`                       | bun                                     | x                     |                               |
-| `codegraph`                 | codegraph                               | x                     | x                             |
-| `context7`                  | context7, context7-mcp                  | x                     | x                             |
-| `destructive-command-guard` | destructive-command-guard               | x                     | x                             |
-| `gh`                        | gh                                      | x                     |                               |
-| `gitlab-ci-local`           | gitlab-ci-local                         | x                     | x                             |
-| `glab`                      | glab                                    | x                     |                               |
-| `go`                        | go, golangci-lint                       | x                     | x                             |
-| `hugo`                      | dart-sass, hugo-extended                | x                     | x                             |
-| `incus`                     | incus                                   | x                     |                               |
-| `java`                      | java (LTS), jdtls, maven                |                       | x                             |
-| `just`                      | just                                    | x                     |                               |
+| Bundle                      | Installs                                          | Home profile defaults | Sopra Steria profile defaults |
+| --------------------------- | ------------------------------------------------- | --------------------- | ----------------------------- |
+| `boost`                     | jfrog-boost                                       | x                     | x                             |
+| `bun`                       | bun                                               | x                     |                               |
+| `codegraph`                 | codegraph                                         | x                     | x                             |
+| `context7`                  | context7, context7-mcp                            | x                     | x                             |
+| `destructive-command-guard` | destructive-command-guard                         | x                     | x                             |
+| `gh`                        | gh                                                | x                     |                               |
+| `gitlab-ci-local`           | gitlab-ci-local                                   | x                     | x                             |
+| `glab`                      | glab                                              | x                     |                               |
+| `go`                        | go, golangci-lint                                 | x                     | x                             |
+| `hugo`                      | dart-sass, hugo-extended                          | x                     | x                             |
+| `incus`                     | incus                                             | x                     |                               |
+| `java`                      | java (LTS), jdtls, maven                          |                       | x                             |
+| `just`                      | just                                              | x                     |                               |
 | `k8s`                       | helm, helm-ct, helmfile, krew, kubectl, kustomize | x                     | x                             |
-| `kotlin`                    | kotlin, kotlin-lsp                      |                       |                               |
-| `mempalace`                 | mempalace                               | x                     | x                             |
-| `opentofu`                  | opentofu, tflint, tofu-ls               | x                     |                               |
-| `pre-commit`                | pre-commit                              | x                     | x                             |
-| `pulumi`                    | pulumi                                  |                       |                               |
-| `rtk`                       | rtk                                     |                       |                               |
-| `shell`                     | bash-language-server, shellcheck        | x                     | x                             |
-| `terraform`                 | terraform, terraform-ls, tflint         |                       | x                             |
-| `uv`                        | uv                                      | x                     | x                             |
+| `kotlin`                    | kotlin, kotlin-lsp                                |                       |                               |
+| `mempalace`                 | mempalace                                         | x                     | x                             |
+| `opentofu`                  | opentofu, tflint, tofu-ls                         | x                     |                               |
+| `pre-commit`                | pre-commit                                        | x                     | x                             |
+| `pulumi`                    | pulumi                                            |                       |                               |
+| `rtk`                       | rtk                                               |                       |                               |
+| `shell`                     | bash-language-server, shellcheck                  | x                     | x                             |
+| `terraform`                 | terraform, terraform-ls, tflint                   |                       | x                             |
+| `uv`                        | uv                                                | x                     | x                             |
 
 ### Container runtimes
 
@@ -266,6 +266,7 @@ and installed depending on the chosen runtime, installed tools with **mise** or 
 | `find-skills`               | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)                                      | always                                                   |
 | `gopls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `go` in `tools.mise`, `claude` and `copilot` only        |
 | `grill-me`, `grilling`      | Skills             | [mattpocock/skills](https://github.com/mattpocock/skills)                                        | always                                                   |
+| `humanizer`                 | Skills             | [humanizer](https://github.com/blader/humanizer)                                                 | `humanizer` in `ai.plugins`                              |
 | `jdtls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `java` in `tools.mise`, `claude` and `copilot` only      |
 | `kotlin-lsp`                | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `kotlin` in `tools.mise`, `claude` and `copilot` only    |
 | `mempalace`                 | Hooks, MCP, Skills | [mempalace](https://github.com/mempalace/mempalace)                                              | `mempalace` in `tools.mise`                              |

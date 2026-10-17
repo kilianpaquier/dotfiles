@@ -7,6 +7,12 @@ set -e
 
 {{- if has "claude" .ai.runtimes }}
 
+# extraKnownMarketplaces only get cloned by an interactive session, the plugin CLI ignores them.
+known=" $(claude plugin marketplace list --json | jq -r '.[].name' | tr '\n' ' ')"
+jq -r '.extraKnownMarketplaces | to_entries[] | .key + " " + .value.source.repo' "$HOME/.claude/settings.json" | while read -r name repo; do
+  case "$known" in *" $name "*) continue ;; esac
+  claude plugin marketplace add "$repo" || true
+done
 claude plugin marketplace update || true
 
 installed=" $(claude plugin list --json | jq -r '.[].id' | tr '\n' ' ')"

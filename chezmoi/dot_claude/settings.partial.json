@@ -31,6 +31,12 @@
                 "source": "github"
             }
         },
+        "humanizer": {
+            "source": {
+                "repo": "blader/humanizer",
+                "source": "github"
+            }
+        },
         "mempalace": {
             "source": {
                 "repo": "mempalace/mempalace",

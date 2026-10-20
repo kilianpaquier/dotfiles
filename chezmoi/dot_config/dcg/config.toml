@@ -89,6 +89,7 @@ custom_paths = [
 "chezmoi.github:gh-mutating" = "ask" # Mutating gh subcommand
 "chezmoi.gitlab:glab-api-write" = "ask" # glab api call with a mutating HTTP method, a request body or a GraphQL mutation
 "chezmoi.gitlab:glab-mutating" = "ask" # Mutating glab subcommand
+"chezmoi.gopass:gopass-mutating" = "ask" # Mutating gopass subcommand
 "chezmoi.package_managers:bun-run-destructive" = "ask" # Destructive package script
 "chezmoi.package_managers:bun-script" = "ask" # Runs inline code or a script file dcg cannot inspect
 "chezmoi.package_managers:bun-write" = "ask" # Mutates bun dependencies or registry state

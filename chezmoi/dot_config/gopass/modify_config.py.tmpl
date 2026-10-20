@@ -1,0 +1,7 @@
+{{- includeTemplate "scripts/ini-merge.py" (dict
+  "indent" "\t"
+  "set" (dict
+    "age" (dict "agent-enabled" "true")
+    "core" (dict "autopush" "false" "autosync" "false" "noreminder" "true" "notifications" "false")
+    "show" (dict "safecontent" "true")
+    "updater" (dict "check" "false"))) }}

@@ -70,4 +70,9 @@ fi
 # set convenient variable ssh keys lifetime within ssh-agent (e.g. ssh-add -t "$SSH_AGENT_TIMEOUT")
 export SSH_AGENT_TIMEOUT=3600
 
+export GOPASS_CONFIG_COUNT=1
+export GOPASS_CONFIG_KEY_0=age.agent-timeout
+export GOPASS_CONFIG_VALUE_0="$SSH_AGENT_TIMEOUT"
+export GOPASS_UMASK=077
+
 export PROFILE_SOURCED=$$

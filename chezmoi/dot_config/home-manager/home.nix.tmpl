@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 
-{{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "gnumake" "jq" "python3" "ripgrep" "socat" "tree" "unzip" "vim" "xdg-utils" }}
+{{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "git-credential-gopass" "gnumake" "gnupg" "gopass" "jq" "python3" "ripgrep" "socat" "tree" "unzip" "vim" "xdg-utils" }}
 
 {{- if has "mise" .tools_management }}{{- $packages = append $packages "mise" }}{{- end }}
 
@@ -44,7 +44,6 @@
 
 {{- if has "docker" .container.runtimes }}
 
-  # nixpkgs docker needs to have its service defined
   systemd.user.services.docker = {
     Install.WantedBy = [ "default.target" ];
     Service = {
@@ -58,6 +57,38 @@
     };
   };
 {{- end }}
+
+  systemd.user.services.gopass-age-agent = {
+    Install.WantedBy = [ "default.target" ];
+    Service = {
+      Environment = [
+        "GOPASS_CONFIG_COUNT=1"
+        "GOPASS_CONFIG_KEY_0=age.agent-timeout"
+        "GOPASS_CONFIG_VALUE_0=3600"
+        "GOPASS_UMASK=077"
+      ];
+      ExecStart = "${pkgs.gopass}/bin/gopass age agent start";
+    };
+  };
+
+  systemd.user.services.gopass-secret-service = {
+    Install.WantedBy = [ "default.target" ];
+    Unit = {
+      After = [ "gopass-age-agent.service" ];
+      Requires = [ "gopass-age-agent.service" ];
+    };
+    Service = {
+      Environment = [
+        "GIT_CONFIG_COUNT=1"
+        "GIT_CONFIG_KEY_0=commit.gpgsign"
+        "GIT_CONFIG_VALUE_0=false"
+        "GOPASS_UMASK=077"
+      ];
+      ExecStart = "${pkgs.gopass}/bin/gopass secret-service serve";
+      Restart = "on-failure";
+      RestartSec = 30;
+    };
+  };
 
   # dotfiles management
   home.file = {

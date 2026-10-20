@@ -26,6 +26,7 @@
   - [Desktop apps](#desktop-apps)
   - [Tooling](#tooling)
   - [Container runtimes](#container-runtimes)
+  - [Credentials](#credentials)
   - [Agent components](#agent-components)
   - [Servers](#servers)
   - [WSL](#wsl)
@@ -44,6 +45,7 @@ The repository offers the following main features:
 - Basic desktop apps for Windows and Linux (see [desktop apps](#desktop-apps))
 - User dev tools for Linux
 - Generation of an SSH key (ed25519) and **git** identity setup
+- Git credentials (HTTPS tokens) stored in **gopass**, see [credentials](#credentials)
 
 Of course to avoid a painful maintenance, the setup is not completely *à la carte*.
 Setup is based on [prompts](#prompts) with predefined machine typologies and work profiles.
@@ -245,6 +247,19 @@ Two main container runtimes can be installed:
 
 - Rootless docker can't bind ports below 1024 by default, updates can be done in `/proc/sys/net/ipv4/ip_unprivileged_port_start`.
 - Rootless docker can't publish a port inside the kernel's ephemeral range (`/proc/sys/net/ipv4/ip_local_port_range`, usually `32768 60999`).
+
+### Credentials
+
+**gopass** is installed with **home-manager** and set as the **git** credential helper for HTTPS remotes (`git-credential-gopass`).
+A user service (`gopass-secret-service`) also exposes the store as a Secret Service, so `gh` and `glab` can keep their tokens in it.
+
+The store is not created by the repository, create it once with the **age** backend (**gopass** defaults to gpg):
+
+```sh
+gopass setup --crypto age
+```
+
+The **age** agent keeps the unlocked identity for `SSH_AGENT_TIMEOUT` seconds (see `~/.profile`).
 
 ### Agent components
 

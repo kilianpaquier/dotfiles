@@ -12,6 +12,7 @@
         "~/.git-credentials",
         "~/.gnupg",
         "~/.kube",
+        "~/.local/share/gopass",
         "~/.netrc",
         "~/.npmrc",
         "~/.pypirc",

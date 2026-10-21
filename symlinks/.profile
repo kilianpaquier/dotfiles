@@ -32,9 +32,6 @@ umask 022
 # set PATH so it includes mise shims if it exists
 [ -d "$HOME/.local/share/mise/shims" ] && PATH="$HOME/.local/share/mise/shims:$PATH"
 
-# set PATH so it includes krew if it exists
-[ -d "$HOME/.krew/bin" ] && PATH="$HOME/.krew/bin:$PATH"
-
 # shellcheck disable=SC1091
 # source nix to expand PATH with home-manager installed tools
 [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] && . "$HOME/.nix-profile/etc/profile.d/nix.sh"
@@ -52,6 +49,9 @@ elif [ -f "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" ]; the
 fi
 
 unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
+
+# set PATH so it includes krew if it exists
+command -v kubectl-krew >/dev/null 2>&1 && PATH="${KREW_ROOT:-"$HOME/.krew"}/bin:$PATH"
 
 # source mise env and aliases
 command -v mise >/dev/null 2>&1 && eval "$(mise env | grep -v 'PATH=')"

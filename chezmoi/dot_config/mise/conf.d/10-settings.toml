@@ -17,8 +17,20 @@ dart-sass = "github:sass/dart-sass"
 destructive-command-guard = "github:Dicklesworthstone/destructive_command_guard"
 gitlab-ci-local = "github:firecow/gitlab-ci-local"
 incus = "github:lxc/incus[matching=incus.,rename_exe=incus]"
-jdtls = "http:jdtls[url=https://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz]"
+# jdtls = """http:jdtls[\
+#   url='https://download.eclipse.org/jdtls/snapshots/jdt-language-server-latest.tar.gz',\
+#   version_json_path='.[].name',\
+#   version_list_url='https://api.github.com/repos/eclipse-jdtls/eclipse.jdt.ls/tags',\
+#   version_order='semver',\
+# ]"""
 jfrog-boost = "github:jfrog/boost"
+# kotlin-lsp = """http:kotlin-lsp[\
+#   rename_exe={intellij-server='kotlin-lsp'},\
+#   url='https://download.jetbrains.com/language-server/kotlin-server/{{ version }}/kotlin-server-{{ version }}{{ arch(x64="", arm64="-aarch64") }}.tar.gz',\
+#   version_json_path='.[].name',\
+#   version_list_url='https://api.github.com/repos/Kotlin/kotlin-lsp/releases',\
+#   version_order='semver',\
+# ]"""
 krew = "github:kubernetes-sigs/krew[rename_exe=kubectl-krew]"
 mempalace = "pipx:mempalace"
 pavois = "github:stephrobert/pavois"

@@ -1,6 +1,8 @@
+{{- $url := "https://raw.githubusercontent.com/romkatv/zsh4humans/v5/.zshenv" }}
+{{- with env "GITHUB_TOKEN" }}{{ $url = replace "https://" (printf "https://%s@" .) $url }}{{ end }}
 {{- if eq .shell "zsh" }}
 .zshenv:
   type: file
-  url: "https://raw.githubusercontent.com/romkatv/zsh4humans/v5/.zshenv"
+  url: {{ $url | quote }}
   refreshPeriod: 168h
 {{- end }}

@@ -42,6 +42,18 @@
   nixpkgs.config.allowUnfree = true;
 {{- end }}
 
+{{- if gt (len .ai.runtimes) 0 }}
+
+  # apm-cli pins websockets<17 while nixpkgs ships 17, drop once nixpkgs relaxes it.
+  nixpkgs.overlays = [
+    (final: prev: {
+      apm-cli = prev.apm-cli.overridePythonAttrs (old: {
+        pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "websockets" ];
+      });
+    })
+  ];
+{{- end }}
+
 {{- if has "docker" .container.runtimes }}
 
   systemd.user.services.docker = {

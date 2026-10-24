@@ -1,2 +1,4 @@
 {{- includeTemplate "scripts/env-merge.py" (dict
-  "set" (dict "CONTAINER_EXECUTABLE" .container.engine)) }}
+  "set" (dict
+    "ARTIFACTS_TO_SOURCE" "false"
+    "CONTAINER_EXECUTABLE" .container.engine)) }}

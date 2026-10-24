@@ -174,9 +174,11 @@
             "WebFetch(domain:schemastore.org)",
             "WebFetch(domain:services.google.com)",
             "WebFetch(domain:shellcheck.net)",
+            "WebFetch(domain:skills.sh)",
             "WebFetch(domain:stackoverflow.com)",
             "WebFetch(domain:university.gitlab.com)",
             "WebFetch(domain:www.schemastore.org)",
+            "WebFetch(domain:www.skills.sh)",
             "WebSearch"
         ],
         "ask": [

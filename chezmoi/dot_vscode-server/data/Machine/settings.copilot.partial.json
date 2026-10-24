@@ -92,9 +92,11 @@
         "https://schemastore.org": true,
         "https://services.google.com": true,
         "https://shellcheck.net": true,
+        "https://skills.sh": true,
         "https://stackoverflow.com": true,
         "https://university.gitlab.com": true,
-        "https://www.schemastore.org": true
+        "https://www.schemastore.org": true,
+        "https://www.skills.sh": true
     },
     "github.copilot.enable": {
         "*": true,

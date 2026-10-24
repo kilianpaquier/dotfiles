@@ -84,9 +84,11 @@
         "schemastore.org",
         "services.google.com",
         "shellcheck.net",
+        "skills.sh",
         "stackoverflow.com",
         "university.gitlab.com",
-        "www.schemastore.org"
+        "www.schemastore.org",
+        "www.skills.sh"
     ],
     "askUser": true,
     "bashEnv": true,

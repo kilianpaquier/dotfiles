@@ -1,0 +1,53 @@
+#!/bin/sh
+
+set -e
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+# mise prunes a deselected tool before run_after scripts, so its hooks are removed while the binary still exists
+
+{{- $rtk := has "rtk" .tools.mise }}
+{{- $boost := has "boost" .tools.mise }}
+
+{{- if not (and $rtk (has "copilot" .ai.runtimes)) }}
+
+if command -v rtk >/dev/null 2>&1 && [ -f "$HOME/.copilot/hooks/rtk-rewrite.json" ]; then
+  rtk init -g --uninstall --copilot --auto-patch
+fi
+{{- end }}
+
+{{- if not (and $rtk (has "claude" .ai.runtimes)) }}
+
+if command -v rtk >/dev/null 2>&1 && grep -qs 'rtk hook claude' "$HOME/.claude/settings.json"; then
+  rtk init -g --uninstall --auto-patch
+fi
+{{- end }}
+
+{{- if not (and $rtk (has "codex" .ai.runtimes)) }}
+
+if command -v rtk >/dev/null 2>&1 && grep -qs 'rtk hook codex' "$HOME/.codex/hooks.json"; then
+  rtk init -g --uninstall --codex
+fi
+{{- end }}
+
+{{- if not (and $boost (has "copilot" .ai.runtimes)) }}
+
+if command -v boost >/dev/null 2>&1 && [ -f "$HOME/.copilot/hooks/boost.json" ]; then
+  boost init --accept-terms --uninstall --copilot
+fi
+{{- end }}
+
+{{- if not (and $boost (has "claude" .ai.runtimes)) }}
+
+if command -v boost >/dev/null 2>&1 && grep -qs boost-hook-claude "$HOME/.claude/settings.json"; then
+  boost init --accept-terms --uninstall --claude
+fi
+{{- end }}
+
+{{- if not (and $boost (has "codex" .ai.runtimes)) }}
+
+if command -v boost >/dev/null 2>&1 && grep -qs boost-hook-codex "$HOME/.codex/hooks.json"; then
+  boost init --accept-terms --uninstall --codex
+fi
+{{- end }}

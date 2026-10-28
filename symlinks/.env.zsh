@@ -42,6 +42,7 @@ plugins=(
   kilianpaquier/zsh-plugins/disk-cleanup
   kilianpaquier/zsh-plugins/docker-rootless
   kilianpaquier/zsh-plugins/gitlab-ci-local-completion
+  kilianpaquier/zsh-plugins/gpg-edit
   kilianpaquier/zsh-plugins/highlight-styles
   kilianpaquier/zsh-plugins/just-completion
   kilianpaquier/zsh-plugins/mise-completion

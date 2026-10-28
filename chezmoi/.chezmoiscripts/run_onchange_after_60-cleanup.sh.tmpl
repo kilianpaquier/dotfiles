@@ -7,3 +7,18 @@ set -e
 {{- range includeTemplate "chezmoiignore.tmpl" . | splitList "\n" | compact }}
 rm -rf "$HOME/{{ . }}"
 {{- end }}
+
+{{- if not (has "go" .tools.mise) }}
+
+# GOPATH module cache directories are read-only
+[ ! -d "$HOME/.cache/go" ] || chmod -R u+w "$HOME/.cache/go"
+rm -rf "$HOME/.cache/go"
+{{- end }}
+
+{{- range $runtime, $storage := dict "docker" ".local/share/docker" "podman" ".local/share/containers" }}
+{{- if not (has $runtime $.container.runtimes) }}
+
+# rootless storage holds files owned by subordinate uids, removable only inside a user namespace
+[ ! -d "$HOME/{{ $storage }}" ] || unshare --map-auto --map-root-user rm -rf "$HOME/{{ $storage }}"
+{{- end }}
+{{- end }}

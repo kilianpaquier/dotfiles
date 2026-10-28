@@ -3,7 +3,9 @@
 {{- if not (has "claude" .ai.runtimes) }}
 .cache/claude
 .cache/claude-cli-nodejs
+.claude.json*
 .local/share/claude
+.local/state/claude
 {{- end }}
 
 {{- if not (has "codex" .ai.runtimes) }}
@@ -24,16 +26,74 @@
 .local/state/mise
 {{- end }}
 
+{{- if not (has "boost" .tools.mise) }}
+.local/share/boost
+{{- end }}
+
+{{- if not (has "bun" .tools.mise) }}
+.bun
+{{- end }}
+
+{{- if not (has "context7" .tools.mise) }}
+.local/state/context7
+{{- end }}
+
+{{- if not (has "destructive-command-guard" .tools.mise) }}
+.cache/dcg
+.local/state/dcg
+{{- end }}
+
+{{- if not (has "go" .tools.mise) }}
+.cache/go-build
+.cache/goimports
+.cache/golangci-lint
+.cache/gopls
+{{- end }}
+
+{{- if not (has "hugo" .tools.mise) }}
+.cache/hugo_cache
+{{- end }}
+
+{{- if not (has "incus" .tools.mise) }}
+.cache/incus
+{{- end }}
+
+{{- if not (has "k8s" .tools.mise) }}
+.cache/helm
+.krew
+{{- end }}
+
+{{- if not (has "pre-commit" .tools.mise) }}
+.cache/pre-commit
+.cache/pre-commit-zipapp
+{{- end }}
+
+{{- if not (has "rtk" .tools.mise) }}
+.local/share/rtk
+{{- end }}
+
+{{- if not (or (has "opentofu" .tools.mise) (has "terraform" .tools.mise)) }}
+.cache/terraform
+.cache/tflint
+{{- end }}
+
+{{- if not (has "uv" .tools.mise) }}
+.cache/uv
+.local/share/uv
+{{- end }}
+
 {{- if not (has "docker" .container.runtimes) }}
 .config/docker
 .docker
 {{- end }}
 
 {{- if not (has "podman" .container.runtimes) }}
-.config/containers
+.cache/containers
 {{- end }}
 
 {{- if ne .shell "zsh" }}
+.cache/gitstatus
+.cache/zsh
 .cache/zsh4humans
 .zshenv
 {{- end }}

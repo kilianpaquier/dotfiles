@@ -90,10 +90,12 @@
       Requires = [ "gopass-age-agent.service" ];
     };
     Service = {
+      # no TTY here, a locked agent must fail on empty stdin instead of spawning the gpg-agent.conf pinentry
       Environment = [
         "GIT_CONFIG_COUNT=1"
         "GIT_CONFIG_KEY_0=commit.gpgsign"
         "GIT_CONFIG_VALUE_0=false"
+        "GOPASS_AGE_STDIN_PASSPHRASE=true"
         "GOPASS_UMASK=077"
       ];
       ExecStart = "${pkgs.gopass}/bin/gopass secret-service serve";

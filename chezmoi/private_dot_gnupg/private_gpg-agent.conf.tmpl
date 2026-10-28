@@ -1,0 +1,3 @@
+default-cache-ttl {{ env "SSH_AGENT_TIMEOUT" | default "3600" }}
+max-cache-ttl {{ env "SSH_AGENT_TIMEOUT" | default "3600" }}
+pinentry-program {{ .chezmoi.homeDir }}/.nix-profile/bin/pinentry

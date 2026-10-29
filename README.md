@@ -167,14 +167,10 @@ When choosing zsh here, the following plugins are provided by default within `~/
 | ------------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `ssh-agent`        | [ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)               | Starts ssh-agent on shell start and loads your SSH keys into it                                      |
 | `history`          | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Timestamps each command, writes it immediately, and shares it live across sessions, deduping repeats |
+| `completions`      | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches shell completions of the tools listed in `ZSH_COMPLETIONS` (edit it in `~/.env.zsh`)          |
 | `disk-cleanup`     | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Adds a `disk-cleanup` command that clears dev-tool caches and old installed versions                 |
-| `docker-rootless`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Exports `DOCKER_HOST` so the docker CLI targets your rootless daemon                                 |
-| `gitlab-ci-local`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches `gitlab-ci-local`'s shell completion so it loads instantly                                    |
 | `highlight-styles` | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Removes the underline zsh's syntax highlighting puts on commands                                     |
-| `just-completion`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches `just`'s shell completion so it loads instantly                                               |
-| `mise-completion`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches `mise`'s shell completion so it loads instantly                                               |
 | `release-sync`     | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Adds a `release-sync` command that syncs releases between GitHub and GitLab                          |
-| `task-completion`  | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches `task`'s shell completion so it loads instantly                                               |
 
 ### Desktop apps
 

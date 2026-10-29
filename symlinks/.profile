@@ -48,6 +48,9 @@ elif [ -f "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" ]; the
   . "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
 fi
 
+# set DOCKER_HOST so docker CLI targets the rootless daemon if it's installed
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/docker.service" ] && export DOCKER_HOST="unix://${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/docker.sock"
+
 unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
 
 # set PATH so it includes krew if it exists

@@ -30,6 +30,10 @@
 .chezmoiscripts/*-mise.sh
 {{- end }}
 
+{{- if not (has "k8s" .tools.mise) }}
+.kube
+{{- end }}
+
 {{- if not (contains "microsoft" (.chezmoi.kernel.osrelease | lower)) }}
 .chezmoiscripts/*-wsl.sh
 {{- end }}

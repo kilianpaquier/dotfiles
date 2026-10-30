@@ -1,0 +1,17 @@
+# Agent local settings and instructions.
+.claude/settings.local.json
+.claude/worktrees/
+CLAUDE.local.md
+
+# Codegraph index.
+.codegraph/
+
+# Merge leftovers.
+*.rej
+
+# Mise local configuration.
+mise.local.toml
+
+# Tools local state.
+.gitlab-ci-local/
+.mempalace/

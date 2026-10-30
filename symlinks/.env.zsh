@@ -52,6 +52,8 @@ ZSH_COMPLETIONS=(
   "hugo completion zsh"
   "incus completion zsh"
   "just --completions zsh"
+  "kickr completion zsh"
+  "kickr.dev completion zsh"
   "kubectl completion zsh"
   "kustomize completion zsh"
   "plumber completion zsh"

@@ -70,5 +70,3 @@ foreach ($id in $wanted | Where-Object { $_ -notin $installed }) {
 foreach ($id in $managed | Where-Object { $_ -notin $wanted -and $_ -in $installed }) {
   winget uninstall -e -i --id $id
 }
-
-winget upgrade --all

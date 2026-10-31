@@ -1,5 +1,5 @@
 {{- if eq .chezmoi.os "windows" }}
-.chezmoiscripts/*.sh
+.chezmoiscripts/linux
 .bash_aliases
 .bash_logout
 .bashenv
@@ -11,31 +11,31 @@
 .profile
 .ssh
 {{- else }}
+.chezmoiscripts/windows
 AppData
 .config/git/git-prompt.sh
 .inputrc
 .wslconfig
-**/*.ps1
 {{- if not (contains "microsoft" (.chezmoi.kernel.osrelease | lower)) }}
-.chezmoiscripts/*-wsl.sh
+.chezmoiscripts/linux/*-wsl.sh
 {{- end }}
 {{- end }}
 
 {{ includeTemplate "chezmoiignore.tmpl" . }}
 
 {{- if not .ssh.generate }}
-.chezmoiscripts/*-ssh.sh
-.chezmoiscripts/*-ssh.ps1
+.chezmoiscripts/linux/*-ssh.sh
+.chezmoiscripts/windows/*-ssh.ps1
 .ssh
 {{- end }}
 
 {{- if eq (len .ai.runtimes) 0 }}
-.chezmoiscripts/*-ai.sh
-.chezmoiscripts/*-ai-hooks.sh
+.chezmoiscripts/linux/*-ai.sh
+.chezmoiscripts/linux/*-ai-hooks.sh
 {{- end }}
 
 {{- if not (has "mise" .tools_management) }}
-.chezmoiscripts/*-mise.sh
+.chezmoiscripts/linux/*-mise.sh
 {{- end }}
 
 {{- if not (has "k8s" .tools.mise) }}
@@ -48,11 +48,11 @@ AppData
 
 {{- $system := or (has "docker" .container.runtimes) (eq .machine.kind "server") (and (eq .machine.kind "desktop") (eq .profile "home")) }}
 {{- if not $system }}
-.chezmoiscripts/*-system.sh
+.chezmoiscripts/linux/*-system.sh
 {{- end }}
 
 {{- if not .wsl }}
-.chezmoiscripts/*-wsl.ps1
+.chezmoiscripts/windows/*-wsl.ps1
 .wslconfig
 {{- end }}
 

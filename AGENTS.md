@@ -7,14 +7,14 @@ Dotfiles repository managed by [chezmoi](https://www.chezmoi.io/). Source root i
 ### Files removal
 
 - Use `.chezmoiremove.tmpl` to remove paths not managed by chezmoi.
-- Use `.chezmoitemplates/chezmoiignore.tmpl` to remove paths managed by chezmoi (cleanup glue under `.chezmoiscripts/run_onchange_after_60-cleanup.sh.tmpl`).
+- Use `.chezmoitemplates/chezmoiignore.tmpl` to remove paths managed by chezmoi (cleanup glue under `.chezmoiscripts/linux/run_onchange_after_60-cleanup.sh.tmpl`).
 
 ### Home-manager integration
 
 - Use `dot_config/home-manager/home.nix.tmpl` for Linux packages (CLI tools, desktop apps, containers, agent runtimes, mise). Every attr must exist in `nixpkgs-unstable`.
 - `scripts/bootstrap.sh` is the `read-source-state` pre hook: installs nix, home-manager and a GC-rooted env (`~/.local/state/chezmoi/env`: jq, python with tomlkit) so `modify_*.py.tmpl` render on a fresh machine.
-- Root-only steps (pcscd, server hostname, timezone) live in `.chezmoiscripts/run_onchange_before_00-system.sh.tmpl` with `sudo`.
-- Use `.chezmoiscripts/*.ps1.tmpl` for Windows system setup (winget).
+- Root-only steps (pcscd, server hostname, timezone) live in `.chezmoiscripts/linux/run_onchange_before_00-system.sh.tmpl` with `sudo`.
+- Use `.chezmoiscripts/windows/` for Windows system setup (winget).
 
 ## Keep in sync
 

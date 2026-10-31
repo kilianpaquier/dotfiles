@@ -93,7 +93,8 @@ umask: 0o22
 hooks:
   read-source-state:
     pre:
-      command: {{ .chezmoi.sourceDir }}/scripts/bootstrap.sh
+      command: sh
+      args: [{{ .chezmoi.sourceDir }}/scripts/bootstrap.sh]
 
 # python built by scripts/bootstrap.sh
 interpreters:

@@ -9,7 +9,7 @@
   {{- $machine = promptChoiceOnce . "machine.kind" "What kind of machine is this (desktop: apps only, workstation: dev tooling, server: dev tooling + hostname/timezone)" $data.machines "workstation" }}
   {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") "zsh" }}
 {{- else }}
-  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "Git Bash" "PowerShell") "PowerShell" }}
+  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "git-bash" "powershell") "powershell" }}
 {{- end }}
 {{- $dev := ne $machine "desktop" }}
 

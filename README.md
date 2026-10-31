@@ -99,7 +99,7 @@ Two profiles exist, `home` and `soprasteria`.
 | Username used as git committer and in the SSH key comment             | home dir name |                         | `user.username` |
 | What kind of machine this is (`desktop`, `workstation`, `server`)     | `workstation` | Linux                   | `machine.kind`  |
 | Default shell (`bash` or `zsh`)                                       | `zsh`         | Linux                   | `shell`         |
-| Default shell (`Git Bash` or `PowerShell`)                            | `PowerShell`  | Windows                 | `shell`         |
+| Default shell (`git-bash` or `powershell`)                            | `powershell`  | Windows                 | `shell`         |
 | Which work profile applies (`home` or `soprasteria`)                  |               |                         | `profile`       |
 | Whether this is a gaming machine (adds EA, Epic, Steam, Ubisoft...)   | `false`       | Windows, `home` profile | `gaming`        |
 | Which IDEs to install (`intellij`, `vscode`, `zed`)                   | `vscode`      |                         | `ide`           |

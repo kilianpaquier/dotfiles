@@ -1,5 +1,5 @@
 {{- /* chezmoi:modify-template */ -}}
 {{- $profiles := dict
-    "Git Bash" "{2ece5bfe-50ed-5f3a-ab87-5cd4baafed2b}"
-    "PowerShell" "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}" }}
+    "git-bash" "{2ece5bfe-50ed-5f3a-ab87-5cd4baafed2b}"
+    "powershell" "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}" }}
 {{ fromJsonc (.chezmoi.stdin | default "{}") | setValueAtPath "defaultProfile" (get $profiles .shell) | toPrettyJson "    " }}

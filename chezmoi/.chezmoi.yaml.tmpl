@@ -91,6 +91,10 @@
 
 umask: 0o22
 
+# pulled changes run scripts, review them with chezmoi diff before chezmoi apply
+update:
+  apply: false
+
 {{- if ne .chezmoi.os "windows" }}
 
 # nix, home-manager and python must exist before any source state read

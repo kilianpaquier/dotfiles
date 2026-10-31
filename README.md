@@ -70,7 +70,7 @@ iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '~/.local/bin' -- init --branch '
 
 - Detect and review drift with `chezmoi diff` or `chezmoi diff /path/to/file` (*e.g.* `~/.env.zsh`)
 - Apply a change in your configuration (`chezmoi cat-config` and `chezmoi edit-config`) with `chezmoi apply`
-- Retrieve new features and upstream modifications with `chezmoi update -a=false` (the option disables the auto-apply)
+- Retrieve new features and upstream modifications with `chezmoi update`, it only pulls, review with `chezmoi diff` then run `chezmoi apply`
 - Reanswer all prompts with `chezmoi init --prompt`
 
 Any tool you add by hand stays put, machines can extend beyond the preset list.

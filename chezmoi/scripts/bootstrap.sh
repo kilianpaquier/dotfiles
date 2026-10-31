@@ -11,12 +11,16 @@ env="$HOME/.local/state/chezmoi/env"
 single="$HOME/.nix-profile/etc/profile.d/nix.sh"
 multi=/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
+# renovate: datasource=github-tags packageName=NixOS/nix
+nix_version=2.35.4
+nix_installer="https://releases.nixos.org/nix/nix-$nix_version/install"
+
 # a pre-existing multi-user nix must not trigger the single-user installer
 if [ ! -f "$single" ] && [ ! -f "$multi" ]; then
   if command -v curl >/dev/null 2>&1; then
-    curl -fsSL https://nixos.org/nix/install | sh -s -- --no-daemon --no-modify-profile
+    curl -fsSL "$nix_installer" | sh -s -- --no-daemon --no-modify-profile
   elif command -v wget >/dev/null 2>&1; then
-    wget -qO- https://nixos.org/nix/install | sh -s -- --no-daemon --no-modify-profile
+    wget -qO- "$nix_installer" | sh -s -- --no-daemon --no-modify-profile
   else
     error "Neither curl nor wget is installed, one is needed to install nix"
   fi

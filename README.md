@@ -54,16 +54,22 @@ Setup is based on [prompts](#prompts) with predefined machine typologies and wor
 
 ```sh
 umask 022
-sh -c "$(curl -sSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main --apply https://gitlab.com/kilianpaquier/dotfiles.git
+sh -c "$(curl -sSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main https://gitlab.com/kilianpaquier/dotfiles.git
+chezmoi diff
+# chezmoi apply
 ```
 
 ```sh
 umask 022
-sh -c "$(wget -qO- https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main --apply https://gitlab.com/kilianpaquier/dotfiles.git
+sh -c "$(wget -qO- https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main https://gitlab.com/kilianpaquier/dotfiles.git
+chezmoi diff
+# chezmoi apply
 ```
 
 ```ps1
-iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '~/.local/bin' -- init --branch 'main' --apply 'https://gitlab.com/kilianpaquier/dotfiles.git'"
+iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '~/.local/bin' -- init --branch 'main' 'https://gitlab.com/kilianpaquier/dotfiles.git'"
+~/.local/bin/chezmoi.exe diff
+# ~/.local/bin/chezmoi.exe apply (raw 'chezmoi' binary can be used afterward)
 ```
 
 ## Day to day

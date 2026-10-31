@@ -16,8 +16,12 @@
 {{- $profile := promptChoiceOnce . "profile" "Which profile should apply to this machine" $data.profiles }}
 
 {{- $gaming := false }}
-{{- if and (eq $profile "home") (eq .chezmoi.os "windows") }}
-  {{- $gaming = promptBoolOnce . "gaming" "Is this a gaming machine" }}
+{{- $wsl := false }}
+{{- if eq .chezmoi.os "windows" }}
+  {{- if eq $profile "home" }}
+    {{- $gaming = promptBoolOnce . "gaming" "Is this a gaming machine" }}
+  {{- end }}
+  {{- $wsl = promptBoolOnce . "wsl" "Will you be using WSL" true }}
 {{- end }}
 
 {{- $ide := promptMultichoiceOnce . "ide" "What IDE are you using to develop" (list "intellij" "vscode" "zed") (list "vscode") }}
@@ -136,3 +140,4 @@ data:
   user:
     email: {{ $email }}
     username: {{ $username }}
+  wsl: {{ $wsl }}

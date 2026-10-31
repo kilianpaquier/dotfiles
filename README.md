@@ -102,6 +102,7 @@ Two profiles exist, `home` and `soprasteria`.
 | Default shell (`git-bash` or `powershell`)                            | `powershell`  | Windows                 | `shell`         |
 | Which work profile applies (`home` or `soprasteria`)                  |               |                         | `profile`       |
 | Whether this is a gaming machine (adds EA, Epic, Steam, Ubisoft...)   | `false`       | Windows, `home` profile | `gaming`        |
+| Whether to install and configure WSL                                  | `true`        | Windows                 | `wsl`           |
 | Which IDEs to install (`intellij`, `vscode`, `zed`)                   | `vscode`      |                         | `ide`           |
 | Whether to generate an SSH key (`id_ed25519`)                         | `true`        |                         | `ssh.generate`  |
 
@@ -198,7 +199,8 @@ you would most likely want some applications to be installed, the repository ext
 | CPU-Z, OCCT, HWiNFO             |       | x       | `gaming`              |
 | Afterburner, RTSS               |       | x       | `gaming`              |
 | EA, Epic, Ubisoft, Steam, WeMod |       | x       | `gaming`              |
-| Office, Teams, WSL, Obsidian    |       | x       | `soprasteria` profile |
+| Office, Teams, Obsidian         |       | x       | `soprasteria` profile |
+| WSL                             |       | x       | `wsl`                 |
 
 ### Tooling
 

@@ -51,6 +51,10 @@ AppData
 .chezmoiscripts/*-system.sh
 {{- end }}
 
+{{- if not .wsl }}
+.wslconfig
+{{- end }}
+
 # partials
 **/*.partial.*
 

@@ -34,6 +34,10 @@
 .kube
 {{- end }}
 
+{{- if eq .machine.kind "desktop" }}
+.gitconfig
+{{- end }}
+
 {{- if or (eq .chezmoi.os "windows") (not (contains "microsoft" (.chezmoi.kernel.osrelease | lower))) }}
 .chezmoiscripts/*-wsl.sh
 {{- end }}

@@ -287,7 +287,7 @@ and installed depending on the chosen runtime, installed tools with **mise** or 
 
 | Component                   | Type               | Source                                                                                           | When                                                     |
 | --------------------------- | ------------------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| `agent-rules`               | Instructions       | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules), refreshed daily                     | `claude` and `copilot` only                              |
+| `agent-rules`               | Instructions       | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules)                                      | `claude` and `copilot` only                              |
 | `bash-language-server`      | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `shell` in `tools.mise`, `claude` and `copilot` only     |
 | `cave-talk`                 | Hooks, Skills      | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `cave-talk` in `ai.plugins`                              |
 | `code-simplifier`           | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
@@ -321,10 +321,10 @@ When choosing `server` as machine kind, small modifications can be done onto the
 Running inside a WSL2 distribution is auto-detected (no prompt), by checking whether `microsoft` appears in the running kernel release.
 It configures an isolated distro, cut off from the Windows host, sized like a small VPS (Virtual Private Server):
 
-| File         | Side                      | Scope               | Sets                                                                                                   |
-| ------------ | ------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------ |
-| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | `memory=8GB`, `processors=4`, `defaultVhdSize=60GB`                                                    |
-| `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount` off, `interop` off (no Windows process launch or `$PATH`), `hostname` from `machine.name`  |
+| File         | Side                      | Scope               | Sets                                                                                                  |
+| ------------ | ------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------- |
+| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | `memory=8GB`, `processors=4`, `defaultVhdSize=60GB`                                                   |
+| `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount` off, `interop` off (no Windows process launch or `$PATH`), `hostname` from `machine.name` |
 
 > [!note]
 > A `wsl.conf` change only takes effect after `wsl.exe --shutdown` from Windows and reopening the distro.

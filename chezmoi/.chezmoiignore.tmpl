@@ -18,6 +18,7 @@ AppData
 .wslconfig
 {{- if not (contains "microsoft" (.chezmoi.kernel.osrelease | lower)) }}
 .chezmoiscripts/linux/*-wsl.sh
+.config/wsl
 {{- end }}
 {{- end }}
 

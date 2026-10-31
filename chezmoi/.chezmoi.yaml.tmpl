@@ -104,6 +104,13 @@ hooks:
 interpreters:
   py:
     command: {{ .chezmoi.homeDir }}/.local/state/chezmoi/env/bin/python3
+{{- else }}
+
+# the default execution policy refuses to run chezmoi's temporary .ps1 scripts
+interpreters:
+  ps1:
+    command: powershell
+    args: [-NoLogo, -ExecutionPolicy, Bypass, -File]
 {{- end }}
 
 data:

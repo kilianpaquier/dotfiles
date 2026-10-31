@@ -65,7 +65,9 @@
 {{- $plugins := list }}
 {{- $tools_management := list }}
 {{- if $dev }}
-  {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" true }}
+  {{- if $ssh_generate }}
+    {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" true }}
+  {{- end }}
   {{- $agent_runtimes = promptMultichoiceOnce . "ai.runtimes" "Which agent runtimes will you be using" $data.agent_runtimes (index $data.default_agent_runtimes $profile) }}
 
   {{- if gt (len $agent_runtimes) 0 }}

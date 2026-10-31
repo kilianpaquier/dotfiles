@@ -7,6 +7,14 @@
 {{- end }}
 
 {{- if eq .machine.kind "desktop" }}
+.config/git
+{{- end }}
+
+{{- if not .git.ssh }}
+.config/git/ssh-sign.sh
+{{- end }}
+
+{{- if not (or (has "opentofu" .tools.mise) (has "terraform" .tools.mise)) }}
 .terraformrc
 {{- end }}
 
@@ -14,14 +22,21 @@
 .config/containers
 {{- end }}
 
-{{- if not (has "boost" .tools.mise) }}
+{{- if or (eq (len .ai.runtimes) 0) (not (has "boost" .tools.mise)) }}
 .boost
+{{- end }}
+
+{{- if or (eq (len .ai.runtimes) 0) (not (has "destructive-command-guard" .tools.mise)) }}
+.config/dcg
+{{- end }}
+
+{{- if or (eq (len .ai.runtimes) 0) (not (has "rtk" .tools.mise)) }}
+.config/rtk
 {{- end }}
 
 {{- if eq (len .ai.runtimes) 0 }}
 .apm
-.config/dcg
-.config/rtk
+.config/protected-paths
 {{- end }}
 
 {{- if not (has "claude" .ai.runtimes) }}

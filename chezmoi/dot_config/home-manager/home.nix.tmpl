@@ -1,7 +1,8 @@
 { config, pkgs, ... }:
 
-{{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "git-credential-gopass" "gnumake" "gnupg" "gopass" "jq" "pinentry-curses" "python3" "ripgrep" "socat" "tree" "unzip" "vim" "xdg-utils" }}
+{{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "gnumake" "gnupg" "gopass" "jq" "pinentry-curses" "python3" "ripgrep" "socat" "tree" "unzip" "vim" "xdg-utils" }}
 
+{{- if ne .machine.kind "desktop" }}{{- $packages = append $packages "git-credential-gopass" }}{{- end }}
 {{- if has "mise" .tools_management }}{{- $packages = append $packages "mise" }}{{- end }}
 
 {{- if gt (len .ai.runtimes) 0 }}{{- $packages = append $packages "apm-cli" }}{{- end }}

@@ -109,7 +109,7 @@ Two profiles exist, `home` and `soprasteria`.
 
 | Prompt                                                               | Default                | When                  | Key                  |
 | -------------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
-| Whether to sign commits with the SSH key                             | `true`                 |                       | `git.ssh`            |
+| Whether to sign commits with the SSH key                             | `true`                 | SSH key               | `git.ssh`            |
 | Which AI agent runtimes to install (`claude`, `codex`, `copilot`)    | Depends on the profile |                       | `ai.runtimes`        |
 | Which agent plugins to enable (`cave-talk`, `humanizer`, `ponytail`) | Depends on the profile | at least one agent    | `ai.plugins`         |
 | Which container runtimes to install (`docker` rootless, `podman`)    | Depends on the profile |                       | `container.runtimes` |

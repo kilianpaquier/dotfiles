@@ -1,12 +1,10 @@
 {{- $set := include "dot_vscode-server/data/Machine/settings.base.partial.json" | fromJson }}
 
-{{- if and (not (has "copilot" .ai.runtimes)) (has "vscode" .ide) }}
-{{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.no-copilot.partial.json" | fromJson) }}
-{{- end }}
-
-{{- if and (has "copilot" .ai.runtimes) (has "vscode" .ide) }}
+{{- if has "copilot" .ai.runtimes }}
 {{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.copilot.partial.json" | fromJson) }}
 {{- $_ := set $set "github.copilot.chat.additionalReadAccessPaths" (list (joinPath .chezmoi.homeDir ".copilot" "instructions")) }}
+{{- else }}
+{{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.no-copilot.partial.json" | fromJson) }}
 {{- end }}
 
 {{- includeTemplate "scripts/json-merge.py" (dict

@@ -1,9 +1,8 @@
 {{- $ramGB := output "powershell" "-NoProfile" "-Command" "[int]((gcim Win32_ComputerSystem).TotalPhysicalMemory/1GB)" | trim | int -}}
-{{- $threads := env "NUMBER_OF_PROCESSORS" | int -}}
 [wsl2]
 defaultVhdSize=60GB
-memory={{ div $ramGB 2 }}GB
-processors={{ div $threads 2 }}
+memory={{ div (add $ramGB 1) 2 }}GB
+processors={{ div (add (env "NUMBER_OF_PROCESSORS" | int) 1) 2 }}
 swap=8GB
 
 [experimental]

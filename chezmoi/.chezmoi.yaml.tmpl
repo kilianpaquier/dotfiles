@@ -2,6 +2,8 @@
 
 {{- $machine := "desktop" }}
 {{- $shell := "powershell" }}
+{{- /* .chezmoi.username is DOMAIN\User on Windows */ -}}
+{{- $os_username := base .chezmoi.homeDir }}
 {{- if ne .chezmoi.os "windows" }}
   {{- $machine = promptChoiceOnce . "machine.kind" "What kind of machine is this (desktop: apps only, workstation: dev tooling, server: dev tooling + hostname/timezone)" $data.machines "workstation" }}
   {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") "zsh" }}
@@ -55,7 +57,7 @@
 {{- $tools_management := list }}
 {{- $username := "" }}
 {{- if $dev }}
-  {{- $username = promptStringOnce . "user.username" "What is your committer username" .chezmoi.username }}
+  {{- $username = promptStringOnce . "user.username" "What is your committer username" $os_username }}
   {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
 
   {{- if $ssh_generate }}
@@ -85,7 +87,7 @@
         (index $data.tools $manager) (index $data.default_tools $profile)) }}
   {{- end }}
 {{- else if $ssh_generate }}
-  {{- $username = promptStringOnce . "user.username" "What username should the SSH key comment use" .chezmoi.username }}
+  {{- $username = promptStringOnce . "user.username" "What username should the SSH key comment use" $os_username }}
 {{- end }}
 
 umask: 0o22

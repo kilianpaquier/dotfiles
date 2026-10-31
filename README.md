@@ -102,7 +102,7 @@ Two profiles exist, `home` and `soprasteria`.
 | Which IDEs to install (`intellij`, `vscode`, `zed`)                   | `vscode`      |                                | `ide`           |
 | Whether to generate an SSH key (`id_ed25519`)                         | `true`        |                                | `ssh.generate`  |
 | Name for this machine, used as the SSH key comment or server hostname | hostname      | SSH key or server              | `machine.name`  |
-| Username used as git committer and in the SSH key comment             | OS username   | SSH key, workstation or server | `user.username` |
+| Username used as git committer and in the SSH key comment             | home dir name | SSH key, workstation or server | `user.username` |
 
 ### Workstation and server
 

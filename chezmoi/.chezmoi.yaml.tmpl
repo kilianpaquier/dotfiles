@@ -28,7 +28,7 @@
 
 {{- $ssh_generate := promptBoolOnce . "ssh.generate" "Would you like to generate an SSH key" true }}
 
-{{- $timezone := "" }}
+{{- $timezone := "UTC" }}
 {{- if eq $machine "server" }}
   {{- $timezone = promptStringOnce . "machine.timezone" "Which timezone should this server use" "UTC" }}
 {{- end }}

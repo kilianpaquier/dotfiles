@@ -137,6 +137,7 @@
             "WebFetch(domain:go.dev)",
             "WebFetch(domain:gohugo.io)",
             "WebFetch(domain:golangci-lint.run)",
+            "WebFetch(domain:google.github.io)",
             "WebFetch(domain:helm.sh)",
             "WebFetch(domain:helmfile.readthedocs.io)",
             "WebFetch(domain:hermes-agent.nousresearch.com)",

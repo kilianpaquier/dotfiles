@@ -55,6 +55,7 @@
         "https://go.dev": true,
         "https://gohugo.io": true,
         "https://golangci-lint.run": true,
+        "https://google.github.io": true,
         "https://helm.sh": true,
         "https://helmfile.readthedocs.io": true,
         "https://hermes-agent.nousresearch.com": true,

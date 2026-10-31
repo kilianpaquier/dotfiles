@@ -93,16 +93,16 @@ Two profiles exist, `home` and `soprasteria`.
 
 ### Every machine
 
-| Prompt                                                                | Default       | When                           | Key             |
-| --------------------------------------------------------------------- | ------------- | ------------------------------ | --------------- |
-| What kind of machine this is (`desktop`, `workstation`, `server`)     | `workstation` | Linux                          | `machine.kind`  |
-| Which shell to use day to day (`bash` or `zsh`)                       | `zsh`         | Linux                          | `shell`         |
-| Which work profile applies (`home` or `soprasteria`)                  |               |                                | `profile`       |
-| Whether this is a gaming machine (adds EA, Epic, Steam, Ubisoft...)   | `false`       | Windows, `home` profile        | `gaming`        |
-| Which IDEs to install (`intellij`, `vscode`, `zed`)                   | `vscode`      |                                | `ide`           |
-| Whether to generate an SSH key (`id_ed25519`)                         | `true`        |                                | `ssh.generate`  |
-| Name for this machine, used as the SSH key comment or server hostname | hostname      | SSH key or server              | `machine.name`  |
-| Username used as git committer and in the SSH key comment             | home dir name | SSH key, workstation or server | `user.username` |
+| Prompt                                                                | Default       | When                    | Key             |
+| --------------------------------------------------------------------- | ------------- | ----------------------- | --------------- |
+| Name for this machine, used as the SSH key comment or server hostname | hostname      |                         | `machine.name`  |
+| Username used as git committer and in the SSH key comment             | home dir name |                         | `user.username` |
+| What kind of machine this is (`desktop`, `workstation`, `server`)     | `workstation` | Linux                   | `machine.kind`  |
+| Which shell to use day to day (`bash` or `zsh`)                       | `zsh`         | Linux                   | `shell`         |
+| Which work profile applies (`home` or `soprasteria`)                  |               |                         | `profile`       |
+| Whether this is a gaming machine (adds EA, Epic, Steam, Ubisoft...)   | `false`       | Windows, `home` profile | `gaming`        |
+| Which IDEs to install (`intellij`, `vscode`, `zed`)                   | `vscode`      |                         | `ide`           |
+| Whether to generate an SSH key (`id_ed25519`)                         | `true`        |                         | `ssh.generate`  |
 
 ### Workstation and server
 

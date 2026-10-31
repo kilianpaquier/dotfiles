@@ -102,13 +102,13 @@ Two profiles exist, `home` and `soprasteria`.
 | Which IDEs to install (`intellij`, `vscode`, `zed`)                   | `vscode`      |                                | `ide`           |
 | Whether to generate an SSH key (`id_ed25519`)                         | `true`        |                                | `ssh.generate`  |
 | Name for this machine, used as the SSH key comment or server hostname | hostname      | SSH key or server              | `machine.name`  |
-| Username to use as git committer                                      | OS username   | SSH key, workstation or server | `user.username` |
-| Email to use as git committer                                         |               | SSH key, workstation or server | `user.email`    |
+| Username used as git committer and in the SSH key comment             | OS username   | SSH key, workstation or server | `user.username` |
 
 ### Workstation and server
 
 | Prompt                                                               | Default                | When                  | Key                  |
 | -------------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
+| Email to use as git committer                                        |                        |                       | `user.email`         |
 | Whether to sign commits with the SSH key                             | `true`                 | SSH key               | `git.ssh`            |
 | Which AI agent runtimes to install (`claude`, `codex`, `copilot`)    | Depends on the profile |                       | `ai.runtimes`        |
 | Which agent plugins to enable (`cave-talk`, `humanizer`, `ponytail`) | Depends on the profile | at least one agent    | `ai.plugins`         |

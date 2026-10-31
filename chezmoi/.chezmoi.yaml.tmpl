@@ -32,12 +32,12 @@
 {{- end }}
 
 {{- $username := "" }}
-{{- if or $dev $ssh_generate }}
-  {{- $username = promptStringOnce . "user.username" "What is your committer username" .chezmoi.username }}
-{{- end }}
 {{- $email := "" }}
 {{- if $dev }}
+  {{- $username = promptStringOnce . "user.username" "What is your committer username" .chezmoi.username }}
   {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
+{{- else if $ssh_generate }}
+  {{- $username = promptStringOnce . "user.username" "What username should the SSH key comment use" .chezmoi.username }}
 {{- end }}
 
 {{- $managers := $data.managers }}

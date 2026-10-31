@@ -16,7 +16,7 @@ set -e
 sudo apt-get update && sudo apt-get install -y pcscd
 {{- end }}
 
-{{- if has "docker" .container.runtimes }}
+{{- if gt (len .container.runtimes) 0 }}
 
 # uidmap provides newuidmap/newgidmap, needed by rootless docker's user namespace
 if ! grep -q "^$USER:" /etc/subuid 2>/dev/null || ! grep -q "^$USER:" /etc/subgid 2>/dev/null; then

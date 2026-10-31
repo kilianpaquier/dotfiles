@@ -1,13 +1,22 @@
 {{- if eq .chezmoi.os "windows" }}
 **/*.sh
+.bash_aliases
+.bash_logout
+.bashenv
+.bashrc
 .config/environment.d
 .config/gopass
 .config/home-manager
 .gnupg
+.profile
+.ssh
 {{- else }}
 .inputrc
 .wslconfig
 **/*.ps1
+{{- if not (contains "microsoft" (.chezmoi.kernel.osrelease | lower)) }}
+.chezmoiscripts/*-wsl.sh
+{{- end }}
 {{- end }}
 
 {{ includeTemplate "chezmoiignore.tmpl" . }}
@@ -15,9 +24,6 @@
 {{- if not .ssh.generate }}
 .chezmoiscripts/*-ssh.sh
 .chezmoiscripts/*-ssh.ps1
-{{- end }}
-
-{{- if or (not .ssh.generate) (eq .chezmoi.os "windows") }}
 .ssh
 {{- end }}
 
@@ -38,21 +44,9 @@
 .gitconfig
 {{- end }}
 
-{{- if or (eq .chezmoi.os "windows") (not (contains "microsoft" (.chezmoi.kernel.osrelease | lower))) }}
-.chezmoiscripts/*-wsl.sh
-{{- end }}
-
 {{- $system := or (has "docker" .container.runtimes) (eq .machine.kind "server") (and (eq .machine.kind "desktop") (eq .profile "home")) }}
 {{- if not $system }}
 .chezmoiscripts/*-system.sh
-{{- end }}
-
-{{- if eq .chezmoi.os "windows" }}
-.bash_aliases
-.bash_logout
-.bashenv
-.bashrc
-.profile
 {{- end }}
 
 # partials

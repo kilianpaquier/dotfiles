@@ -14,6 +14,8 @@
 ---
 
 - [Install](#install)
+  - [Linux](#linux)
+  - [Windows](#windows)
 - [Day to day](#day-to-day)
 - [Machine kind](#machine-kind)
 - [Profile](#profile)
@@ -52,19 +54,27 @@ Setup is based on [prompts](#prompts) with predefined machine typologies and wor
 
 ## Install
 
+### Linux
+
 ```sh
 umask 022
 sh -c "$(curl -sSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main https://gitlab.com/kilianpaquier/dotfiles.git
-chezmoi diff
-# chezmoi apply
+~/.local/bin/chezmoi.exe diff
+# ~/.local/bin/chezmoi.exe apply (raw 'chezmoi' binary can be used afterward)
 ```
 
 ```sh
 umask 022
 sh -c "$(wget -qO- https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main https://gitlab.com/kilianpaquier/dotfiles.git
-chezmoi diff
-# chezmoi apply
+~/.local/bin/chezmoi.exe diff
+# ~/.local/bin/chezmoi.exe apply (raw 'chezmoi' binary can be used afterward)
 ```
+
+> [!important]
+> The install needs **curl** or **wget**, and **xz**.
+> The `xz-utils` or `xz` package provides **xz**, depending on the distribution.
+
+### Windows
 
 ```ps1
 iex "&{$(irm 'https://get.chezmoi.io/ps1')} -b '~/.local/bin' -- init --branch 'main' 'https://gitlab.com/kilianpaquier/dotfiles.git'"
@@ -247,6 +257,10 @@ The following tools are always installed without capability to skip them: age, c
 Two main container runtimes can be installed:
 - `docker`: rootless docker on the pasta network driver.
 - `podman`: podman, podman-compose (default compose provider) and docker-compose (opt-in with `PODMAN_COMPOSE_PROVIDER=docker-compose`), rootless by default.
+
+> [!important]
+> Rootless containers need `uidmap` and linger.
+> Both are set up on `chezmoi apply` when missing, with a `sudo` password prompt.
 
 #### Limitations
 

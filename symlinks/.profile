@@ -7,7 +7,7 @@
 # the files are located in the bash-doc package.
 
 # sourced once per shell (or child process)
-[ "$PROFILE_SOURCED" != "$$" ] || return 0
+[ "${PROFILE_SOURCED:-}" != "$$" ] || return 0
 
 # the default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.

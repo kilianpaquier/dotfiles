@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# hourly run: {{ now | date "2006-01-02T15" }}
+
+set -e
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+# shellcheck disable=SC1091
+. "{{ .chezmoi.sourceDir }}/scripts/log.sh"
+
+# occasionally fails behind a proxy (connection reset), the existing channel keeps working
+info "updating nix channels"
+if ! nix-channel --quiet --update; then
+  warn "nix-channel --update failed, continuing with the existing channel"
+fi

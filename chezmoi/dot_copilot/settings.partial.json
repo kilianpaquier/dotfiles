@@ -109,18 +109,21 @@
     "extraKnownMarketplaces": {
         "docker": {
             "source": {
+                "ref": "v0.3.1",
                 "repo": "docker/skills",
                 "source": "github"
             }
         },
         "humanizer": {
             "source": {
+                "ref": "v3.1.0",
                 "repo": "blader/humanizer",
                 "source": "github"
             }
         },
         "mempalace": {
             "source": {
+                "ref": "v3.11.0",
                 "repo": "mempalace/mempalace",
                 "source": "github"
             }
@@ -133,6 +136,7 @@
         },
         "ponytail": {
             "source": {
+                "ref": "v5.3.3",
                 "repo": "DietrichGebert/ponytail",
                 "source": "github"
             }

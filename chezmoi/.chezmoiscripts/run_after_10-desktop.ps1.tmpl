@@ -1,10 +1,14 @@
 # same rules as mise: install selected, uninstall deselected, leave unknown packages alone
 
+{{- $editor := "VIM" }}
+{{- if has "vscode" .ide }}{{ $editor = "VisualStudioCode" }}{{ end }}
+
+# installed in order, Git's EditorOption only resolves VS Code when it's already installed
 $wanted = @(
-  'Git.Git', 'Spotify.Spotify', '7zip.7zip'
 {{- if has "vscode" .ide }}
   'Microsoft.VisualStudioCode'
 {{- end }}
+  'Git.Git', 'Spotify.Spotify', '7zip.7zip'
 {{- if has "intellij" .ide }}
   'JetBrains.IntelliJIDEA.Ultimate'
 {{- end }}
@@ -19,7 +23,7 @@ $wanted = @(
 {{- end }}
 {{- if .gaming }}
   'CPUID.CPU-Z', 'OCBase.OCCT.Personal', 'REALiX.HWiNFO', 'Guru3D.Afterburner', 'Guru3D.RTSS'
-  'ElectronicArts.EADesktop', 'EpicGames.EpicGamesLauncher', 'Ubisoft.Connect', 'Valve.Steam', 'WeMod.WeMod'
+  'Ubisoft.Connect', 'Valve.Steam', 'WeMod.WeMod'
 {{- end }}
 {{- if eq .profile "soprasteria" }}
   'Microsoft.Office', 'Microsoft.Teams', 'Microsoft.WSL', 'Obsidian.Obsidian'
@@ -41,11 +45,17 @@ $managed = @(
 
 $export = Join-Path $env:TEMP 'winget-export.json'
 winget export -o $export --accept-source-agreements --nowarn | Out-Null
-$installed = @((Get-Content $export | ConvertFrom-Json).Sources.Packages.PackageIdentifier)
+$installed = @((Get-Content -Raw $export | ConvertFrom-Json).Sources.Packages.PackageIdentifier)
 
-$missing = @($wanted | Where-Object { $_ -notin $installed })
-if ($missing) {
-  winget install -e -i @missing
+# install arguments per package, a package without an entry installs interactively
+$arguments = @{
+  'Git.Git' = @('-h', '--custom', '/o:EditorOption={{ $editor }} /o:UseCredentialManager=Enabled')
+}
+
+foreach ($id in $wanted | Where-Object { $_ -notin $installed }) {
+  $extra = $arguments[$id]
+  if (-not $extra) { $extra = @('-i') }
+  winget install -e --id $id @extra
 }
 
 foreach ($id in $managed | Where-Object { $_ -notin $wanted -and $_ -in $installed }) {

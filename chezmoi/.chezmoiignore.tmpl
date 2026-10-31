@@ -1,5 +1,5 @@
 {{- if eq .chezmoi.os "windows" }}
-**/*.sh
+.chezmoiscripts/*.sh
 .bash_aliases
 .bash_logout
 .bashenv
@@ -11,6 +11,7 @@
 .profile
 .ssh
 {{- else }}
+.config/git/git-prompt.sh
 .inputrc
 .wslconfig
 **/*.ps1

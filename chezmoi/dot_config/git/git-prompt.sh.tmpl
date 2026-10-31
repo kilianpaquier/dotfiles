@@ -1,0 +1,10 @@
+# shellcheck shell=bash
+# sourced by Git for Windows' /etc/profile.d/git-prompt.sh in place of its default prompt, which shows the Windows account name
+
+completion="$(git --exec-path)/../../share/git/completion"
+# shellcheck disable=SC1091
+. "$completion/git-completion.bash"
+# shellcheck disable=SC1091
+. "$completion/git-prompt.sh"
+
+PS1='\n\[\e[32m\]{{ .user.username }}@{{ .machine.name }} \[\e[35m\]$MSYSTEM \[\e[33m\]\w\[\e[36m\]`__git_ps1`\[\e[0m\]\n$ '

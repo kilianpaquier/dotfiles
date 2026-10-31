@@ -7,7 +7,8 @@
 {{- end }}
 
 {{- if eq .machine.kind "desktop" }}
-.config/git
+.config/git/config
+.config/git/ignore
 {{- end }}
 
 {{- if not .git.ssh }}

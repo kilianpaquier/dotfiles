@@ -4,9 +4,12 @@
 {{- if .git.ssh }}
 	signingKey = ~/.ssh/id_ed25519
 {{- end }}
-{{- if has "vscode" .ide }}
 [core]
+{{- if has "vscode" .ide }}
 	editor = code --wait
+{{- end }}
+{{- if .ssh.generate }}
+	sshCommand = ssh -o AddKeysToAgent=$SSH_AGENT_TIMEOUT
 {{- end }}
 [credential]
 	helper = gopass
@@ -17,8 +20,6 @@
 {{- if .git.ssh }}
 [commit]
 	gpgsign = true
-[core]
-	sshCommand = ssh -o AddKeysToAgent=$SSH_AGENT_TIMEOUT
 [gpg]
 	format = ssh
 [gpg "ssh"]

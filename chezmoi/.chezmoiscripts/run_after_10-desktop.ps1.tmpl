@@ -49,7 +49,16 @@ $installed = @((Get-Content -Raw $export | ConvertFrom-Json).Sources.Packages.Pa
 
 # install arguments per package, a package without an entry installs interactively
 $arguments = @{
-  'Git.Git' = @('-h', '--custom', '/o:EditorOption={{ $editor }} /o:UseCredentialManager=Enabled')
+  # wizard choices differing from the installer defaults, /COMPONENTS drops every unlisted component
+  'Git.Git' = @('-h', '--custom', (@(
+    '/COMPONENTS=windowsterminal'
+    '/o:CRLFOption=CRLFCommitAsIs'
+    '/o:CURLOption=WinSSL'
+    '/o:DefaultBranchOption=main'
+    '/o:EditorOption={{ $editor }}'
+    '/o:GitPullBehaviorOption=FFOnly'
+    '/o:SSHOption=ExternalOpenSSH'
+  ) -join ' '))
 }
 
 foreach ($id in $wanted | Where-Object { $_ -notin $installed }) {

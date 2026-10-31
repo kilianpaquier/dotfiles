@@ -1,4 +1,10 @@
+{{- $ramGB := output "powershell" "-NoProfile" "-Command" "[int]((gcim Win32_ComputerSystem).TotalPhysicalMemory/1GB)" | trim | int -}}
+{{- $threads := env "NUMBER_OF_PROCESSORS" | int -}}
 [wsl2]
-memory=8GB
-processors=4
 defaultVhdSize=60GB
+memory={{ div $ramGB 2 }}GB
+processors={{ div $threads 2 }}
+swap=8GB
+
+[experimental]
+autoMemoryReclaim=gradual

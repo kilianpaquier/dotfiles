@@ -4,10 +4,12 @@
 {{- $username := promptStringOnce . "user.username" "What is your username" (base .chezmoi.homeDir) }}
 
 {{- $machine := "desktop" }}
-{{- $shell := "powershell" }}
+{{- $shell := "" }}
 {{- if ne .chezmoi.os "windows" }}
   {{- $machine = promptChoiceOnce . "machine.kind" "What kind of machine is this (desktop: apps only, workstation: dev tooling, server: dev tooling + hostname/timezone)" $data.machines "workstation" }}
   {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") "zsh" }}
+{{- else }}
+  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "Git Bash" "PowerShell") "PowerShell" }}
 {{- end }}
 {{- $dev := ne $machine "desktop" }}
 

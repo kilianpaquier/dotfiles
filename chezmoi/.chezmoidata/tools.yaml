@@ -38,7 +38,6 @@ tools:
     - uv
 default_tools:
   home:
-    - boost
     - bun
     - codegraph
     - context7
@@ -54,10 +53,10 @@ default_tools:
     - mempalace
     - opentofu
     - pre-commit
+    - rtk
     - shell
     - uv
   soprasteria:
-    - boost
     - codegraph
     - context7
     - destructive-command-guard
@@ -68,6 +67,7 @@ default_tools:
     - k8s
     - mempalace
     - pre-commit
+    - rtk
     - shell
     - terraform
     - uv

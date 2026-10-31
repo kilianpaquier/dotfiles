@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# hourly run: {{ now | date "2006-01-02T15" }}
+# immediate run on plugin or marketplace change: {{ list (includeTemplate "plugins.json.tmpl" (merge (dict "lsps" true) .)) (include "dot_claude/settings.partial.json") (include "dot_copilot/settings.partial.json") | join "" | sha256sum }}
+
 set -e
 
 # shellcheck disable=SC1091

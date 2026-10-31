@@ -34,7 +34,7 @@
 .kube
 {{- end }}
 
-{{- if not (contains "microsoft" (.chezmoi.kernel.osrelease | lower)) }}
+{{- if or (eq .chezmoi.os "windows") (not (contains "microsoft" (.chezmoi.kernel.osrelease | lower))) }}
 .chezmoiscripts/*-wsl.sh
 {{- end }}
 

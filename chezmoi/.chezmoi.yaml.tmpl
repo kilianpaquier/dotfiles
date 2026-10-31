@@ -31,10 +31,12 @@
   {{- $timezone = promptStringOnce . "machine.timezone" "Which timezone should this server use" "UTC" }}
 {{- end }}
 
-{{- $email := "" }}
 {{- $username := "" }}
 {{- if or $dev $ssh_generate }}
   {{- $username = promptStringOnce . "user.username" "What is your committer username" .chezmoi.username }}
+{{- end }}
+{{- $email := "" }}
+{{- if $dev }}
   {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
 {{- end }}
 

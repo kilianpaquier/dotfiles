@@ -28,9 +28,6 @@ $wanted = @(
 {{- if eq .profile "soprasteria" }}
   'Microsoft.Office', 'Microsoft.Teams', 'Obsidian.Obsidian'
 {{- end }}
-{{- if .wsl }}
-  'Microsoft.WSL'
-{{- end }}
 )
 
 # every package a condition above can select, the only ones this script may uninstall
@@ -44,7 +41,6 @@ $managed = @(
   'CPUID.CPU-Z', 'OCBase.OCCT.Personal', 'REALiX.HWiNFO', 'Guru3D.Afterburner', 'Guru3D.RTSS'
   'ElectronicArts.EADesktop', 'EpicGames.EpicGamesLauncher', 'Ubisoft.Connect', 'Valve.Steam', 'WeMod.WeMod'
   'Microsoft.Office', 'Microsoft.Teams', 'Obsidian.Obsidian'
-  'Microsoft.WSL'
 )
 
 $export = Join-Path $env:TEMP 'winget-export.json'

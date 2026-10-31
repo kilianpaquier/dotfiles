@@ -1,3 +1,6 @@
 # daily run: {{ now | date "2006-01-02" }}
 
 winget upgrade --all
+{{- if .wsl }}
+wsl --update
+{{- end }}

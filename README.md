@@ -187,7 +187,7 @@ When choosing zsh here, the following plugins are provided by default within `~/
 | `completions`      | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches shell completions of the tools listed in `ZSH_COMPLETIONS` (edit it in `~/.env.zsh`)          |
 | `disk-cleanup`     | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Adds a `disk-cleanup` command that clears dev-tool caches and old installed versions                 |
 | `highlight-styles` | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Removes the underline zsh's syntax highlighting puts on commands                                     |
-| `release-sync`     | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Adds a `release-sync` command that syncs releases between GitHub and GitLab                          |
+| `release-sync`     | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Adds a `release-sync` command that syncs releases between **GitHub** and **GitLab**                  |
 
 ### Desktop apps
 
@@ -280,14 +280,24 @@ Two main container runtimes can be installed:
 
 ### Credentials
 
-**gopass** is installed with **home-manager** and set as the **git** credential helper for HTTPS remotes (`git-credential-gopass`).
+On every machine, Windows included, the first apply generates the SSH key `~/.ssh/id_ed25519`, asks for its passphrase,
+and prints the public key to paste into **GitLab** or **GitHub**.
+A later change of `user.username` or `machine.name` only updates the key comment.
+
+On Linux workstations and servers, **gopass** is installed with **home-manager** and set as the **git** credential helper for HTTPS remotes (`git-credential-gopass`).
 A user service (`gopass-secret-service`) also exposes the store as a Secret Service, so `gh` and `glab` can keep their tokens in it.
 
-The first apply creates the store with **age** and the `fs` storage, and asks for the passphrase protecting its new identity.
+The first apply also creates the store with **age** and the `fs` storage, and asks for the passphrase protecting its new identity.
+The **age** agent locks again after an hour (`age.agent-timeout` in `~/.config/gopass/config`), independently of `SSH_AGENT_TIMEOUT`.
+
+While it's locked, **git** falls back to prompting for a username and password on HTTPS remotes,
+and `gh` or `glab` report a missing token.
+
+After login or a timeout, unlock the agent then list its identities once, so `gh` and `glab` can also write refreshed tokens:
 
 ```sh
-gopass age agent unlock # unlocks the gopass keyring service for git credentials, glab, gh, etc.
-gopass age identities # reads age identities and ask for unlock (required for glab or gh refresh token writing)
+gopass age agent unlock
+gopass age identities
 
 gopass age agent status
 gopass age agent lock

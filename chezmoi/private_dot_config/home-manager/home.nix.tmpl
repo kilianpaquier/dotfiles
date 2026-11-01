@@ -1,6 +1,6 @@
 { pkgs, ... }:
 
-{{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "gnumake" "gnupg" "gopass" "jq" "pinentry-curses" "python3" "ripgrep" "socat" "tree" "unzip" "vim" "xdg-utils" }}
+{{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "gnumake" "gnupg" "jq" "pinentry-curses" "python3" "ripgrep" "socat" "tree" "unzip" "vim" "xdg-utils" }}
 
 {{- if has "mise" .tools_management }}{{- $packages = append $packages "mise" }}{{- end }}
 
@@ -18,7 +18,7 @@
   {{- if has "zed" .ide }}{{- $packages = append $packages "zed-editor" }}{{- end }}
   {{- if eq .profile "home" }}{{- $packages = concat $packages (list "brave" "discord" "netbird-ui" "nextcloud-client" "yubioath-flutter") }}{{- end }}
 {{- else }}
-  {{- $packages = append $packages "git-credential-gopass" }}
+  {{- $packages = concat $packages (list "git-credential-gopass" "gopass") }}
 {{- end }}
 
 {
@@ -83,6 +83,8 @@
   };
 {{- end }}
 
+{{- if ne .machine.kind "desktop" }}
+
   systemd.user.services.gopass-age-agent = {
     Install.WantedBy = [ "default.target" ];
     Service = {
@@ -113,6 +115,7 @@
       RestartSec = 30;
     };
   };
+{{- end }}
 
   # dotfiles management
   home.file = {

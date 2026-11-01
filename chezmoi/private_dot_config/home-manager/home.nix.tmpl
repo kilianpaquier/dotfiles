@@ -76,9 +76,6 @@
     Install.WantedBy = [ "default.target" ];
     Service = {
       Environment = [
-        "GOPASS_CONFIG_COUNT=1"
-        "GOPASS_CONFIG_KEY_0=age.agent-timeout"
-        "GOPASS_CONFIG_VALUE_0=3600"
         "GOPASS_UMASK=077"
       ];
       ExecStart = "${pkgs.gopass}/bin/gopass age agent start";

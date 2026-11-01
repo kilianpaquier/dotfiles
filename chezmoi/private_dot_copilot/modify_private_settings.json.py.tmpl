@@ -1,4 +1,4 @@
-{{- $set := include "dot_copilot/settings.partial.json" | fromJson }}
+{{- $set := include "private_dot_copilot/settings.partial.json" | fromJson }}
 
 {{- $enabled_plugins := dict }}
 {{- range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" false) .) | fromJson }}

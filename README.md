@@ -120,14 +120,13 @@ Two profiles exist, `home` and `soprasteria`.
 | Whether this is a gaming machine (adds EA, Epic, Steam, Ubisoft...)   | `false`       | Windows, `home` profile | `gaming`        |
 | Whether to install and configure WSL                                  | `true`        | Windows                 | `wsl`           |
 | Which IDEs to install (`intellij`, `vscode`, `zed`)                   | `vscode`      |                         | `ide`           |
-| Whether to generate an SSH key (`id_ed25519`)                         | `true`        |                         | `ssh.generate`  |
 
 ### Workstation and server
 
 | Prompt                                                               | Default                | When                  | Key                  |
 | -------------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
 | Email to use as git committer                                        |                        |                       | `user.email`         |
-| Whether to sign commits with the SSH key                             | `true`                 | SSH key               | `git.ssh`            |
+| Whether to sign commits with the SSH key                             | `true`                 |                       | `git.ssh`            |
 | Which AI agent runtimes to install (`claude`, `codex`, `copilot`)    | Depends on the profile |                       | `ai.runtimes`        |
 | Which agent plugins to enable (`cave-talk`, `humanizer`, `ponytail`) | Depends on the profile | at least one agent    | `ai.plugins`         |
 | Which container runtimes to install (`docker` rootless, `podman`)    | Depends on the profile |                       | `container.runtimes` |
@@ -220,9 +219,21 @@ you would most likely want some applications to be installed, the repository ext
 
 ### Tooling
 
-Dev tools are grouped into bundles, each bundle is a set of tools installed through [**mise**](https://mise.jdx.dev).
-Selected, unselected, added, removed tools from the **chezmoi** configuration are reconciled in the next apply.
-Tools added by hand with **mise** always stay to ease customization per user, unless such tool is managed by **chezmoi**.
+Dev tools are grouped into bundles that [**mise**](https://mise.jdx.dev) installs.
+The next apply reconciles them with your **chezmoi** configuration, so a tool you select or add gets installed while one you unselect or remove gets uninstalled.
+Anything you installed by hand with **mise** stays, unless **chezmoi** manages it.
+
+Secrets such as `GITLAB_TOKEN` go in the `[env]` table of `~/.config/mise/conf.d/00-secrets.toml`,
+which **chezmoi** creates empty with mode 0600 and never overwrites.
+Either paste the value directly, or read it from **gopass** when the store should stay the only place holding it.
+
+```toml
+[env]
+GITLAB_TOKEN = "glpat-xxxxxxxxxxxxxxxxxxxx"
+GITHUB_TOKEN = "{{ exec(command='gopass show -o dev/github/token') }}"
+```
+
+Avoid `cache_duration` and `cache_key` on `exec`, since **mise** then keeps the value in plaintext in its cache directory.
 
 The following tools are always installed without capability to skip them: age, cosign, node 24, sops, usage.
 
@@ -272,13 +283,15 @@ Two main container runtimes can be installed:
 **gopass** is installed with **home-manager** and set as the **git** credential helper for HTTPS remotes (`git-credential-gopass`).
 A user service (`gopass-secret-service`) also exposes the store as a Secret Service, so `gh` and `glab` can keep their tokens in it.
 
-The store is not created by the repository, create it once with the **age** backend (**gopass** defaults to gpg):
+The first apply creates the store with **age** and the `fs` storage, and asks for the passphrase protecting its new identity.
 
 ```sh
-gopass setup --crypto age
-```
+gopass age agent unlock # unlocks the gopass keyring service for git credentials, glab, gh, etc.
+gopass age identities # reads age identities and ask for unlock (required for glab or gh refresh token writing)
 
-The **age** agent keeps the unlocked identity for `SSH_AGENT_TIMEOUT` seconds (see `~/.profile`).
+gopass age agent status
+gopass age agent lock
+```
 
 ### Agent components
 
@@ -321,10 +334,10 @@ When choosing `server` as machine kind, small modifications can be done onto the
 Running inside a WSL2 distribution is auto-detected (no prompt), by checking whether `microsoft` appears in the running kernel release.
 It configures an isolated distro, cut off from the Windows host, sized like a small VPS (Virtual Private Server):
 
-| File         | Side                      | Scope               | Sets                                                                                                  |
-| ------------ | ------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------- |
-| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | `memory=8GB`, `processors=4`, `defaultVhdSize=60GB`                                                   |
-| `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount` off, `interop` off (no Windows process launch or `$PATH`), `hostname` from `machine.name` |
+| File         | Side                      | Scope               | Sets                                                                                                                                         |
+| ------------ | ------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | `memory=8GB`, `processors=4`, `defaultVhdSize=60GB`                                                                                          |
+| `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount` off (options `metadata,umask=22,fmask=11`), `interop` off (no Windows process launch or `$PATH`), `hostname` from `machine.name` |
 
 > [!note]
 > A `wsl.conf` change only takes effect after `wsl.exe --shutdown` from Windows and reopening the distro.

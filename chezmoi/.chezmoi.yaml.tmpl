@@ -26,8 +26,6 @@
 
 {{- $ide := promptMultichoiceOnce . "ide" "What IDE are you using to develop" (list "intellij" "vscode" "zed") (list "vscode") }}
 
-{{- $ssh_generate := promptBoolOnce . "ssh.generate" "Would you like to generate an SSH key" true }}
-
 {{- $timezone := "UTC" }}
 {{- if eq $machine "server" }}
   {{- $timezone = promptStringOnce . "machine.timezone" "Which timezone should this server use" "UTC" }}
@@ -61,9 +59,7 @@
 {{- if $dev }}
   {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
 
-  {{- if $ssh_generate }}
-    {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" true }}
-  {{- end }}
+  {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" true }}
   {{- $agent_runtimes = promptMultichoiceOnce . "ai.runtimes" "Which agent runtimes will you be using" $data.agent_runtimes (index $data.default_agent_runtimes $profile) }}
 
   {{- if gt (len $agent_runtimes) 0 }}
@@ -134,8 +130,6 @@ data:
     timezone: {{ $timezone }}
   profile: {{ $profile }}
   shell: {{ $shell }}
-  ssh:
-    generate: {{ $ssh_generate }}
   tools:
 {{- range $manager := $managers }}
     {{ $manager }}:{{ index $tools $manager | toYaml | trim | nindent 6 }}

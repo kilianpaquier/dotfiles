@@ -11,7 +11,7 @@ Dotfiles repository managed by [chezmoi](https://www.chezmoi.io/). Source root i
 
 ### Home-manager integration
 
-- Use `dot_config/home-manager/home.nix.tmpl` for Linux packages (CLI tools, desktop apps, containers, agent runtimes, mise). Every attr must exist in `nixpkgs-unstable`.
+- Use `private_dot_config/home-manager/home.nix.tmpl` for Linux packages (CLI tools, desktop apps, containers, agent runtimes, mise). Every attr must exist in `nixpkgs-unstable`.
 - `scripts/bootstrap.sh` is the `read-source-state` pre hook: installs nix, home-manager and a GC-rooted env (`~/.local/state/chezmoi/env`: jq, python with tomlkit) so `modify_*.py.tmpl` render on a fresh machine.
 - Root-only steps (pcscd, server hostname, timezone) live in `.chezmoiscripts/linux/run_onchange_before_00-system.sh.tmpl` with `sudo`.
 - Use `.chezmoiscripts/windows/` for Windows system setup (winget).
@@ -20,16 +20,16 @@ Dotfiles repository managed by [chezmoi](https://www.chezmoi.io/). Source root i
 
 - A new prompt in `.chezmoi.yaml.tmpl`: the `README.md` prompts tables.
 - A new tool: `.chezmoidata/tools.yaml` and the `README.md` tools table.
-- A desktop app in `dot_config/home-manager/home.nix.tmpl`: its windows counterpart in `run_after_10-desktop.ps1.tmpl` and the `README.md` desktop apps table.
+- A desktop app in `private_dot_config/home-manager/home.nix.tmpl`: its windows counterpart in `run_after_10-desktop.ps1.tmpl` and the `README.md` desktop apps table.
 - Trusted directories:
-  - `dot_claude/settings.partial.json`: `permissions.additionalDirectories`
-  - `dot_copilot/modify_private_config.json.tmpl`: `trustedFolders`
+  - `private_dot_claude/settings.partial.json`: `permissions.additionalDirectories`
+  - `private_dot_copilot/modify_private_config.json.py.tmpl`: `trustedFolders`
 - URL permissions:
-  - `dot_claude/settings.partial.json`: `WebFetch(domain:...)`
-  - `dot_copilot/settings.partial.json`: `allowedUrls`
+  - `private_dot_claude/settings.partial.json`: `WebFetch(domain:...)`
+  - `private_dot_copilot/settings.partial.json`: `allowedUrls`
   - `dot_vscode-server/data/Machine/settings.copilot.partial.json`: `chat.tools.urls.autoApprove`
 - Tool permissions:
-  - `dot_claude/settings.partial.json`: `permissions.allow`, `permissions.ask`, `permissions.deny`
+  - `private_dot_claude/settings.partial.json`: `permissions.allow`, `permissions.ask`, `permissions.deny`
   - `dot_vscode-server/data/Machine/settings.copilot.partial.json`: `chat.tools.terminal.autoApprove`
 
 ## Boundaries

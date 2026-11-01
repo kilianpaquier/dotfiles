@@ -8,9 +8,7 @@
 {{- if has "vscode" .ide }}
 	editor = code --wait
 {{- end }}
-{{- if .ssh.generate }}
 	sshCommand = ssh -o AddKeysToAgent=$SSH_AGENT_TIMEOUT
-{{- end }}
 [credential]
 	helper = gopass
 [init]

@@ -71,8 +71,11 @@ sh -c "$(wget -qO- https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch
 ```
 
 > [!important]
-> The install needs **curl** or **wget**, and **xz**.
-> The `xz-utils` or `xz` package provides **xz**, depending on the distribution.
+> The install needs these tools, and the package providing each depends on the distribution.
+>
+> - **curl** or **wget**
+> - **ssh-keygen**, from `openssh-client` or `openssh-clients` (package name depends on the distribution)
+> - **xz**, from `xz-utils` or `xz` (package name depends on the distribution)
 
 ### Windows
 

@@ -1,0 +1,42 @@
+#!/bin/sh
+
+set -e
+
+# date: {{ now | date "2006-01-02" }}
+# mise config: {{ includeTemplate "private_dot_config/mise/modify_config.toml.py.tmpl" . | sha256sum }}
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+# shellcheck disable=SC1091
+. "{{ .chezmoi.sourceDir }}/scripts/log.sh"
+
+# hooks of a deselected tool go before mise prunes its binary
+{{- if not (has "rtk" .tools.mise) }}
+
+{{ include ".chezmoitemplates/linux/rtk-hooks-uninstall.sh" | trim }}
+{{- end }}
+{{- if not (has "boost" .tools.mise) }}
+
+{{ include ".chezmoitemplates/linux/boost-hooks-uninstall.sh" | trim }}
+{{- end }}
+
+# run every step regardless so a single broken tool doesn't also skip pruning,
+# reshimming and the hooks of the ones that succeeded.
+status=0
+mise install -y || status=$?
+mise upgrade -y || status=$?
+mise prune -y || status=$?
+mise reshim --force -y || status=$?
+
+{{- if has "rtk" .tools.mise }}
+
+{{ includeTemplate "linux/rtk-hooks-install.sh.tmpl" . | trim }}
+{{- end }}
+
+{{- if has "boost" .tools.mise }}
+
+{{ includeTemplate "linux/boost-hooks-install.sh.tmpl" . | trim }}
+{{- end }}
+
+exit "$status"

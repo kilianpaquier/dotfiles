@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -e
+
+# date: {{ now | date "2006-01-02T15" }}
+# plugins config: {{ list (includeTemplate "plugins.json.tmpl" (merge (dict "lsps" true) .)) (include "private_dot_claude/settings.partial.json") (include "private_dot_copilot/settings.partial.json") | join "" | sha256sum }}
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+{{- if has "claude" .ai.runtimes }}
+
+{{ include ".chezmoitemplates/linux/claude-plugins.sh" | trim }}
+{{- end }}
+
+{{- if has "codex" .ai.runtimes }}
+
+codex plugin marketplace upgrade
+{{- end }}
+
+{{- if has "copilot" .ai.runtimes }}
+
+{{ include ".chezmoitemplates/linux/copilot-plugins.sh" | trim }}
+{{- end }}
+
+apm update -g -y

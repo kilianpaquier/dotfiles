@@ -1,0 +1,11 @@
+if command -v boost >/dev/null 2>&1; then
+{{- if has "claude" .ai.runtimes }}
+  grep -qs boost-hook-claude "$HOME/.claude/settings.json" || boost init --accept-terms --claude
+{{- end }}
+{{- if has "codex" .ai.runtimes }}
+  grep -qs boost-hook-codex "$HOME/.codex/hooks.json" || boost init --accept-terms --codex
+{{- end }}
+{{- if has "copilot" .ai.runtimes }}
+  [ -f "$HOME/.copilot/hooks/boost.json" ] || boost init --accept-terms --copilot
+{{- end }}
+fi

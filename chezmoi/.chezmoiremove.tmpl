@@ -1,5 +1,8 @@
 # force remove side directories not chezmoi managed
 
+.config/home-manager/scripts
+.config/wsl
+
 {{- if not (has "claude" .ai.runtimes) }}
 .cache/claude
 .cache/claude-cli-nodejs

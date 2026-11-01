@@ -1,0 +1,18 @@
+# date: {{ now | date "2006-01-02" }}
+
+$bin = Join-Path $HOME '.local\bin'
+$path = [Environment]::GetEnvironmentVariable('Path', 'User')
+if (($path -split ';') -notcontains $bin) {
+  [Environment]::SetEnvironmentVariable('Path', "$path;$bin".TrimStart(';'), 'User')
+}
+
+{{ includeTemplate "windows/winget-sync.ps1" . | trim }}
+
+{{- if .wsl }}
+
+# wsl.exe installs the Store package (updated by the Store), winget's Microsoft.WSL conflicts with it
+if (-not (Get-AppxPackage MicrosoftCorporationII.WindowsSubsystemForLinux)) {
+  wsl --install --no-distribution
+}
+wsl --update
+{{- end }}

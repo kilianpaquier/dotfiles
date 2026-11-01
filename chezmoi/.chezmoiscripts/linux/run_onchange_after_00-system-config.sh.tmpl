@@ -1,0 +1,35 @@
+#!/bin/sh
+
+set -e
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+# shellcheck disable=SC1091
+. "{{ .chezmoi.sourceDir }}/scripts/log.sh"
+
+# root-only setup home-manager cannot own: system daemons and host identity
+
+{{- if and (eq .machine.kind "desktop") (eq .profile "home") }}
+
+# PC/SC daemon for yubioath-flutter
+sudo apt-get update && sudo apt-get install -y pcscd
+{{- end }}
+
+{{- if gt (len .container.runtimes) 0 }}
+
+{{ include ".chezmoitemplates/linux/rootless-containers.sh" | trim }}
+{{- end }}
+
+{{- if eq .machine.kind "server" }}
+
+{{ includeTemplate "linux/server-identity.sh" . | trim }}
+{{- end }}
+
+{{- if contains "microsoft" (.chezmoi.kernel.osrelease | lower) }}
+
+sudo tee /etc/wsl.conf >/dev/null <<'EOF'
+{{ includeTemplate "wsl.conf.tmpl" . | trim }}
+EOF
+info "wsl.conf updated, run 'wsl.exe --shutdown' from Windows and reopen this distro to apply"
+{{- end }}

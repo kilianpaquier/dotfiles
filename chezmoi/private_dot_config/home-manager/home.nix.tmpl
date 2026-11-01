@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "gnumake" "gnupg" "gopass" "jq" "pinentry-curses" "python3" "ripgrep" "socat" "tree" "unzip" "vim" "xdg-utils" }}
 
@@ -30,6 +30,17 @@
 
   # home-manager state version, all updates must be done carefully to avoid breakage
   home.stateVersion = "26.05";
+
+  services.home-manager.autoUpgrade = {
+    enable = true;
+    frequency = "daily";
+  };
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
 
   # packages to install
   home.packages = with pkgs; [

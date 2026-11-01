@@ -1,0 +1,13 @@
+#!/bin/sh
+
+{{- $config := list
+    (includeTemplate "private_dot_config/home-manager/home.nix.tmpl" .)
+    (include (joinPath .chezmoi.sourceDir ".." "symlinks" "local.nix")) }}
+
+set -e
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+# home-manager config: {{ $config | join "" | sha256sum }}
+home-manager switch --log-format bar

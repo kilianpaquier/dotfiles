@@ -1,0 +1,11 @@
+if command -v rtk >/dev/null 2>&1; then
+{{- if has "claude" .ai.runtimes }}
+  grep -qs 'rtk hook claude' "$HOME/.claude/settings.json" || rtk init -g --auto-patch
+{{- end }}
+{{- if has "codex" .ai.runtimes }}
+  grep -qs 'rtk hook codex' "$HOME/.codex/hooks.json" || rtk init -g --codex
+{{- end }}
+{{- if has "copilot" .ai.runtimes }}
+  [ -f "$HOME/.copilot/hooks/rtk-rewrite.json" ] || rtk init -g --copilot --auto-patch
+{{- end }}
+fi

@@ -225,7 +225,8 @@ you would most likely want some applications to be installed, the repository ext
 | WSL                             |       | x       | `wsl`                 |
 
 > [!note]
-> On Linux, the `pcscd` package is installed with the system package manager, so `sudo` is asked for your password.
+> On Linux, `sudo` is asked for your password to install the `pcscd` package with the system package manager,
+> and to link the GPU drivers that nix apps need on any OS that can display a GUI (an installed Wayland or X11 session, or WSLg).
 
 ### Tooling
 

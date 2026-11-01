@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "gnumake" "gnupg" "jq" "pinentry-curses" "python3" "ripgrep" "socat" "tree" "unzip" "vim" "xdg-utils" }}
 
@@ -28,8 +28,18 @@
   home.username = "{{ .chezmoi.username }}";
   home.homeDirectory = "{{ .chezmoi.homeDir }}";
 
-  # GPU libraries and XDG_DATA_DIRS for nix applications on a non-NixOS host
+{{- if or (glob "/usr/share/wayland-sessions/*") (glob "/usr/share/xsessions/*") (stat "/mnt/wslg") }}
+
+  # GPU libraries for nix graphical applications on a non-NixOS host
   targets.genericLinux.enable = true;
+
+  # the warning of checkExistingGpuDrivers prints this same sudo command, which fails without a TTY (autoUpgrade)
+  home.activation.linkGpuDrivers = lib.hm.dag.entryAfter [ "checkExistingGpuDrivers" ] ''
+    if [[ "$(readlink /run/opengl-driver || true)" != "${config.targets.genericLinux.gpu.drivers}" ]]; then
+      run sudo ${lib.getExe config.targets.genericLinux.gpu.setupPackage} || warnEcho "failed to link the GPU drivers"
+    fi
+  '';
+{{- end }}
 
   # home-manager state version, all updates must be done carefully to avoid breakage
   home.stateVersion = "26.05";

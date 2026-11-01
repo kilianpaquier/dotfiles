@@ -5,6 +5,8 @@
 .bashenv
 .bashrc
 .config/environment.d
+.config/gh
+.config/glab-cli
 .config/gopass
 .config/home-manager
 .gnupg
@@ -20,13 +22,20 @@ AppData
 
 {{ includeTemplate "chezmoiignore.tmpl" . }}
 
-
 {{- if eq (len .ai.runtimes) 0 }}
 .chezmoiscripts/linux/*-agent-plugins.sh
 {{- end }}
 
 {{- if not (has "mise" .tools_management) }}
 .chezmoiscripts/linux/*-mise-tools.sh
+{{- end }}
+
+{{- if not (has "gh" .tools.mise) }}
+.config/gh
+{{- end }}
+
+{{- if not (has "glab" .tools.mise) }}
+.config/glab-cli
 {{- end }}
 
 {{- if not (has "k8s" .tools.mise) }}

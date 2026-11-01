@@ -58,6 +58,7 @@
 {{- end }}
 
 {{- if or (eq .machine.kind "desktop") (not (has "vscode" .ide)) }}
+.local/bin/code
 .vscode-server
 {{- end }}
 

@@ -4,7 +4,13 @@ import json
 import sys
 
 def main():
-    lines = sys.stdin.read().splitlines()
+    text = sys.stdin.read()
+
+    # empty output keeps chezmoi from creating a config the tool never wrote
+    if not text.strip():
+        return
+
+    lines = text.splitlines()
     wanted = json.loads(r'''{{ toJson .set }}''')
 
     # only top-level scalar keys are rewritten in place, so comments, nested maps and key order stay untouched

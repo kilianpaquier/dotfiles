@@ -7,6 +7,7 @@
     },
     "autoCompactEnabled": false,
     "autoCompactWindow": 180000,
+    "autoConnectIde": true,
     "autoMemoryEnabled": false,
     "autoUploadSessions": false,
     "cleanupPeriodDays": 60,
@@ -73,6 +74,7 @@
             "effortLevel": "medium"
         }
     },
+    "outputStyle": "Concise",
     "permissions": {
         "additionalDirectories": [
             "~/.local/share/chezmoi",
@@ -262,7 +264,7 @@
             "mcp__plugin_mempalace_mempalace__mempalace_delete_tunnel",
             "mcp__plugin_mempalace_mempalace__mempalace_kg_invalidate"
         ],
-        "defaultMode": "default",
+        "defaultMode": "auto",
         "deny": [],
         "disableBypassPermissionsMode": "disable"
     },

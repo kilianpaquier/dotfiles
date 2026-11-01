@@ -28,6 +28,9 @@
   home.username = "{{ .chezmoi.username }}";
   home.homeDirectory = "{{ .chezmoi.homeDir }}";
 
+  # GPU libraries and XDG_DATA_DIRS for nix applications on a non-NixOS host
+  targets.genericLinux.enable = true;
+
   # home-manager state version, all updates must be done carefully to avoid breakage
   home.stateVersion = "26.05";
 

@@ -2,7 +2,7 @@
 # source'd by all shells
 
 # enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
+if command -v dircolors >/dev/null 2>&1; then
   if test -r ~/.dircolors; then eval "$(dircolors -b ~/.dircolors)"; else eval "$(dircolors -b)"; fi
   alias ls='ls --color=auto'
   alias dir='dir --color=auto'

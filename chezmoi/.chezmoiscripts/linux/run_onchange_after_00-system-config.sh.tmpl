@@ -8,12 +8,20 @@ set -e
 # shellcheck disable=SC1091
 . "{{ .chezmoi.sourceDir }}/scripts/log.sh"
 
+# shellcheck disable=SC1091
+. "{{ .chezmoi.sourceDir }}/scripts/pkg.sh"
+
 # root-only setup home-manager cannot own: system daemons and host identity
 
 {{- if and (eq .machine.kind "desktop") (eq .profile "home") }}
 
 # PC/SC daemon for yubioath-flutter
-sudo apt-get update && sudo apt-get install -y pcscd
+pkg_install pcscd pcsc-lite pcsclite
+if [ -d /run/systemd/system ]; then
+  sudo systemctl enable --now pcscd.socket
+else
+  warn "systemd isn't running, skipping pcscd socket activation"
+fi
 {{- end }}
 
 {{- if gt (len .container.runtimes) 0 }}
@@ -28,6 +36,9 @@ sudo apt-get update && sudo apt-get install -y pcscd
 
 {{- if contains "microsoft" (.chezmoi.kernel.osrelease | lower) }}
 
+pkg_install dbus-user-session - dbus
+pkg_install openssh-client openssh-clients openssh
+pkg_install uidmap shadow-utils shadow
 sudo tee /etc/wsl.conf >/dev/null <<'EOF'
 {{ includeTemplate "wsl.conf.tmpl" . | trim }}
 EOF

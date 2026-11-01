@@ -34,7 +34,11 @@ umask 022
 
 # shellcheck disable=SC1091
 # source nix to expand PATH with home-manager installed tools
-[ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] && . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+  . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+elif [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
 
 # set LD_LIBRARY_PATH so it includes nix user level libraries
 [ -d "$HOME/.nix-profile/lib" ] && export LD_LIBRARY_PATH="$HOME/.nix-profile/lib${LD_LIBRARY_PATH:+":$LD_LIBRARY_PATH"}"

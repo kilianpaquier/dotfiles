@@ -2,6 +2,9 @@
 
 set -e
 
+# shellcheck disable=SC1091
+. "{{ .chezmoi.sourceDir }}/scripts/log.sh"
+
 # chezmoi never removes an ignored target, drop the ones it managed before the option was deselected
 
 {{- range includeTemplate "chezmoiignore.tmpl" . | splitList "\n" | compact }}
@@ -19,6 +22,6 @@ rm -rf "$HOME/.cache/go"
 {{- if not (has $runtime $.container.runtimes) }}
 
 # rootless storage holds files owned by subordinate uids, removable only inside a user namespace
-[ ! -d "$HOME/{{ $storage }}" ] || unshare --map-auto --map-root-user rm -rf "$HOME/{{ $storage }}"
+[ ! -d "$HOME/{{ $storage }}" ] || unshare --map-auto --map-root-user rm -rf "$HOME/{{ $storage }}" || warn "failed to remove $HOME/{{ $storage }}, unshare needs util-linux 2.38 or later and subuid ranges"
 {{- end }}
 {{- end }}

@@ -24,12 +24,14 @@ Read it when a task touches prompts, tool bundles, desktop apps or agent compone
 Nix home-manager owns a step that runs as the user, needs no prompt, and fits in the nix switch.
 The chezmoi scripts own the rest: `sudo`, passphrase prompts, tools outside nix, and Windows.
 
-Root-only steps (pcscd, rootless containers, server identity, `/etc/wsl.conf`) go in `.chezmoiscripts/linux/run_onchange_after_00-system-config.sh.tmpl`.
+Two scripts sit outside that split, the root-only system setup and the bootstrap hook.
 
-`scripts/bootstrap.sh` is the `read-source-state` pre hook.
-It runs before every chezmoi command, so it must exit fast once its work is done.
-It installs nix, home-manager and a GC-rooted env at `~/.local/state/chezmoi/env` (jq, python with tomlkit).
-That env lets `modify_*.py.tmpl` render on a fresh machine.
+- Root-only steps (pcscd, rootless containers, server identity, `/etc/wsl.conf`) go in `.chezmoiscripts/linux/run_onchange_after_00-system-config.sh.tmpl`.
+- Install a system package there with `pkg_install <apt> <dnf> <pacman>` from `scripts/pkg.sh`, never a direct `apt-get`.
+- Pass `-` to `pkg_install` for a distro that needs no package.
+- The `scripts/bootstrap.sh` script is the `read-source-state` pre hook, so it runs before every chezmoi command and must exit fast once its work is done.
+- The bootstrap installs nix, home-manager and a GC-rooted env at `~/.local/state/chezmoi/env` (jq, python with tomlkit).
+- That env lets `modify_*.py.tmpl` render on a fresh machine.
 
 ## Removing paths
 

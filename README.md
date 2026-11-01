@@ -39,8 +39,8 @@ and user level packages (CLI tools, desktop apps, container engines, agent runti
 Drift detection and reconciliation is managed with **chezmoi** for dotfiles
 and **home-manager** (nix) for packages.
 
-To improve the usage experience, **home-manager** commands are directly integrated within **chezmoi** ones,
-offering a uniform experience to review drift and reapply the configuration.
+The **home-manager** commands are integrated into the **chezmoi** ones,
+so reviewing drift and reapplying the configuration works the same way for dotfiles and packages.
 
 The repository offers the following main features:
 - Shell choice for Linux (`bash` or `zsh`)
@@ -71,10 +71,14 @@ sh -c "$(wget -qO- https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch
 ```
 
 > [!important]
+> Supported distributions are Debian/Ubuntu, Fedora/RHEL and Arch, with `apt-get`, `dnf` or `pacman`.
+> NixOS and Alpine are not supported.
+>
 > The install needs these tools, and the package providing each depends on the distribution.
 >
 > - **curl** or **wget**
-> - **ssh-keygen**, from `openssh-client` or `openssh-clients` (package name depends on the distribution)
+> - **ssh-keygen**, from `openssh-client`, `openssh-clients` or `openssh` (package name depends on the distribution)
+> - **sudo**, only for the root-only steps described in [desktop apps](#desktop-apps), [container runtimes](#container-runtimes), [servers](#servers) and [WSL](#wsl)
 > - **xz**, from `xz-utils` or `xz` (package name depends on the distribution)
 
 ### Windows
@@ -220,6 +224,9 @@ you would most likely want some applications to be installed, the repository ext
 | Office, Teams, Obsidian         |       | x       | `soprasteria` profile |
 | WSL                             |       | x       | `wsl`                 |
 
+> [!note]
+> On Linux, the `pcscd` package is installed with the system package manager, so `sudo` is asked for your password.
+
 ### Tooling
 
 Dev tools are grouped into bundles that [**mise**](https://mise.jdx.dev) installs.
@@ -274,7 +281,8 @@ Two main container runtimes can be installed:
 
 > [!important]
 > Rootless containers need `uidmap` and linger.
-> Both are set up on `chezmoi apply` when missing, with a `sudo` password prompt.
+> Running `chezmoi apply` installs `uidmap` and enables linger when they are missing, and only then asks for your `sudo` password.
+> Without systemd, linger is skipped with a warning.
 
 #### Limitations
 
@@ -308,8 +316,8 @@ gopass age agent lock
 
 ### Agent components
 
-To improve agent generation, responses and consumption, the following components are provided
-and installed depending on the chosen runtime, installed tools with **mise** or even prompt choices.
+The following components improve agent generation, responses and consumption.
+Which ones are installed depends on the chosen runtime, the tools installed with **mise** and the prompt choices.
 
 | Component                   | Type               | Source                                                                                           | When                                                     |
 | --------------------------- | ------------------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
@@ -338,22 +346,32 @@ and installed depending on the chosen runtime, installed tools with **mise** or 
 
 ### Servers
 
-When choosing `server` as machine kind, small modifications can be done onto the OS configuration itself (`sudo` is needed in such cases):
-- The hostname can be changed, retrieved from `machine.name`.
-- The timezone can be changed, retrieved from `machine.timezone`.
+On a `server` machine kind, the setup also changes the OS configuration, which needs `sudo`:
+- The hostname is set from `machine.name`.
+- The timezone is set from `machine.timezone`.
 
 ### WSL
 
-Running inside a WSL2 distribution is auto-detected (no prompt), by checking whether `microsoft` appears in the running kernel release.
-It configures an isolated distro, cut off from the Windows host, sized like a small VPS (Virtual Private Server):
+A WSL2 distribution is set up as an isolated, VPS-like machine, cut off from the Windows host.
+Running inside one is detected without a prompt, by checking whether `microsoft` appears in the running kernel release.
 
-| File         | Side                      | Scope               | Sets                                                                                                                                         |
-| ------------ | ------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | `memory=8GB`, `processors=4`, `defaultVhdSize=60GB`                                                                                          |
-| `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount` off (options `metadata,umask=22,fmask=11`), `interop` off (no Windows process launch or `$PATH`), `hostname` from `machine.name` |
+Two files drive the setup, `wsl.conf` inside the distro and `.wslconfig` on the Windows host.
+The latter needs the dotfiles installed on Windows too, with the `wsl` prompt set to `true`, and that install is worth it.
 
-> [!note]
-> A `wsl.conf` change only takes effect after `wsl.exe --shutdown` from Windows and reopening the distro.
+Without it, the distro disk can grow up to 1TB and fill the Windows drive, while with it the setup:
+- Caps the disk at 60GB
+- Limits the distro to half of the host processors (rounded up)
+- Hands unused memory back to Windows gradually
 
-> [!note]
-> When using **VSCode**, the setting `"remote.WSL.experimental.scriptLessStartup": true` must be defined in the *User Settings*.
+| File         | Location                  | Scope               | Sets                                                                                                       |
+| ------------ | ------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | Half of the host `memory` and `processors`, `swap=8GB`, `defaultVhdSize=60GB`, `autoMemoryReclaim=gradual` |
+| `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount`, `interop` and `appendWindowsPath` off, `systemd` on, `hostname` from `machine.name`           |
+
+Keep in mind that:
+- Either file only takes effect after `wsl.exe --shutdown` from Windows and reopening the distro.
+- Applying inside the distro asks for your `sudo` password, to write `/etc/wsl.conf` and to install the following packages:
+  - D-Bus user session (for **gopass** keyring service)
+  - OpenSSH client (for SSH key generation and usage)
+  - UID and GID mapping tools, `uidmap` on Debian (for rootless containers)
+- With **VS Code**, `"remote.WSL.experimental.scriptLessStartup": true` must be set in the *User Settings*.

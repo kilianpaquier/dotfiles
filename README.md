@@ -59,15 +59,15 @@ Setup is based on [prompts](#prompts) with predefined machine typologies and wor
 ```sh
 umask 022
 sh -c "$(curl -sSL https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main https://gitlab.com/kilianpaquier/dotfiles.git
-~/.local/bin/chezmoi.exe diff
-# ~/.local/bin/chezmoi.exe apply (raw 'chezmoi' binary can be used afterward)
+~/.local/bin/chezmoi diff
+# ~/.local/bin/chezmoi apply (raw 'chezmoi' binary can be used afterward)
 ```
 
 ```sh
 umask 022
 sh -c "$(wget -qO- https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch main https://gitlab.com/kilianpaquier/dotfiles.git
-~/.local/bin/chezmoi.exe diff
-# ~/.local/bin/chezmoi.exe apply (raw 'chezmoi' binary can be used afterward)
+~/.local/bin/chezmoi diff
+# ~/.local/bin/chezmoi apply (raw 'chezmoi' binary can be used afterward)
 ```
 
 > [!important]

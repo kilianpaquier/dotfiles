@@ -20,7 +20,7 @@ $wanted = @(
 {{- if eq .profile "home" }}
   'Brave.Brave', 'Discord.Discord', 'Netbird.Netbird', 'FilenCloud.FilenSync', 'Nextcloud.NextcloudDesktop', 'TheDocumentFoundation.LibreOffice'
   'Microsoft.DotNet.DesktopRuntime.10', 'Microsoft.DotNet.DesktopRuntime.8'
-  'IDRIX.VeraCrypt', 'Logitech.GHUB'
+  'IDRIX.VeraCrypt',
   'Yubico.Authenticator', 'Yubico.YubiKeyManagerCLI', 'Yubico.YubiKeySmartCardMinidriver'
 {{- end }}
 {{- if .gaming }}
@@ -38,10 +38,10 @@ $managed = @(
   'Microsoft.VisualStudioCode', 'JetBrains.IntelliJIDEA.Ultimate', 'ZedIndustries.Zed'
   'Brave.Brave', 'Discord.Discord', 'Netbird.Netbird', 'FilenCloud.FilenSync', 'Nextcloud.NextcloudDesktop', 'TheDocumentFoundation.LibreOffice'
   'Microsoft.DotNet.DesktopRuntime.10', 'Microsoft.DotNet.DesktopRuntime.8'
-  'IDRIX.VeraCrypt', 'Logitech.GHUB'
+  'IDRIX.VeraCrypt',
   'Yubico.Authenticator', 'Yubico.YubiKeyManagerCLI', 'Yubico.YubiKeySmartCardMinidriver'
   'CPUID.CPU-Z', 'OCBase.OCCT.Personal', 'REALiX.HWiNFO', 'Guru3D.Afterburner', 'Guru3D.RTSS'
-  'ElectronicArts.EADesktop', 'EpicGames.EpicGamesLauncher', 'Ubisoft.Connect', 'Valve.Steam', 'WeMod.WeMod'
+  'Ubisoft.Connect', 'Valve.Steam', 'WeMod.WeMod'
   'Microsoft.Office', 'Microsoft.Teams', 'Mozilla.Firefox', 'Obsidian.Obsidian'
 )
 

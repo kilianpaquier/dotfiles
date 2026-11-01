@@ -77,6 +77,7 @@
         "https://mcr.microsoft.com": true,
         "https://microsoft.github.io": true,
         "https://mise.jdx.dev": true,
+        "https://nix-community.github.io": true,
         "https://npmjs.com": true,
         "https://oauth2-proxy.github.io": true,
         "https://open-api.netlify.com": true,
@@ -104,6 +105,8 @@
         "https://stackoverflow.com": true,
         "https://trivy.dev": true,
         "https://university.gitlab.com": true,
+        "https://www.chezmoi.io": true,
+        "https://www.freedesktop.org": true,
         "https://www.schemastore.org": true,
         "https://www.skills.sh": true
     },

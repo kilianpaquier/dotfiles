@@ -166,6 +166,7 @@
             "WebFetch(domain:mcr.microsoft.com)",
             "WebFetch(domain:microsoft.github.io)",
             "WebFetch(domain:mise.jdx.dev)",
+            "WebFetch(domain:nix-community.github.io)",
             "WebFetch(domain:npmjs.com)",
             "WebFetch(domain:oauth2-proxy.github.io)",
             "WebFetch(domain:open-api.netlify.com)",
@@ -193,6 +194,8 @@
             "WebFetch(domain:stackoverflow.com)",
             "WebFetch(domain:trivy.dev)",
             "WebFetch(domain:university.gitlab.com)",
+            "WebFetch(domain:www.chezmoi.io)",
+            "WebFetch(domain:www.freedesktop.org)",
             "WebFetch(domain:www.schemastore.org)",
             "WebFetch(domain:www.skills.sh)",
             "WebSearch"

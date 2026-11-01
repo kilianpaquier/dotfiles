@@ -69,6 +69,7 @@
         "mcr.microsoft.com",
         "microsoft.github.io",
         "mise.jdx.dev",
+        "nix-community.github.io",
         "npmjs.com",
         "oauth2-proxy.github.io",
         "open-api.netlify.com",
@@ -96,6 +97,8 @@
         "stackoverflow.com",
         "trivy.dev",
         "university.gitlab.com",
+        "www.chezmoi.io",
+        "www.freedesktop.org",
         "www.schemastore.org",
         "www.skills.sh"
     ],

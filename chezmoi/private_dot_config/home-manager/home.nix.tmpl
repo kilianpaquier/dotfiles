@@ -36,7 +36,7 @@
   # the warning of checkExistingGpuDrivers prints this same sudo command, which fails without a TTY (autoUpgrade)
   home.activation.linkGpuDrivers = lib.hm.dag.entryAfter [ "checkExistingGpuDrivers" ] ''
     if [[ "$(readlink /run/opengl-driver || true)" != "${config.targets.genericLinux.gpu.drivers}" ]]; then
-      run sudo ${lib.getExe config.targets.genericLinux.gpu.setupPackage} || warnEcho "failed to link the GPU drivers"
+      run /usr/bin/sudo ${lib.getExe config.targets.genericLinux.gpu.setupPackage} || warnEcho "failed to link the GPU drivers"
     fi
   '';
 {{- end }}

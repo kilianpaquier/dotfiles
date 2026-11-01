@@ -221,6 +221,7 @@ you would most likely want some applications to be installed, the repository ext
 | CPU-Z, OCCT, HWiNFO             |       | x       | `gaming`              |
 | Afterburner, RTSS               |       | x       | `gaming`              |
 | EA, Epic, Ubisoft, Steam, WeMod |       | x       | `gaming`              |
+| Firefox                         | x     | x       | `soprasteria` profile |
 | Office, Teams, Obsidian         |       | x       | `soprasteria` profile |
 | WSL                             |       | x       | `wsl`                 |
 

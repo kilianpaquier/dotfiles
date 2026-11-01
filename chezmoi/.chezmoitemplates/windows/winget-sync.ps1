@@ -28,7 +28,7 @@ $wanted = @(
   'Ubisoft.Connect', 'Valve.Steam', 'WeMod.WeMod'
 {{- end }}
 {{- if eq .profile "soprasteria" }}
-  'Microsoft.Office', 'Microsoft.Teams', 'Obsidian.Obsidian'
+  'Microsoft.Office', 'Microsoft.Teams', 'Mozilla.Firefox', 'Obsidian.Obsidian'
 {{- end }}
 )
 
@@ -42,7 +42,7 @@ $managed = @(
   'Yubico.Authenticator', 'Yubico.YubiKeyManagerCLI', 'Yubico.YubiKeySmartCardMinidriver'
   'CPUID.CPU-Z', 'OCBase.OCCT.Personal', 'REALiX.HWiNFO', 'Guru3D.Afterburner', 'Guru3D.RTSS'
   'ElectronicArts.EADesktop', 'EpicGames.EpicGamesLauncher', 'Ubisoft.Connect', 'Valve.Steam', 'WeMod.WeMod'
-  'Microsoft.Office', 'Microsoft.Teams', 'Obsidian.Obsidian'
+  'Microsoft.Office', 'Microsoft.Teams', 'Mozilla.Firefox', 'Obsidian.Obsidian'
 )
 
 $export = Join-Path $env:TEMP 'winget-export.json'

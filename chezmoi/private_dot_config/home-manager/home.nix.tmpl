@@ -17,6 +17,7 @@
   {{- if has "vscode" .ide }}{{- $packages = append $packages "vscode" }}{{- end }}
   {{- if has "zed" .ide }}{{- $packages = append $packages "zed-editor" }}{{- end }}
   {{- if eq .profile "home" }}{{- $packages = concat $packages (list "brave" "discord" "netbird-ui" "nextcloud-client" "yubioath-flutter") }}{{- end }}
+  {{- if eq .profile "soprasteria" }}{{- $packages = append $packages "firefox" }}{{- end }}
 {{- else }}
   {{- $packages = concat $packages (list "git-credential-gopass" "gopass") }}
 {{- end }}

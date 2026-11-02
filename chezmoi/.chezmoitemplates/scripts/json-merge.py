@@ -50,7 +50,10 @@ def main():
 
     sys.stdout.write("".join(head))
     json.dump(doc, sys.stdout, indent={{ .indent }}, ensure_ascii=False)
-    sys.stdout.write("\n")
+
+    # keep the target's trailing newline as its tool wrote it (docker omits it), so a rewrite shows no diff
+    if not text.strip() or text.endswith("\n"):
+        sys.stdout.write("\n")
 
 if __name__ == "__main__":
     main()

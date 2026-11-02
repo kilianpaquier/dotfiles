@@ -11,6 +11,7 @@
 
 {{- if has "docker" .container.runtimes }}{{- $packages = concat $packages (list "docker" "passt") }}{{- end }}
 {{- if has "podman" .container.runtimes }}{{- $packages = concat $packages (list "podman" "podman-compose" "docker-compose") }}{{- end }}
+{{- if gt (len .container.runtimes) 0 }}{{- $packages = append $packages "docker-credential-helpers" }}{{- end }}
 
 {{- if eq .machine.kind "desktop" }}
   {{- $packages = concat $packages (list "libreoffice" "spotify") }}

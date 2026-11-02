@@ -87,7 +87,6 @@
 
 {{- if not (has "docker" .container.runtimes) }}
 .config/docker
-.docker
 {{- end }}
 
 {{- if not (has "podman" .container.runtimes) }}

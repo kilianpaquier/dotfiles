@@ -20,6 +20,10 @@
 .terraformrc
 {{- end }}
 
+{{- if eq (len .container.runtimes) 0 }}
+.docker
+{{- end }}
+
 {{- if not (has "podman" .container.runtimes) }}
 .config/containers
 {{- end }}

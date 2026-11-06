@@ -78,7 +78,7 @@ sh -c "$(wget -qO- https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch
 >
 > - **curl** or **wget**
 > - **ssh-keygen**, from `openssh-client`, `openssh-clients` or `openssh` (package name depends on the distribution)
-> - **sudo**, only for the root-only steps described in [desktop apps](#desktop-apps), [container runtimes](#container-runtimes), [servers](#servers) and [WSL](#wsl)
+> - **sudo**, to create `/nix` and for the root-only steps of the [deep dive](#deep-dive)
 > - **xz**, from `xz-utils` or `xz` (package name depends on the distribution)
 
 ### Windows
@@ -282,9 +282,9 @@ Two main container runtimes can be installed:
 - `podman`: podman, podman-compose (default compose provider) and docker-compose (opt-in with `PODMAN_COMPOSE_PROVIDER=docker-compose`), rootless by default.
 
 > [!important]
-> Rootless containers need `uidmap` and linger.
-> Running `chezmoi apply` installs `uidmap` and enables linger when they are missing, and only then asks for your `sudo` password.
-> Without systemd, linger is skipped with a warning.
+> Rootless containers need `uidmap` and linger, which `chezmoi apply` installs when they are missing
+> and asks for your `sudo` password.
+> Without linger (or without systemd), rootless docker doesn't start at boot and stops with your last login session.
 
 #### Limitations
 
@@ -293,18 +293,26 @@ Two main container runtimes can be installed:
 
 ### Credentials
 
-On every machine, Windows included, the first apply generates the SSH key `~/.ssh/id_ed25519`, asks for its passphrase,
-and prints the public key to paste into **GitLab** or **GitHub**.
-A later change of `user.username` or `machine.name` only updates the key comment.
+On every machine, Windows included, the first apply:
+- Generates the SSH key `~/.ssh/id_ed25519` and asks for its passphrase (empty allowed)
+- Prints the public key to paste into **GitLab** or **GitHub**
+- Only updates the key comment on a later change of `user.username` or `machine.name`
 
-On Linux workstations and servers, **gopass** is installed with **home-manager** and set as the **git** credential helper for HTTPS remotes (`git-credential-gopass`).
-A user service (`gopass-secret-service`) also exposes the store as a Secret Service, so `gh` and `glab` can keep their tokens in it.
+On Linux workstations and servers, **gopass** is installed with **home-manager** and:
+- Is the **git** credential helper for HTTPS remotes (`git-credential-gopass`)
+- Exposes the store as a Secret Service through a user service (`gopass-secret-service`), so `gh` and `glab` keep their tokens in it
+- Stores the registry credentials of `docker login` and `podman login` through `docker-credential-secretservice`, when a container runtime is selected
 
-The first apply also creates the store with **age** and the `fs` storage, and asks for the passphrase protecting its new identity.
+> [!warning]
+> A login made before this change stays in `~/.docker/config.json` until you log out and in again.
+
+The first apply creates the **gopass** store with **age** and the `fs` storage, and asks for the passphrase (empty not allowed, a warning is printed before the prompt) protecting its new identity.
 The **age** agent locks again after an hour (`age.agent-timeout` in `~/.config/gopass/config`), independently of `SSH_AGENT_TIMEOUT`.
 
-While it's locked, **git** falls back to prompting for a username and password on HTTPS remotes,
-and `gh` or `glab` report a missing token.
+While it's locked:
+- **git** prompts for a username and password on HTTPS remotes
+- `gh` and `glab` report a missing token
+- `docker` and `podman` fail to log in or pull from a private registry
 
 After login or a timeout, unlock the agent then list its identities once, so `gh` and `glab` can also write refreshed tokens:
 

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+# shellcheck disable=SC1091
+. "{{ .chezmoi.sourceDir }}/scripts/log.sh"
+
+info "Run 'exec {{ .shell }} -l' to load the new profile in this terminal"

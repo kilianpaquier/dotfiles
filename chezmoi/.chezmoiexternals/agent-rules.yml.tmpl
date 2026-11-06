@@ -1,9 +1,11 @@
-{{- $url := "https://gitlab.com/api/v4/projects/kilianpaquier%2Fagent-rules/repository/archive.tar.gz?path=.apm/instructions" }}
-{{- with env "GITLAB_TOKEN" }}{{ $url = printf "%s&private_token=%s" $url . }}{{ end }}
+{{- $url := "https://github.com/kilianpaquier/agent-rules/archive/refs/heads/main.tar.gz" }}
+{{- with env "GITHUB_TOKEN" }}{{ $url = replace "https://" (printf "https://x-access-token:%s@" .) $url }}{{ end }}
 {{- if has "claude" .ai.runtimes }}
 .claude/rules:
   type: archive
   url: {{ $url | quote }}
+  include:
+    - "*/.apm/instructions/**"
   stripComponents: 3
   refreshPeriod: 24h
 {{- end }}
@@ -11,6 +13,8 @@
 .copilot/instructions:
   type: archive
   url: {{ $url | quote }}
+  include:
+    - "*/.apm/instructions/**"
   stripComponents: 3
   refreshPeriod: 24h
 {{- end }}

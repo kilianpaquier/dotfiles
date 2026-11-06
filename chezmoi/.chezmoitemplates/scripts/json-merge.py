@@ -6,6 +6,13 @@ import sys
 
 from functools import reduce
 
+def lookup(table, path):
+    for key in path:
+        if not isinstance(table, dict) or key not in table:
+            return None
+        table = table[key]
+    return table
+
 def merge(table, wanted):
     for key, value in wanted.items():
         if isinstance(value, dict) and isinstance(table.get(key), dict):
@@ -29,7 +36,9 @@ def main():
     # assign overridden paths in place, delete+reinsert would move the key to the dict's end
     for path in json.loads(r'''{{ toJson (.override | default list) }}'''):
         *parents, key = path
-        src = reduce(lambda d, k: d[k], parents, wanted)
+        src = lookup(wanted, parents)
+        if src is None or key not in src:
+            continue
         dst = reduce(lambda d, k: d.setdefault(k, {}), parents, doc)
         dst[key] = src[key]
         del src[key]
@@ -40,9 +49,9 @@ def main():
     sort_key = lambda item: str(item).lower() + "￿"
     for path in json.loads(r'''{{ toJson (.sort | default list) }}'''):
         *parents, key = path
-        table = doc
-        for parent in parents:
-            table = table[parent]
+        table = lookup(doc, parents)
+        if table is None or key not in table:
+            continue
         if isinstance(table[key], dict):
             table[key] = {k: table[key][k] for k in sorted(table[key], key=sort_key)}
         else:

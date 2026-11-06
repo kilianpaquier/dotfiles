@@ -5,6 +5,13 @@ import sys
 
 import tomlkit
 
+def lookup(table, path):
+    for key in path:
+        if not isinstance(table, dict) or key not in table:
+            return None
+        table = table[key]
+    return table
+
 def merge(table, wanted):
     for key, value in wanted.items():
         if isinstance(value, dict) and isinstance(table.get(key), dict):
@@ -18,16 +25,15 @@ def main():
 
     # remove unwanted keys from TOML file
     for *parents, key in json.loads(r'''{{ toJson .unset }}'''):
-        table = doc
-        for parent in parents:
-            table = table.get(parent, {})
-        table.pop(key, None)
+        table = lookup(doc, parents)
+        if table is not None:
+            table.pop(key, None)
 
     # re-append keys in order, tomlkit has no sort
     for path in json.loads(r'''{{ toJson .sort }}'''):
-        table = doc
-        for part in path:
-            table = table.get(part, {})
+        table = lookup(doc, path)
+        if table is None:
+            continue
         for key in sorted(table):
             table[key] = table.pop(key)
 

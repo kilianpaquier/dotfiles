@@ -2,6 +2,9 @@
 
 set -e
 
+# systemd: {{ if stat "/run/systemd/system" }}running{{ else }}off{{ end }}
+# sourced scripts: {{ list (include "scripts/log.sh") (include "scripts/pkg.sh") (include "scripts/sudo.sh") | join "" | sha256sum }}
+
 # shellcheck disable=SC1091
 [ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
 
@@ -11,17 +14,35 @@ set -e
 # shellcheck disable=SC1091
 . "{{ .chezmoi.sourceDir }}/scripts/pkg.sh"
 
+# shellcheck disable=SC1091
+. "{{ .chezmoi.sourceDir }}/scripts/sudo.sh"
+
 # root-only setup home-manager cannot own: system daemons and host identity
 
 {{- if and (eq .machine.kind "desktop") (eq .profile "home") }}
 
 # PC/SC daemon for yubioath-flutter
-pkg_install pcscd pcsc-lite pcsclite
-if [ -d /run/systemd/system ]; then
-  sudo systemctl enable --now pcscd.socket
-else
-  warn "systemd isn't running, skipping pcscd socket activation"
-fi
+pcscd() {
+  if [ ! -d /run/systemd/system ]; then
+    warn "systemd isn't running, skipping pcscd socket activation"
+    return 0
+  fi
+
+  # is-enabled also fails while the package is missing
+  if systemctl is-enabled --quiet pcscd.socket 2>/dev/null; then
+    return 0
+  fi
+
+  if ! pkg_install pcscd pcsc-lite pcsclite; then
+    warn "pcscd is missing, yubioath-flutter can't reach the YubiKey, install pcscd (apt), pcsc-lite (dnf) or pcsclite (pacman) as root"
+    return 0
+  fi
+
+  if ! sudo_run systemctl enable --now pcscd.socket; then
+    warn "pcscd.socket isn't enabled, yubioath-flutter can't reach the YubiKey, run as root: systemctl enable --now pcscd.socket"
+  fi
+}
+pcscd
 {{- end }}
 
 {{- if gt (len .container.runtimes) 0 }}
@@ -36,11 +57,29 @@ fi
 
 {{- if contains "microsoft" (.chezmoi.kernel.osrelease | lower) }}
 
-pkg_install dbus-user-session - dbus
-pkg_install openssh-client openssh-clients openssh
-pkg_install uidmap shadow-utils shadow
-sudo tee /etc/wsl.conf >/dev/null <<'EOF'
+pkg_install dbus-user-session - dbus ||
+  warn "D-Bus user session is missing, gopass secret-service (gh, glab, registry logins) can't run, install dbus-user-session (apt) or dbus (pacman) as root"
+pkg_install openssh-client openssh-clients openssh ||
+  warn "OpenSSH client is missing, SSH keys and SSH commit signing don't work, install openssh-client (apt), openssh-clients (dnf) or openssh (pacman) as root"
+pkg_install uidmap shadow-utils shadow ||
+  warn "uidmap is missing, rootless containers can't start, install uidmap (apt), shadow-utils (dnf) or shadow (pacman) as root"
+
+wsl_config() {
+  wsl_conf=$(cat <<'EOF'
 {{ includeTemplate "wsl.conf.tmpl" . | trim }}
 EOF
-info "wsl.conf updated, run 'wsl.exe --shutdown' from Windows and reopen this distro to apply"
+)
+
+  if [ "$(cat /etc/wsl.conf 2>/dev/null)" = "$wsl_conf" ]; then
+    return 0
+  fi
+
+  if ! sudo_write /etc/wsl.conf "$wsl_conf"; then
+    warn "/etc/wsl.conf differs from .chezmoitemplates/wsl.conf.tmpl, without its systemd = true no user service runs (docker, gopass agents, resource limits), write it as root"
+    return 0
+  fi
+
+  info "wsl.conf updated, run 'wsl.exe --shutdown' from Windows and reopen this distro to apply"
+}
+wsl_config
 {{- end }}

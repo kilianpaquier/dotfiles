@@ -7,6 +7,9 @@ set -e
 # shellcheck disable=SC1091
 . "$(dirname "$0")/log.sh"
 
+# shellcheck disable=SC1091
+. "$(dirname "$0")/sudo.sh"
+
 env="$HOME/.local/state/chezmoi/env"
 single="$HOME/.nix-profile/etc/profile.d/nix.sh"
 multi=/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
@@ -17,6 +20,16 @@ nix_installer="https://releases.nixos.org/nix/nix-$nix_version/install"
 
 # a pre-existing multi-user nix must not trigger the single-user installer
 if [ ! -f "$single" ] && [ ! -f "$multi" ]; then
+  # the single-user installer only calls sudo itself when /nix is missing
+  if [ ! -d /nix ]; then
+    if ! sudo_run mkdir /nix; then
+      error "/nix can't be created, run as root: mkdir /nix && chown $USER /nix"
+    fi
+    if ! sudo_run chown "$USER" /nix; then
+      error "/nix isn't owned by $USER, run as root: chown $USER /nix"
+    fi
+  fi
+
   if command -v curl >/dev/null 2>&1; then
     curl -fsSL "$nix_installer" | sh -s -- --no-daemon --no-modify-profile
   elif command -v wget >/dev/null 2>&1; then

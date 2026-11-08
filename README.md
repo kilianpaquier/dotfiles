@@ -102,11 +102,9 @@ Any tool you add by hand stays put, machines can extend beyond the preset list.
 ## Machine kind
 
 The repository filters what's installed on a specific machine based on its kind:
-- `desktop`: shell and desktop apps
+- `desktop`: shell and desktop apps, always chosen on Windows
 - `workstation`: shell and dev tooling
-- `server`: shell, dev tooling, hostname and timezone
-
-*Windows machines are always desktops.*
+- `server`: shell, dev tooling, hostname and timezone, not offered on WSL
 
 ## Profile
 
@@ -374,7 +372,7 @@ Run the installs a task needs yourself beforehand, such as `go mod tidy`, `bun i
 
 ### Servers
 
-On a `server` machine kind, the setup also changes the OS configuration, which needs `sudo`:
+On a `server` machine kind, the setup also changes the OS configuration:
 - The hostname is set from `machine.name`.
 - The timezone is set from `machine.timezone`.
 
@@ -398,7 +396,7 @@ Without it, the distro disk can grow up to 1TB and fill the Windows drive, while
 
 Keep in mind that:
 - Either file only takes effect after `wsl.exe --shutdown` from Windows and reopening the distro.
-- Applying inside the distro asks for your `sudo` password, to write `/etc/wsl.conf` and to install the following packages:
+- Applying inside the distro asks for your `sudo` password, to write `/etc/wsl.conf`, to link the GPU drivers and to install the following packages:
   - D-Bus user session (for **gopass** keyring service)
   - OpenSSH client (for SSH key generation and usage)
   - UID and GID mapping tools, `uidmap` on Debian (for rootless containers)

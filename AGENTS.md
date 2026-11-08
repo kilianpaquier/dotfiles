@@ -7,17 +7,18 @@ Paths below are relative to it, except `symlinks/` and repo-root files.
 The [README.md](README.md) explains the setup to users.
 Read it when a task touches prompts, tool bundles, desktop apps or agent components, which it lists in tables.
 
+## Before changing anything
+
+- Check the upstream standard first (man pages, official docs, Context7), and follow the mechanism it documents for the task.
+- Check how sibling files already solve the same problem (checks, warnings, layout), and match them.
+- Only propose a workaround when neither gives an answer, and say so.
+
 ## Where things go
 
 - Linux packages go in `private_dot_config/home-manager/home.nix.tmpl`, with attrs from `nixpkgs-unstable` only.
 - Dev tools go in a mise bundle, see [Keep in sync](#keep-in-sync).
-- Shell rc files and `local.nix` live in `symlinks/` at the repo root, and chezmoi links them into `$HOME`.
 - A config file that a tool also writes gets a `modify_*.py.tmpl` calling a merge script from `.chezmoitemplates/scripts/`.
 - The values a `modify_` script enforces live in a `*.partial.json` next to it, or in a dict inside the script.
-- A file only the user fills in (secrets, kube config) gets the `create_` prefix, so chezmoi never overwrites it.
-- A target holding credentials or tokens gets the `private_` prefix.
-- Remote archives (agent rules, zsh4humans) go in `.chezmoiexternals/`.
-- Windows apps go in `.chezmoitemplates/windows/winget-sync.ps1`, other Windows setup in `.chezmoiscripts/windows/`.
 
 ## home-manager or chezmoi script
 
@@ -26,12 +27,10 @@ The chezmoi scripts own the rest: `sudo`, passphrase prompts, tools outside nix,
 
 Two scripts sit outside that split, the root-only system setup and the bootstrap hook.
 
-- Root-only steps (pcscd, rootless containers, server identity, `/etc/wsl.conf`) go in `.chezmoiscripts/linux/run_onchange_after_00-system-config.sh.tmpl`.
-- Install a system package there with `pkg_install <apt> <dnf> <pacman>` from `scripts/pkg.sh`, never a direct `apt-get`.
-- Pass `-` to `pkg_install` for a distro that needs no package.
+- Root-only steps go in `.chezmoiscripts/linux/run_onchange_after_00-system-config.sh.tmpl`.
+- Install a system package there with `pkg_install`, never a direct `apt-get`.
 - The `scripts/bootstrap.sh` script is the `read-source-state` pre hook, so it runs before every chezmoi command and must exit fast once its work is done.
-- The bootstrap installs nix, home-manager and a GC-rooted env at `~/.local/state/chezmoi/env` (jq, python with tomlkit).
-- That env lets `modify_*.py.tmpl` render on a fresh machine.
+- Its GC-rooted env at `~/.local/state/chezmoi/env` lets `modify_*.py.tmpl` render on a fresh machine.
 
 ## Removing paths
 
@@ -44,11 +43,8 @@ The right file depends on whether chezmoi ever managed the path.
 
 ## Scripts
 
-- Name every script `run_onchange_after_<NN>-<name>`.
-- Only `run_after_70-restrict-permissions.sh` runs on every apply, because tools loosen permissions whenever they write.
 - Add a date stamp comment only when upstream drifts on its own (mise tools, agent plugins, winget).
 - A script depending on a file outside its body puts that file's `sha256sum` in a comment, so `run_onchange_` sees changes.
-- Start a script like its siblings: `#!/bin/sh`, `set -e`, then source `$HOME/.profile` and `scripts/log.sh`.
 
 ### Fragments
 
@@ -59,15 +55,12 @@ Embedding keeps it inside the script, so `run_onchange_` tracks it and `diff.scr
 - Embed a fragment that reads chezmoi data with `{{ includeTemplate "<os>/<name>" . | trim }}`.
 - Skip the `template` action for fragments, as it can't be piped to `trim`.
 - A fragment runs in the parent's shell with the parent's options, so it has no shebang and no `set`.
-- Start a shell fragment with `# shellcheck shell=sh`.
 - Add the `.tmpl` suffix only when the template syntax breaks shellcheck.
 - Guard a fragment's body with `if` instead of calling `exit`, which would end the parent.
-- `info`, `warn` and `error` come from `scripts/log.sh`, which the parent sources.
 
 ## Agent plugins
 
-- `.chezmoitemplates/plugins.json.tmpl` lists every plugin with the condition that enables it.
-- Set a dropped plugin to `false`, because the sync uninstalls `false` entries and leaves deleted ones installed.
+Set an unselected plugin to `false` in `.chezmoitemplates/plugins.json.tmpl`, because the sync uninstalls `false` entries and leaves deleted ones installed.
 
 ## Keep in sync
 
@@ -92,16 +85,13 @@ Embedding keeps it inside the script, so `run_onchange_` tracks it and `diff.scr
 
 ## Checks
 
-- Run `shellcheck` on each changed shell script without the `.tmpl` suffix.
-- Render a changed template with `chezmoi execute-template < <file>`.
-- Check a rendered shell template with `chezmoi execute-template < <file> | shellcheck -s sh -`.
-- pre-commit (gitleaks, whitespace) runs on every commit and in CI.
+Run `shellcheck` on each changed shell script without the `.tmpl` suffix.
 
 ## Boundaries
 
-- Read-only chezmoi commands are fine: `cat`, `data`, `diff`, `execute-template`, `managed`.
+- Read-only chezmoi commands are fine: `cat`, `data`, `diff`, `managed`.
 - Every chezmoi command runs `scripts/bootstrap.sh` first, which installs nix on a machine without it.
-- Never run `apply`, `init`, `update` or any other command that changes state, unless asked.
+- Never run `apply`, `init`, `update`, `execute-template` or any other command that changes state, unless asked.
 
 ## References
 

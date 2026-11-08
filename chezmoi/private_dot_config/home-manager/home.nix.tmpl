@@ -62,10 +62,11 @@
   # GPU libraries for nix graphical applications on a non-NixOS host
   targets.genericLinux.enable = true;
 
-  # linked before checkExistingGpuDrivers so its warning stays quiet
+  # linked before checkExistingGpuDrivers, which prints the root command when the link fails
   home.activation.linkGpuDrivers = lib.hm.dag.entryBefore [ "checkExistingGpuDrivers" ] ''
     if [[ "$(readlink /run/opengl-driver || true)" != "${config.targets.genericLinux.gpu.drivers}" ]]; then
-      run /usr/bin/sudo -n ${lib.getExe config.targets.genericLinux.gpu.setupPackage} || warnEcho "GPU drivers aren't linked, run as root: ${lib.getExe config.targets.genericLinux.gpu.setupPackage}"
+      # no -n since empty passwords would be refused
+      run /usr/bin/sudo ${lib.getExe config.targets.genericLinux.gpu.setupPackage} || true
     fi
   '';
 {{- end }}

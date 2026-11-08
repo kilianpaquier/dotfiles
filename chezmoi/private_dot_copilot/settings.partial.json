@@ -148,5 +148,16 @@
     "effortLevel": "medium",
     "logLevel": "info",
     "remoteExport": false,
-    "respectGitignore": true
+    "respectGitignore": true,
+    "sandbox": {
+        "allowBypass": true,
+        "allowDevToolAccess": false,
+        "auth": {
+            "gh": true,
+            "git": true
+        },
+        "enabled": true,
+        "sandboxLspServers": true,
+        "sandboxMcpServers": true
+    }
 }

@@ -1,7 +1,8 @@
 # Agent local settings and instructions.
-.claude/settings.local.json
-.claude/worktrees/
-CLAUDE.local.md
+**/.claude/.cc-writes/
+**/.claude/settings.local.json
+**/.claude/worktrees/
+**/CLAUDE.local.md
 
 # Codegraph index.
 .codegraph/

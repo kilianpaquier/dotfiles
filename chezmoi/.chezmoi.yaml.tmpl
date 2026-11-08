@@ -6,7 +6,8 @@
 {{- $machine := "desktop" }}
 {{- $shell := "" }}
 {{- if ne .chezmoi.os "windows" }}
-  {{- $machine = promptChoiceOnce . "machine.kind" "What kind of machine is this (desktop: apps only, workstation: dev tooling, server: dev tooling + hostname/timezone)" $data.machines "workstation" }}
+  {{- $machines := (contains "microsoft" (.chezmoi.kernel.osrelease | lower)) | ternary (without $data.machines "server") $data.machines }}
+  {{- $machine = promptChoiceOnce . "machine.kind" "What kind of machine is this (desktop: apps only, workstation: dev tooling, server: dev tooling + hostname/timezone)" $machines "workstation" }}
   {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") "zsh" }}
 {{- else }}
   {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "git-bash" "powershell") "powershell" }}

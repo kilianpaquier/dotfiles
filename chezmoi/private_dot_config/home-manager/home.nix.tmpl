@@ -7,7 +7,7 @@
 {{- if gt (len .ai.runtimes) 0 }}{{- $packages = append $packages "apm-cli" }}{{- end }}
 {{- if has "claude" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "claude-code") }}{{- end }}
 {{- if has "codex" .ai.runtimes }}{{- $packages = append $packages "codex" }}{{- end }}
-{{- if has "copilot" .ai.runtimes }}{{- $packages = append $packages "github-copilot-cli" }}{{- end }}
+{{- if has "copilot" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "github-copilot-cli" "iptables" "slirp4netns") }}{{- end }}
 
 {{- if has "docker" .container.runtimes }}{{- $packages = concat $packages (list "docker" "passt") }}{{- end }}
 {{- if has "podman" .container.runtimes }}{{- $packages = concat $packages (list "podman" "podman-compose" "docker-compose") }}{{- end }}
@@ -30,21 +30,21 @@
   home.username = "{{ .chezmoi.username }}";
   home.homeDirectory = "{{ .chezmoi.homeDir }}";
 
-{{- if or (glob "/usr/share/wayland-sessions/*") (glob "/usr/share/xsessions/*") (stat "/mnt/wslg") }}
-
-  # GPU libraries for nix graphical applications on a non-NixOS host
-  targets.genericLinux.enable = true;
-
-  # linked before checkExistingGpuDrivers so its warning stays quiet
-  home.activation.linkGpuDrivers = lib.hm.dag.entryBefore [ "checkExistingGpuDrivers" ] ''
-    if [[ "$(readlink /run/opengl-driver || true)" != "${config.targets.genericLinux.gpu.drivers}" ]]; then
-      run /usr/bin/sudo ${lib.getExe config.targets.genericLinux.gpu.setupPackage} || warnEcho "failed to link the GPU drivers"
-    fi
-  '';
-{{- end }}
-
   # home-manager state version, all updates must be done carefully to avoid breakage
   home.stateVersion = "26.05";
+
+{{- if or (eq .machine.kind "desktop") (has "claude" .ai.runtimes) (has "copilot" .ai.runtimes) }}
+
+  # proprietary packages (claude-code, discord, github-copilot-cli, spotify, vscode) are refused by nixpkgs unless unfree is allowed.
+  nixpkgs.config.allowUnfree = true;
+{{- end }}
+
+  # packages to install
+  home.packages = with pkgs; [
+{{- range $packages | uniq | sortAlpha }}
+    {{ . }}
+{{- end }}
+  ];
 
   services.home-manager.autoUpgrade = {
     enable = true;
@@ -57,17 +57,17 @@
     options = "--delete-older-than 30d";
   };
 
-  # packages to install
-  home.packages = with pkgs; [
-{{- range $packages | sortAlpha }}
-    {{ . }}
-{{- end }}
-  ];
+{{- if or (glob "/usr/share/wayland-sessions/*") (glob "/usr/share/xsessions/*") (stat "/mnt/wslg") }}
 
-{{- if or (eq .machine.kind "desktop") (has "claude" .ai.runtimes) (has "copilot" .ai.runtimes) }}
+  # GPU libraries for nix graphical applications on a non-NixOS host
+  targets.genericLinux.enable = true;
 
-  # proprietary packages (claude-code, discord, github-copilot-cli, spotify, vscode) are refused by nixpkgs unless unfree is allowed.
-  nixpkgs.config.allowUnfree = true;
+  # linked before checkExistingGpuDrivers so its warning stays quiet
+  home.activation.linkGpuDrivers = lib.hm.dag.entryBefore [ "checkExistingGpuDrivers" ] ''
+    if [[ "$(readlink /run/opengl-driver || true)" != "${config.targets.genericLinux.gpu.drivers}" ]]; then
+      run /usr/bin/sudo -n ${lib.getExe config.targets.genericLinux.gpu.setupPackage} || warnEcho "GPU drivers aren't linked, run as root: ${lib.getExe config.targets.genericLinux.gpu.setupPackage}"
+    fi
+  '';
 {{- end }}
 
 {{- if gt (len .ai.runtimes) 0 }}

@@ -30,6 +30,7 @@
   - [Container runtimes](#container-runtimes)
   - [Credentials](#credentials)
   - [Agent components](#agent-components)
+  - [Agent sandboxes](#agent-sandboxes)
   - [Servers](#servers)
   - [WSL](#wsl)
 
@@ -353,6 +354,23 @@ Which ones are installed depends on the chosen runtime, the tools installed with
 | `schema-converter`          | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
 | `terraform-ls`              | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `terraform` in `tools.mise`, `claude` and `copilot` only |
 | `tofu-ls`                   | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `opentofu` in `tools.mise`, `claude` and `copilot` only  |
+
+### Agent sandboxes
+
+**Claude Code** and **Copilot** run their shell commands in a sandbox, which can read your machine but only write to the working directory,
+the **chezmoi** source directory, `~/workspaces` and the build caches of your dev tools.
+Each runtime comes with what its sandbox needs, installed by **home-manager**.
+
+A few commands need your SSH key, your keyring or your container runtime, which the sandbox can't reach, so they run outside it:
+- **Claude Code** runs `git`, `gh`, `glab`, `podman` and `docker` outside its sandbox, with no question asked.
+- **Copilot** asks you before running one of them outside its sandbox.
+
+Installing a tool is blocked, since a binary the agent plants would later run outside the sandbox.
+This makes `go install`, `npm install -g` and `mise install` fail.
+Run the installs a task needs yourself beforehand, such as `go mod tidy`, `bun i` or `pre-commit install-hooks`.
+
+> [!warning]
+> The sandbox doesn't hide your secrets file, since **mise** needs to read it, so the agents can see the tokens it holds.
 
 ### Servers
 

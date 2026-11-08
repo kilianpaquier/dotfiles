@@ -274,8 +274,44 @@
     "sandbox": {
         "allowUnsandboxedCommands": false,
         "autoAllowBashIfSandboxed": true,
-        "enabled": false,
-        "failIfUnavailable": true
+        "enabled": true,
+        "excludedCommands": [
+            "docker *",
+            "gh *",
+            "git *",
+            "glab *",
+            "podman *",
+            "rtk docker *",
+            "rtk gh *",
+            "rtk git *",
+            "rtk glab *",
+            "rtk podman *"
+        ],
+        "failIfUnavailable": true,
+        "filesystem": {
+            "allowRead": [
+                "~/.claude/projects"
+            ],
+            "allowWrite": [
+                "~/.cache/go",
+                "~/.cache/go-build",
+                "~/.cache/goimports",
+                "~/.cache/golangci-lint",
+                "~/.cache/gopls",
+                "~/.cache/hugo_cache",
+                "~/.cache/pip",
+                "~/.cache/pre-commit",
+                "~/.cache/typescript",
+                "~/.cache/uv",
+                "~/.cache/virtualenv",
+                "~/.claude/plans",
+                "~/.local/share/chezmoi",
+                "~/workspaces"
+            ],
+            "denyWrite": [
+                "~/.cache/go/bin"
+            ]
+        }
     },
     "showMessageTimestamps": true,
     "showTurnDuration": true,
@@ -288,6 +324,6 @@
     "viewMode": "focus",
     "worktree": {
         "baseRef": "head",
-        "bgIsolation": "worktree"
+        "bgIsolation": "none"
     }
 }

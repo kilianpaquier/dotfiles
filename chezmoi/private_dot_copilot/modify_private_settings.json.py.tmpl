@@ -6,8 +6,39 @@
 {{- end }}
 {{- $_ := set $set "enabledPlugins" $enabled_plugins }}
 
+{{- $_ := set $set.sandbox "userPolicy" (dict "filesystem" (dict
+  "readonlyPaths" (list
+    "/nix/store"
+    (printf "/run/user/%s/bus" .chezmoi.uid)
+    (joinPath .chezmoi.homeDir ".cache" "go" "bin")
+    (joinPath .chezmoi.homeDir ".config" "glab-cli")
+    (joinPath .chezmoi.homeDir ".config" "mise")
+    (joinPath .chezmoi.homeDir ".local" "share" "mise")
+    (joinPath .chezmoi.homeDir ".nix-profile"))
+  "readwritePaths" (list
+    (joinPath .chezmoi.homeDir ".cache" "go")
+    (joinPath .chezmoi.homeDir ".cache" "go-build")
+    (joinPath .chezmoi.homeDir ".cache" "goimports")
+    (joinPath .chezmoi.homeDir ".cache" "golangci-lint")
+    (joinPath .chezmoi.homeDir ".cache" "gopls")
+    (joinPath .chezmoi.homeDir ".cache" "hugo_cache")
+    (joinPath .chezmoi.homeDir ".cache" "pip")
+    (joinPath .chezmoi.homeDir ".cache" "pre-commit")
+    (joinPath .chezmoi.homeDir ".cache" "typescript")
+    (joinPath .chezmoi.homeDir ".cache" "uv")
+    (joinPath .chezmoi.homeDir ".cache" "virtualenv")
+    (joinPath .chezmoi.homeDir ".copilot" "session-state")
+    (joinPath .chezmoi.homeDir ".local" "share" "chezmoi")
+    (joinPath .chezmoi.homeDir "workspaces")))) }}
+
 {{- includeTemplate "scripts/json-merge.py" (dict
   "indent" 2
-  "override" (list (list "allowedUrls") (list "deniedUrls"))
+  "override" (list
+    (list "allowedUrls")
+    (list "deniedUrls")
+    (list "sandbox" "userPolicy" "filesystem" "readonlyPaths")
+    (list "sandbox" "userPolicy" "filesystem" "readwritePaths"))
   "set" $set
-  "sort" (list (list "enabledPlugins"))) }}
+  "sort" (list
+    (list "enabledPlugins")
+    (list "sandbox"))) }}

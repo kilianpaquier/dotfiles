@@ -4,6 +4,7 @@ disabled_allowlist = true
 
 [general]
 fail_closed = true
+self_heal_hook = false # the dcg@one-for-all plugin owns the hook registration
 unverified_decision = "ask"
 
 [history]
@@ -60,68 +61,89 @@ custom_paths = [
 [policy.rules]
 # severity: critical
 "chezmoi.exec:sudo-any" = "ask" # Any sudo command requires elevated privileges and human approval
+"chezmoi.remote:curl-wget" = "warn" # Prefer the WebFetch tool over curl and wget
 
 # severity: high
-"chezmoi.build_tools:go-exec" = "ask" # Runs code, fetches deps, generates files, clears a cache or writes the go env
-"chezmoi.build_tools:go-mod-write" = "ask" # Fetches dependencies or rewrites go.mod
 "chezmoi.build_tools:just-destructive" = "ask" # Destructive just target
 "chezmoi.build_tools:make-destructive" = "ask" # Destructive make target
 "chezmoi.build_tools:mise-run-destructive" = "ask" # Destructive mise task
 "chezmoi.build_tools:mvn-destructive" = "ask" # Publishes artifacts or wipes the local maven repository
 "chezmoi.build_tools:task-destructive" = "ask" # Destructive task target
-"chezmoi.devtools:chezmoi-mutating" = "ask" # Writes to the target machine, the source repo, or chezmoi's own config
-"chezmoi.exec:bash-script" = "ask" # Runs a shell script file
-"chezmoi.exec:deno-run" = "ask" # Runs a script or inline code
-"chezmoi.exec:node-script" = "ask" # Runs a script file
-"chezmoi.exec:perl-script" = "ask" # Runs a script file
-"chezmoi.exec:python-script" = "ask" # Runs a script file or a module
-"chezmoi.exec:relative-exec" = "ask" # Runs a local executable by relative path
-"chezmoi.exec:ruby-script" = "ask" # Runs a script file
-"chezmoi.exec:sh-script" = "ask" # Runs a shell script file
-"chezmoi.exec:source" = "ask" # Sources a shell script into the current shell
-"chezmoi.exec:zsh-script" = "ask" # Runs a shell script file
-"chezmoi.git:git-config-set" = "ask" # Writes git config through the legacy key value form
-"chezmoi.git:git-config-write" = "ask" # Writes git config through a flag or the set/unset verb
-"chezmoi.git:git-mutating" = "ask" # Changes refs, history or the working tree
-"chezmoi.git:git-stash-mutating" = "ask" # Creates, applies or clears a stash
+"chezmoi.containers:container-bind-host" = "ask" # Bind mounts a host directory other than the workspaces
+"chezmoi.containers:container-escape" = "ask" # Drops the isolation of the container from the host
+"chezmoi.containers:container-mount-host" = "ask" # Bind mounts a host directory other than the workspaces
+"chezmoi.devtools:chezmoi-mutating" = "ask" # Writes to the target machine, the source repo, or chezmoi's own config, or runs a command through chezmoi
+"chezmoi.filesystem:find-delete" = "ask" # Deletes what find selects
+"chezmoi.filesystem:rm-glob" = "ask" # Deletes a shell-chosen set of files
+"chezmoi.filesystem:rm-recursive" = "ask" # Deletes a directory tree
+"chezmoi.filesystem:shred" = "ask" # Overwrites a file so its content cannot be recovered
+"chezmoi.filesystem:xargs-rm" = "ask" # Deletes what xargs is fed
+"chezmoi.git:git-config-write" = "ask" # Writes git config
+"chezmoi.git:git-grep-pager" = "ask" # git grep opening matches in a command
+"chezmoi.git:git-history-write" = "ask" # Merges, rebases, cherry-picks, reverts or applies patches
+"chezmoi.git:git-mutating" = "ask" # Any other git verb that is not read-only
+"chezmoi.git:git-notes-write" = "ask" # Adds, edits or removes notes
+"chezmoi.git:git-output-file" = "ask" # Writes to a file chosen by the caller
+"chezmoi.git:git-ref-write" = "ask" # Creates, renames or deletes branches and tags
+"chezmoi.git:git-reflog-write" = "ask" # Deletes or expires reflog entries
+"chezmoi.git:git-remote-write" = "ask" # Adds, changes or removes remotes
+"chezmoi.git:git-stage-sync" = "ask" # Stages files, or fetches or pushes over the network
+"chezmoi.git:git-stash-write" = "ask" # Creates, applies or drops a stash
 "chezmoi.git:git-submodule-write" = "ask" # Fetches, rewires or runs code in submodules
+"chezmoi.git:git-transport-exec" = "ask" # Runs a command or writes outside the new tree through a clone, archive or ls-remote option
+"chezmoi.git:git-worktree-write" = "ask" # Adds, moves or removes worktrees
 "chezmoi.github:gh-api-write" = "ask" # gh api call with a mutating HTTP method, a request body or a GraphQL mutation
 "chezmoi.github:gh-mutating" = "ask" # Mutating gh subcommand
+"chezmoi.github:gh-token" = "ask" # Printing the gh token
 "chezmoi.gitlab:glab-api-write" = "ask" # glab api call with a mutating HTTP method, a request body or a GraphQL mutation
 "chezmoi.gitlab:glab-mutating" = "ask" # Mutating glab subcommand
+"chezmoi.gitlab:glab-token" = "ask" # Printing the glab token
 "chezmoi.gopass:gopass-mutating" = "ask" # Mutating gopass subcommand
+"chezmoi.gopass:gopass-read" = "ask" # Prints a secret into the output
 "chezmoi.package_managers:bun-run-destructive" = "ask" # Destructive package script
-"chezmoi.package_managers:bun-script" = "ask" # Runs inline code or a script file dcg cannot inspect
 "chezmoi.package_managers:bun-write" = "ask" # Mutates bun dependencies or registry state
+"chezmoi.package_managers:cargo-write" = "ask" # Installs, removes or publishes rust crates
+"chezmoi.package_managers:gem-write" = "ask" # Installs, removes or publishes ruby gems
+"chezmoi.package_managers:go-env-write" = "ask" # Writes the go env file
+"chezmoi.package_managers:go-install-get" = "ask" # Installs a binary or fetches a dependency
+"chezmoi.package_managers:go-mod-write" = "ask" # Fetches dependencies or rewrites go.mod
+"chezmoi.package_managers:mise-write" = "ask" # Installs, upgrades or removes mise tools, or changes mise settings and trust
+"chezmoi.package_managers:nix-write" = "ask" # Installs, builds or removes nix packages
 "chezmoi.package_managers:npm-run-destructive" = "ask" # Destructive package script
 "chezmoi.package_managers:npm-write" = "ask" # Mutates npm dependencies
+"chezmoi.package_managers:pip-write" = "ask" # Installs, removes or downloads python packages
+"chezmoi.package_managers:pipx-write" = "ask" # Installs, removes or upgrades pipx applications
 "chezmoi.package_managers:pnpm-run-destructive" = "ask" # Destructive package script
 "chezmoi.package_managers:pnpm-write" = "ask" # Mutates pnpm dependencies
-"chezmoi.package_managers:uv-run" = "ask" # Runs a script or command in the project environment
-# "chezmoi.remote:curl-output" = "ask" # curl writing fetched content, headers or cookies to a local file
-# "chezmoi.remote:wget-output" = "ask" # wget writing fetched content to a local file (wget's default behavior)
-"chezmoi.filesystem:awk-redirect" = "ask" # awk writing a file or piping to a command
-"chezmoi.filesystem:awk-system" = "ask" # awk running a command or a program file dcg cannot inspect
-"chezmoi.filesystem:cp" = "ask" # Copies a file, can overwrite the destination silently
-"chezmoi.filesystem:mv" = "ask" # Moves a file, can overwrite the destination silently
-"chezmoi.filesystem:rm-plain" = "ask" # Deletes a file
-"chezmoi.filesystem:sed-inplace" = "ask" # Edits a file in place
+"chezmoi.package_managers:uv-run" = "ask" # Runs a script or command in the project environment, after syncing it
+"chezmoi.package_managers:uv-write" = "ask" # Changes the uv project, its environment, its tools or its interpreters
+
+# severity: medium
+"chezmoi.build_tools:just-run" = "log" # Runs a justfile recipe
+"chezmoi.build_tools:make-run" = "log" # Runs a Makefile target
+"chezmoi.build_tools:mise-run" = "log" # Runs a mise task
+"chezmoi.build_tools:mvn-run" = "log" # Runs a maven phase or goal
+"chezmoi.build_tools:task-run" = "log" # Runs a Taskfile task
 
 # severity: critical
+"core.filesystem:rm-recursive-root-home" = "ask" # recursive rm targeting a root, home, or absolute system path is EXTREMELY DANGEROUS, even without --force.
 "infrastructure.ansible:shell-rm-rf" = "ask" # Ansible shell/command with 'rm -rf' is destructive. Review carefully.
 "kubernetes.helm:uninstall" = "ask" # helm uninstall removes the release and all its resources. Use --dry-run first.
 "remote.ssh:ssh-remote-rm-rf" = "ask" # SSH remote execution contains destructive rm -rf command.
 
 # severity: high
 "core.filesystem:mv-dynamic-path" = "ask" # mv with a shell-expanded or escaped path cannot be verified before execution.
+"core.filesystem:redirect-truncate-dynamic-path" = "log" # shell redirect to a dynamic or escaped path may truncate a sensitive file and requires human approval.
 "core.filesystem:rm-glob-home" = "ask" # rm with an unexpanded glob under a home directory deletes an unbounded, shell-chosen file set and requires human approval.
 "core.filesystem:rm-r-f-separate" = "ask" # rm with separate -r -f flags is destructive and requires human approval.
 "core.filesystem:rm-recursive-force-long" = "ask" # rm --recursive --force is destructive and requires human approval.
+"core.filesystem:rm-recursive-general" = "ask" # recursive rm can silently remove an entire writable directory tree and requires human approval, even without --force.
 "core.filesystem:rm-rf-general" = "ask" # rm -rf is destructive and requires human approval. Explain what you want to delete and why, then ask the user to run the command manually.
 "core.filesystem:sed-exec-unverified" = "ask" # GNU sed executes shell input that dcg cannot statically verify.
 "core.filesystem:tar-remove-files-general" = "ask" # tar --remove-files deletes source paths after archiving and requires human approval.
 "core.filesystem:truncate-zero-general" = "ask" # truncate with an absolute or shrinking size can destroy file content and requires human approval.
 "core.filesystem:unlink-general" = "ask" # unlink is destructive (POSIX equivalent of rm on a single file) and requires human approval.
+"core.git:checkout-ref-discard" = "ask" # git checkout <ref> -- <path> overwrites working tree. Use 'git stash' first.
 "database.mongodb:stdin-unverified" = "ask" # mongosh receives indirect input that dcg cannot statically verify.
 "database.mysql:stdin-unverified" = "ask" # mysql/mariadb receives indirect input that dcg cannot statically verify.
 "database.postgresql:pg-dump-clean" = "ask" # pg_dump --clean drops objects before creating them. This can be destructive on restore.
@@ -129,6 +151,8 @@ custom_paths = [
 "database.redis:stdin-unverified" = "ask" # redis-cli receives indirect input that dcg cannot statically verify.
 "database.sqlite:sqlite3-stdin" = "ask" # Running SQL from file could contain destructive commands. Review the file first.
 "database.sqlite:stdin-unverified" = "ask" # sqlite3 receives indirect input that dcg cannot statically verify.
+"heredoc.posix:inline-launcher-unverified" = "ask" # Inline interpreter launcher cannot be statically verified: a dynamically assembled executable is followed by an inline-code flag
+"heredoc.posix:substitution-unverified" = "ask" # ambiguous command substitution could not be parsed as POSIX shell syntax
 "infrastructure.ansible:playbook-all-hosts" = "ask" # ansible-playbook without --check or --limit may affect all hosts. Use --check first.
 "infrastructure.ansible:shell-reboot" = "ask" # Ansible shell/command with reboot/shutdown affects system availability.
 "kubernetes.helm:rollback" = "ask" # helm rollback reverts to a previous release. Use --dry-run to preview changes.

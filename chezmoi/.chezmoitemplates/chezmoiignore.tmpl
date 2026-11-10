@@ -28,6 +28,10 @@
 .config/containers
 {{- end }}
 
+{{- if not (has "agentsview" .tools.mise) }}
+.agentsview
+{{- end }}
+
 {{- if or (eq (len .ai.runtimes) 0) (not (has "boost" .tools.mise)) }}
 .boost
 {{- end }}

@@ -13,6 +13,7 @@ default_container_runtimes:
 
 tools:
   mise:
+    - agentsview
     - boost
     - bun
     - codegraph
@@ -38,6 +39,7 @@ tools:
     - uv
 default_tools:
   home:
+    - agentsview
     - bun
     - codegraph
     - context7
@@ -57,6 +59,7 @@ default_tools:
     - shell
     - uv
   soprasteria:
+    - agentsview
     - codegraph
     - context7
     - destructive-command-guard

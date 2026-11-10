@@ -9,6 +9,7 @@ trusted_config_paths = ["~/workspaces", "~/.local/share/chezmoi", "~/.local/shar
 shell_out = true
 
 [tool_alias]
+agentsview = "github:kenn-io/agentsview"
 bash-language-server = "npm:bash-language-server"
 codebase-memory-mcp = "github:DeusData/codebase-memory-mcp[matching=codebase-memory-mcp-ui]"
 codegraph = "github:colbymchenry/codegraph"
@@ -39,6 +40,8 @@ plumber = "github:getplumber/plumber"
 tofu-ls = "github:opentofu/tofu-ls"
 
 [env]
+AGENTSVIEW_TELEMETRY_ENABLED = "0"
 CAVEMAN_DEFAULT_MODE = "caveman"
+DO_NOT_TRACK = "1"
 MEMPALACE_HOOKS_AUTO_SAVE = "false"
 PONYTAIL_DEFAULT_MODE = "ultra"

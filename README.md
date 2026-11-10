@@ -250,6 +250,7 @@ The following tools are always installed without capability to skip them: age, c
 
 | Bundle                      | Installs                                          | Home profile defaults | Sopra Steria profile defaults |
 | --------------------------- | ------------------------------------------------- | --------------------- | ----------------------------- |
+| `agentsview`                | agentsview                                        | x                     | x                             |
 | `boost`                     | jfrog-boost                                       | x                     | x                             |
 | `bun`                       | bun                                               | x                     |                               |
 | `codegraph`                 | codegraph                                         | x                     | x                             |

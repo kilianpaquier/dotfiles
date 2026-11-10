@@ -99,6 +99,18 @@
   };
 {{- end }}
 
+{{- if has "agentsview" .tools.mise }}
+
+  systemd.user.services.agentsview = {
+    Install.WantedBy = [ "default.target" ];
+    Service = {
+      ExecStart = "%h/.local/share/mise/shims/agentsview serve --no-browser";
+      Restart = "on-failure";
+      RestartSec = 30;
+    };
+  };
+{{- end }}
+
 {{- if ne .machine.kind "desktop" }}
 
   systemd.user.services.gopass-age-agent = {

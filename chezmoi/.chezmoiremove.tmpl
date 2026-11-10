@@ -29,10 +29,6 @@
 .local/state/mise
 {{- end }}
 
-{{- if not (has "boost" .tools.mise) }}
-.local/share/boost
-{{- end }}
-
 {{- if not (has "bun" .tools.mise) }}
 .bun
 {{- end }}

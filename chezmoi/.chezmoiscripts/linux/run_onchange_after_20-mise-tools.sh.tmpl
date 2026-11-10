@@ -16,10 +16,6 @@ set -e
 
 {{ include ".chezmoitemplates/linux/rtk-hooks-uninstall.sh" | trim }}
 {{- end }}
-{{- if not (has "boost" .tools.mise) }}
-
-{{ include ".chezmoitemplates/linux/boost-hooks-uninstall.sh" | trim }}
-{{- end }}
 
 # run every step regardless so a single broken tool doesn't also skip pruning,
 # reshimming and the hooks of the ones that succeeded.
@@ -32,11 +28,6 @@ mise reshim --force -y || status=$?
 {{- if has "rtk" .tools.mise }}
 
 {{ includeTemplate "linux/rtk-hooks-install.sh.tmpl" . | trim }}
-{{- end }}
-
-{{- if has "boost" .tools.mise }}
-
-{{ includeTemplate "linux/boost-hooks-install.sh.tmpl" . | trim }}
 {{- end }}
 
 exit "$status"

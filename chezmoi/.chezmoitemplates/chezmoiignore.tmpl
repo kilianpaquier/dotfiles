@@ -32,10 +32,6 @@
 .agentsview
 {{- end }}
 
-{{- if or (eq (len .ai.runtimes) 0) (not (has "boost" .tools.mise)) }}
-.boost
-{{- end }}
-
 {{- if or (eq (len .ai.runtimes) 0) (not (has "codegraph" .tools.mise)) }}
 .codegraph
 {{- end }}

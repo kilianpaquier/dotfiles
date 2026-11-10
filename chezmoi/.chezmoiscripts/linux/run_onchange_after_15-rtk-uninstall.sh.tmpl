@@ -1,6 +1,13 @@
-# shellcheck shell=sh
+#!/bin/sh
 
-# a runtime never selected has no hook marker, so no runtime condition is needed
+set -e
+
+# rtk selected: {{ has "rtk" .tools.mise }}
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+# hooks go before mise prunes the binary, a runtime never selected has no marker to match
 if command -v rtk >/dev/null 2>&1; then
   ! grep -qs 'rtk hook claude' "$HOME/.claude/settings.json" || rtk init -g --uninstall --auto-patch
   ! grep -qs 'rtk hook codex' "$HOME/.codex/hooks.json" || rtk init -g --uninstall --codex

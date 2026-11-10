@@ -1,0 +1,7 @@
+{{- $extends := list "rtk:posthook" }}
+{{- if not (has "cave-talk" .ai.plugins) }}{{- $extends = append $extends "rtk:terse" }}{{- end -}}
+
+schema_version = 1
+
+[pipeline]
+extends = {{ $extends | uniq | sortAlpha | toJson }}

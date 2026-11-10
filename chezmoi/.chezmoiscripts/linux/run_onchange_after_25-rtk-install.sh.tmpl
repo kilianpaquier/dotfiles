@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+# rtk selected: {{ has "rtk" .tools.mise }}
+# rtk config: {{ list (include "private_dot_config/rtk/config.toml") (includeTemplate "private_dot_config/rtk/pipeline.toml.tmpl" .) | join "" | sha256sum }}
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+# init is idempotent, and rewrites the hooks and the awareness text from the config above
+{{- if has "claude" .ai.runtimes }}
+rtk init -g --auto-patch
+{{- end }}
+{{- if has "codex" .ai.runtimes }}
+rtk init -g --codex
+{{- end }}
+{{- if has "copilot" .ai.runtimes }}
+rtk init -g --copilot --auto-patch
+{{- end }}

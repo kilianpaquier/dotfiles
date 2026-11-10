@@ -1,5 +1,5 @@
 [awareness]
-level = "full"
+level = "high"
 
 [hooks]
 exclude_commands = []

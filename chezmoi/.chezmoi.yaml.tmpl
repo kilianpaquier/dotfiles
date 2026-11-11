@@ -56,6 +56,7 @@
 {{- $email := "" }}
 {{- $git_ssh := false }}
 {{- $plugins := list }}
+{{- $rules := dig "ai" "rules" true . }}
 {{- $tools_management := list }}
 {{- if $dev }}
   {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
@@ -119,8 +120,9 @@ interpreters:
 
 data:
   ai:
-    runtimes:{{ $agent_runtimes | toYaml | trim | nindent 6 }}
     plugins:{{ $plugins | toYaml | trim | nindent 6 }}
+    rules: {{ $rules }}
+    runtimes:{{ $agent_runtimes | toYaml | trim | nindent 6 }}
   container:
     engine: {{ $container_engine }}
     runtimes:{{ $container_runtimes | toYaml | trim | nindent 6 }}

@@ -1,6 +1,6 @@
 {{- $url := "https://github.com/kilianpaquier/agent-rules/archive/refs/heads/main.tar.gz" }}
 {{- with env "GITHUB_TOKEN" }}{{ $url = replace "https://" (printf "https://x-access-token:%s@" .) $url }}{{ end }}
-{{- if has "claude" .ai.runtimes }}
+{{- if and .ai.rules (has "claude" .ai.runtimes) }}
 .claude/rules:
   type: archive
   url: {{ $url | quote }}
@@ -9,7 +9,7 @@
   stripComponents: 3
   refreshPeriod: 24h
 {{- end }}
-{{- if has "copilot" .ai.runtimes }}
+{{- if and .ai.rules (has "copilot" .ai.runtimes) }}
 .copilot/instructions:
   type: archive
   url: {{ $url | quote }}

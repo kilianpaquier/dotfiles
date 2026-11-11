@@ -306,7 +306,15 @@
         "failIfUnavailable": true,
         "filesystem": {
             "allowRead": [
-                "~/.claude/projects"
+                "~/.claude/CLAUDE.md",
+                "~/.claude/RTK.md",
+                "~/.claude/agents",
+                "~/.claude/commands",
+                "~/.claude/hooks",
+                "~/.claude/plugins",
+                "~/.claude/projects",
+                "~/.claude/rules",
+                "~/.claude/skills"
             ],
             "allowWrite": [
                 "~/.cache/go",

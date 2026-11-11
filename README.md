@@ -387,12 +387,12 @@ The latter needs the dotfiles installed on Windows too, with the `wsl` prompt se
 
 Without it, the distro disk can grow up to 1TB and fill the Windows drive, while with it the setup:
 - Caps the disk at 60GB
-- Limits the distro to half of the host processors (rounded up)
+- Limits the distro to 75% of the host processors (rounded up)
 - Hands unused memory back to Windows gradually
 
 | File         | Location                  | Scope               | Sets                                                                                                       |
 | ------------ | ------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | Half of the host `memory` and `processors`, `swap=8GB`, `defaultVhdSize=60GB`, `autoMemoryReclaim=gradual` |
+| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | `memory` at half, `processors` at 75%, `swap=8GB`, `defaultVhdSize=60GB`, `autoMemoryReclaim=gradual`      |
 | `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount`, `interop` and `appendWindowsPath` off, `systemd` on, `hostname` from `machine.name`           |
 
 Keep in mind that:

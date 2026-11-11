@@ -341,6 +341,7 @@ Which ones are installed depends on the chosen runtime, the tools installed with
 | `exam-drill`                | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
 | `feature-dev`               | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
 | `find-skills`               | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)                                      | always                                                   |
+| `go`                        | Skills             | [spf13/go-skills](https://github.com/spf13/go-skills)                                            | `go` in `tools.mise`                                     |
 | `gopls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `go` in `tools.mise`, `claude` and `copilot` only        |
 | `grill-me`, `grilling`      | Skills             | [mattpocock/skills](https://github.com/mattpocock/skills)                                        | always                                                   |
 | `humanizer`                 | Skills             | [humanizer](https://github.com/blader/humanizer)                                                 | `humanizer` in `ai.plugins`                              |

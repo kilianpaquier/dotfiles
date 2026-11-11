@@ -36,6 +36,12 @@
                 "source": "github"
             }
         },
+        "go-skills": {
+            "source": {
+                "repo": "spf13/go-skills",
+                "source": "github"
+            }
+        },
         "humanizer": {
             "source": {
                 "ref": "v3.1.0",

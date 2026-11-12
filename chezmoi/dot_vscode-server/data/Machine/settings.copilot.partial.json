@@ -121,7 +121,6 @@
         "https://www.skills.sh": true
     },
     "github.copilot.enable": {
-        "*": true,
         "dotenv": false,
         "http": false,
         "markdown": true,

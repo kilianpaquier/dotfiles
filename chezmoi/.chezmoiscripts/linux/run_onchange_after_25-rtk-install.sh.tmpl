@@ -3,7 +3,9 @@
 set -e
 
 # rtk selected: {{ has "rtk" .tools.mise }}
-# rtk config: {{ list (include "private_dot_config/rtk/config.toml") (includeTemplate "private_dot_config/rtk/pipeline.toml.tmpl" .) | join "" | sha256sum }}
+# rtk config: {{ list
+  (include "private_dot_config/rtk/config.toml")
+  (includeTemplate "private_dot_config/rtk/pipeline.toml.tmpl" .) | join "" | sha256sum }}
 
 # shellcheck disable=SC1091
 [ ! -f "$HOME/.profile" ] || . "$HOME/.profile"

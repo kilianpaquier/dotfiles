@@ -78,9 +78,9 @@ sh -c "$(wget -qO- https://get.chezmoi.io)" -- -b $HOME/.local/bin init --branch
 > The install needs these tools, and the package providing each depends on the distribution.
 >
 > - **curl** or **wget**
-> - **ssh-keygen**, from `openssh-client`, `openssh-clients` or `openssh` (package name depends on the distribution)
+> - **ssh-keygen**, from `openssh-client`, `openssh-clients` or `openssh`
 > - **sudo**, to create `/nix` and for the root-only steps of the [deep dive](#deep-dive)
-> - **xz**, from `xz-utils` or `xz` (package name depends on the distribution)
+> - **xz**, from `xz-utils` or `xz`
 
 ### Windows
 
@@ -157,7 +157,7 @@ Two particularities:
 - `zsh` is always enriched with [zsh4humans](https://github.com/romkatv/zsh4humans)
 
 Shell 'rc' files are configured as symlinks since they are the most susceptible ones to be modified per user preferences.
-Having symlinks is as such convenient since **chezmoi** will not detect drift and use **git** to apply changes (stash > pull > stash pop).
+Having symlinks is as such convenient since **chezmoi** will not detect drift and use **git** to apply changes.
 
 Below the list of shell files configuration and what they bring to the table.
 
@@ -226,7 +226,7 @@ you would most likely want some applications to be installed, the repository ext
 
 > [!note]
 > On Linux, `sudo` is asked for your password to install the `pcscd` package with the system package manager,
-> and to link the GPU drivers that nix apps need on any OS that can display a GUI (an installed Wayland or X11 session, or WSLg).
+> and to link the GPU drivers.
 
 ### Tooling
 
@@ -235,7 +235,7 @@ The next apply reconciles them with your **chezmoi** configuration, so a tool yo
 Anything you installed by hand with **mise** stays, unless **chezmoi** manages it.
 
 Secrets such as `GITLAB_TOKEN` go in the `[env]` table of `~/.config/mise/conf.d/00-secrets.toml`,
-which **chezmoi** creates empty with mode 0600 and never overwrites.
+which **chezmoi** creates empty and never overwrites.
 Either paste the value directly, or read it from **gopass** when the store should stay the only place holding it.
 
 ```toml
@@ -261,10 +261,10 @@ The following tools are always installed without capability to skip them: age, c
 | `go`                        | go, golangci-lint                                 | x                     | x                             |
 | `hugo`                      | dart-sass, hugo-extended                          | x                     | x                             |
 | `incus`                     | incus                                             | x                     |                               |
-| `java`                      | java (LTS), jdtls, maven                          |                       | x                             |
+| `java`                      | java (LTS), maven                                 |                       | x                             |
 | `just`                      | just                                              | x                     |                               |
 | `k8s`                       | helm, helm-ct, helmfile, krew, kubectl, kustomize | x                     | x                             |
-| `kotlin`                    | kotlin, kotlin-lsp                                |                       |                               |
+| `kotlin`                    | kotlin                                            |                       |                               |
 | `mempalace`                 | mempalace                                         | x                     | x                             |
 | `opentofu`                  | opentofu, tflint, tofu-ls                         | x                     |                               |
 | `pre-commit`                | pre-commit                                        | x                     | x                             |
@@ -277,7 +277,7 @@ The following tools are always installed without capability to skip them: age, c
 ### Container runtimes
 
 Two main container runtimes can be installed:
-- `docker`: rootless docker on the pasta network driver.
+- `docker`: rootless docker.
 - `podman`: podman, podman-compose (default compose provider) and docker-compose (opt-in with `PODMAN_COMPOSE_PROVIDER=docker-compose`), rootless by default.
 
 > [!important]
@@ -298,15 +298,15 @@ On every machine, Windows included, the first apply:
 - Only updates the key comment on a later change of `user.username` or `machine.name`
 
 On Linux workstations and servers, **gopass** is installed with **home-manager** and:
-- Is the **git** credential helper for HTTPS remotes (`git-credential-gopass`)
-- Exposes the store as a Secret Service through a user service (`gopass-secret-service`), so `gh` and `glab` keep their tokens in it
-- Stores the registry credentials of `docker login` and `podman login` through `docker-credential-secretservice`, when a container runtime is selected
+- Is the **git** credential helper for HTTPS remotes
+- Exposes the store as a Secret Service through a user service, so `gh` and `glab` keep their tokens in it
+- Stores the registry credentials of `docker login` and `podman login`, when a container runtime is selected
 
 > [!warning]
 > A login made before this change stays in `~/.docker/config.json` until you log out and in again.
 
-The first apply creates the **gopass** store with **age** and the `fs` storage, and asks for the passphrase (empty not allowed, a warning is printed before the prompt) protecting its new identity.
-The **age** agent locks again after an hour (`age.agent-timeout` in `~/.config/gopass/config`), independently of `SSH_AGENT_TIMEOUT`.
+The first apply creates the **gopass** store and asks for the passphrase (empty not allowed) protecting its new identity.
+The **age** agent locks again after an hour.
 
 While it's locked:
 - **git** prompts for a username and password on HTTPS remotes
@@ -328,48 +328,67 @@ gopass age agent lock
 The following components improve agent generation, responses and consumption.
 Which ones are installed depends on the chosen runtime, the tools installed with **mise** and the prompt choices.
 
-| Component                   | Type               | Source                                                                                           | When                                                     |
-| --------------------------- | ------------------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| `agent-rules`               | Instructions       | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules)                                      | `claude` and `copilot` only                              |
-| `bash-language-server`      | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `shell` in `tools.mise`, `claude` and `copilot` only     |
-| `cave-talk`                 | Hooks, Skills      | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `cave-talk` in `ai.plugins`                              |
-| `code-simplifier`           | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
-| `codegraph`                 | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `codegraph` in `tools.mise`                              |
-| `context7`                  | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `context7` in `tools.mise`                               |
-| `destructive-command-guard` | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | `destructive-command-guard` in `tools.mise`              |
-| `docker`                    | Skills             | [docker/skills](https://github.com/docker/skills)                                                | At least one `container.runtimes` selected               |
-| `exam-drill`                | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
-| `feature-dev`               | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
-| `find-skills`               | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)                                      | always                                                   |
-| `go`                        | Skills             | [spf13/go-skills](https://github.com/spf13/go-skills)                                            | `go` in `tools.mise`                                     |
-| `gopls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `go` in `tools.mise`, `claude` and `copilot` only        |
-| `grill-me`, `grilling`      | Skills             | [mattpocock/skills](https://github.com/mattpocock/skills)                                        | always                                                   |
-| `humanizer`                 | Skills             | [humanizer](https://github.com/blader/humanizer)                                                 | `humanizer` in `ai.plugins`                              |
-| `jdtls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `java` in `tools.mise`, `claude` and `copilot` only      |
-| `kotlin-lsp`                | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `kotlin` in `tools.mise`, `claude` and `copilot` only    |
-| `mempalace`                 | Hooks, MCP, Skills | [mempalace](https://github.com/mempalace/mempalace)                                              | `mempalace` in `tools.mise`                              |
-| `ponytail`                  | Hooks, Skills      | [ponytail](https://github.com/DietrichGebert/ponytail)                                           | `ponytail` in `ai.plugins`                               |
-| `protected-paths`           | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
-| `schema-converter`          | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)                                   | always                                                   |
-| `terraform-ls`              | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `terraform` in `tools.mise`, `claude` and `copilot` only |
-| `tofu-ls`                   | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps), `~/.copilot/lsp-config.json` | `opentofu` in `tools.mise`, `claude` and `copilot` only  |
+| Component                   | Type               | Source                                                             | When                                                     |
+| --------------------------- | ------------------ | ------------------------------------------------------------------ | -------------------------------------------------------- |
+| `agent-rules`               | Instructions       | [agent-rules](https://gitlab.com/kilianpaquier/agent-rules)        | `claude` and `copilot` only                              |
+| `bash-language-server`      | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `shell` in `tools.mise`, `claude` and `copilot` only     |
+| `cave-talk`                 | Hooks, Skills      | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | `cave-talk` in `ai.plugins`                              |
+| `code-simplifier`           | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | always                                                   |
+| `codegraph`                 | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | `codegraph` in `tools.mise`                              |
+| `context7`                  | Hooks, MCP, Skills | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | `context7` in `tools.mise`                               |
+| `destructive-command-guard` | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | `destructive-command-guard` in `tools.mise`              |
+| `docker`                    | Skills             | [docker/skills](https://github.com/docker/skills)                  | At least one `container.runtimes` selected               |
+| `exam-drill`                | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | always                                                   |
+| `feature-dev`               | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | always                                                   |
+| `find-skills`               | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)        | always                                                   |
+| `go`                        | Skills             | [spf13/go-skills](https://github.com/spf13/go-skills)              | `go` in `tools.mise`                                     |
+| `gopls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `go` in `tools.mise`, `claude` and `copilot` only        |
+| `grill-me`, `grilling`      | Skills             | [mattpocock/skills](https://github.com/mattpocock/skills)          | always                                                   |
+| `humanizer`                 | Skills             | [humanizer](https://github.com/blader/humanizer)                   | `humanizer` in `ai.plugins`                              |
+| `jdtls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `java` in `tools.mise`, `claude` and `copilot` only      |
+| `kotlin-lsp`                | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `kotlin` in `tools.mise`, `claude` and `copilot` only    |
+| `mempalace`                 | Hooks, MCP, Skills | [mempalace](https://github.com/mempalace/mempalace)                | `mempalace` in `tools.mise`                              |
+| `ponytail`                  | Hooks, Skills      | [ponytail](https://github.com/DietrichGebert/ponytail)             | `ponytail` in `ai.plugins`                               |
+| `protected-paths`           | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | always                                                   |
+| `schema-converter`          | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | always                                                   |
+| `terraform-ls`              | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `terraform` in `tools.mise`, `claude` and `copilot` only |
+| `tofu-ls`                   | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `opentofu` in `tools.mise`, `claude` and `copilot` only  |
 
 ### Agent sandboxes
 
-**Claude Code** and **Copilot** run their shell commands in a sandbox, which can read your machine but only write to the working directory,
-the **chezmoi** source directory, `~/workspaces` and the build caches of your dev tools.
-Each runtime comes with what its sandbox needs, installed by **home-manager**.
+#### Light sandbox
 
-A few commands need your SSH key, your keyring or your container runtime, which the sandbox can't reach, so they run outside it:
-- **Claude Code** runs `git`, `gh`, `glab`, `podman` and `docker` outside its sandbox, with no question asked.
-- **Copilot** asks you before running one of them outside its sandbox.
+**Claude Code** and **Copilot** run their shell commands in a sandbox by default, for the daily work you review.
+It blocks tool installs (`go install`, `mise install`), so run those yourself, and writes only to:
+- The working directory.
+- The **chezmoi** source directory.
+- Your workspaces, in `~/workspaces`.
+- The caches of your dev tools (`~/.cache/go`, `~/.cache/pip`, `~/.cache/uv`...).
 
-Installing a tool is blocked, since a binary the agent plants would later run outside the sandbox.
-This makes `go install`, `npm install -g` and `mise install` fail.
-Run the installs a task needs yourself beforehand, such as `go mod tidy`, `bun i` or `pre-commit install-hooks`.
+Commands that need your keys (`git`, `gh`, `glab`, `docker`, `podman`) run outside it, and **Copilot** asks before each one.
 
 > [!warning]
-> The sandbox doesn't hide your secrets file, since **mise** needs to read it, so the agents can see the tokens it holds.
+> The agents can read the tokens in your **mise** secrets file.
+
+To turn it off for one session, start **Claude Code** with `claude --settings '{"sandbox": {"enabled": false}}'`, or run `/sandbox disable` in **Copilot**.
+
+#### Full sandbox (sbx)
+
+For unattended runs, untrusted repositories or long tasks, [**Docker Sandboxes**](https://docs.docker.com/ai/sandboxes/) runs the whole agent in a microVM,
+as long as your user is in the `kvm` group.
+The agent sees your settings, plugins, rules and tools read-only, while your **GitLab** and **GitHub** tokens stay on the host.
+The sandbox goes through your proxy and trusts the CA certificates installed in `/usr/local/share/ca-certificates`.
+
+Set it up once, then start an agent from a project:
+
+```sh
+sbx login
+sbx secret set anthropic                        # Claude Code API key, or /login inside the sandbox for a subscription
+sbx secret set openai --oauth                   # Codex sign-in, in your browser
+sbx secret set github --command 'gh auth token' # gh, and Copilot sign-in
+sbx secret set gitlab                           # GitLab token with the api scope
+sbx env run                                     # or sbx env run --env-arg agent=codex
+```
 
 ### Servers
 
@@ -380,7 +399,7 @@ On a `server` machine kind, the setup also changes the OS configuration:
 ### WSL
 
 A WSL2 distribution is set up as an isolated, VPS-like machine, cut off from the Windows host.
-Running inside one is detected without a prompt, by checking whether `microsoft` appears in the running kernel release.
+Running inside one is detected without a prompt.
 
 Two files drive the setup, `wsl.conf` inside the distro and `.wslconfig` on the Windows host.
 The latter needs the dotfiles installed on Windows too, with the `wsl` prompt set to `true`, and that install is worth it.
@@ -390,10 +409,10 @@ Without it, the distro disk can grow up to 1TB and fill the Windows drive, while
 - Limits the distro to 75% of the host processors (rounded up)
 - Hands unused memory back to Windows gradually
 
-| File         | Location                  | Scope               | Sets                                                                                                       |
-| ------------ | ------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | `memory` at half, `processors` at 75%, `swap=8GB`, `defaultVhdSize=60GB`, `autoMemoryReclaim=gradual`      |
-| `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount`, `interop` and `appendWindowsPath` off, `systemd` on, `hostname` from `machine.name`           |
+| File         | Location                  | Scope               | Sets                                                                                                  |
+| ------------ | ------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------- |
+| `.wslconfig` | Windows (`%UserProfile%`) | Global, all distros | `memory` at half, `processors` at 75%, `swap=8GB`, `defaultVhdSize=60GB`, `autoMemoryReclaim=gradual` |
+| `wsl.conf`   | Linux (`/etc/wsl.conf`)   | This distro only    | `automount`, `interop` and `appendWindowsPath` off, `systemd` on, `hostname` from `machine.name`      |
 
 Keep in mind that:
 - Either file only takes effect after `wsl.exe --shutdown` from Windows and reopening the distro.

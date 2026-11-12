@@ -4,7 +4,7 @@ schema_version: 1
 
 id: chezmoi.exec
 name: exec
-version: 1.1.0
+version: 0.0.0
 description: Privilege escalation through sudo and its equivalents.
 
 # gates pattern evaluation: dcg skips this pack entirely unless one of these appears in the command

@@ -4,7 +4,7 @@ schema_version: 1
 
 id: chezmoi.containers
 name: containers
-version: 1.0.0
+version: 0.0.0
 description: |
   Options of docker and podman that drop the container isolation or mount the host.
   Both run outside the sandbox.

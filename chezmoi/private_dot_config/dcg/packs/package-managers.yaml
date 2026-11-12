@@ -4,7 +4,7 @@ schema_version: 1
 
 id: chezmoi.package_managers
 name: package-managers
-version: 1.2.0
+version: 0.0.0
 description: |
   Installs and package execution for npm, pnpm, bun, go, uv, pip, pipx, cargo, gem, mise and nix.
   The built-in package_managers pack covers publishing for some of them.

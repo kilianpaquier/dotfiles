@@ -4,7 +4,7 @@ schema_version: 1
 
 id: chezmoi.gopass
 name: gopass
-version: 1.1.0
+version: 0.0.0
 description: Gopass subcommands that write to the store or print a secret.
 
 # gates pattern evaluation: dcg skips this pack entirely unless one of these appears in the command

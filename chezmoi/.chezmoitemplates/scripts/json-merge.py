@@ -45,6 +45,12 @@ def main():
 
     merge(doc, wanted)
 
+    # remove unwanted keys
+    for *parents, key in json.loads(r'''{{ toJson (.unset | default list) }}'''):
+        table = lookup(doc, parents)
+        if isinstance(table, dict):
+            table.pop(key, None)
+
     # sort merged list values or dict keys in place; the sentinel sorts a string after any longer string it prefixes
     sort_key = lambda item: str(item).lower() + "￿"
     for path in json.loads(r'''{{ toJson (.sort | default list) }}'''):

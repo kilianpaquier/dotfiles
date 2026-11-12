@@ -4,7 +4,7 @@ schema_version: 1
 
 id: chezmoi.devtools
 name: devtools
-version: 1.2.0
+version: 0.0.0
 description: Mutating chezmoi subcommands and disabled ctx7 subcommands.
 
 # gates pattern evaluation: dcg skips this pack entirely unless one of these appears in the command

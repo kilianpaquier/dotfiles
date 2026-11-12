@@ -4,42 +4,24 @@ Dotfiles managed by [chezmoi](https://www.chezmoi.io/), with Linux packages inst
 The source root is `chezmoi/`, set in `.chezmoiroot`.
 Paths below are relative to it, except `symlinks/` and repo-root files.
 
-The [README.md](README.md) explains the setup to users.
-Read it when a task touches prompts, tool bundles, desktop apps or agent components, which it lists in tables.
-
 ## Before changing anything
 
-- Check the upstream standard first (man pages, official docs, Context7), and follow the mechanism it documents for the task.
+- Check the upstream standard first (man pages, official docs, Context7 `/websites/chezmoi_io` for chezmoi), and follow the mechanism it documents.
 - Check how sibling files already solve the same problem (checks, warnings, layout), and match them.
-- Only propose a workaround when neither gives an answer, and say so.
+- Propose a workaround only when neither gives an answer, and say so.
 
 ## Where things go
 
 - Linux packages go in `private_dot_config/home-manager/home.nix.tmpl`, with attrs from `nixpkgs-unstable` only.
-- Dev tools go in a mise bundle, see [Keep in sync](#keep-in-sync).
-- A config file that a tool also writes gets a `modify_*.py.tmpl` calling a merge script from `.chezmoitemplates/scripts/`.
-- The values a `modify_` script enforces live in a `*.partial.json` next to it, or in a dict inside the script.
 
-## home-manager or chezmoi script
-
-Nix home-manager owns a step that runs as the user, needs no prompt, and fits in the nix switch.
-The chezmoi scripts own the rest: `sudo`, passphrase prompts, tools outside nix, and Windows.
-
-Two scripts sit outside that split, the root-only system setup and the bootstrap hook.
-
-- Root-only steps go in `.chezmoiscripts/linux/run_onchange_after_00-system-config.sh.tmpl`.
-- Install a system package there with `pkg_install`, never a direct `apt-get`.
-- The `scripts/bootstrap.sh` script is the `read-source-state` pre hook, so it runs before every chezmoi command and must exit fast once its work is done.
-- Its GC-rooted env at `~/.local/state/chezmoi/env` lets `modify_*.py.tmpl` render on a fresh machine.
-
-## Removing paths
+### Removing paths
 
 The right file depends on whether chezmoi ever managed the path.
 
 - Paths chezmoi never managed (caches, tool state) go in `.chezmoiremove.tmpl`.
 - Paths chezmoi managed until an option got deselected go in `.chezmoitemplates/chezmoiignore.tmpl`.
-- `run_onchange_after_60-prune-deselected.sh.tmpl` deletes those when the selection changes.
-- Paths that never apply to an OS go in `.chezmoiignore.tmpl` itself, and nothing prunes them.
+- The `run_onchange_after_60-prune-deselected.sh.tmpl` script deletes those when the selection changes.
+- Paths that never apply to an OS go in `.chezmoiignore.tmpl` itself, where nothing prunes them.
 
 ## Scripts
 
@@ -48,19 +30,28 @@ The right file depends on whether chezmoi ever managed the path.
 
 ### Fragments
 
-A block longer than a few lines moves to a fragment under `.chezmoitemplates/<os>/`.
-Embedding keeps it inside the script, so `run_onchange_` tracks it and `diff.scriptContents: false` keeps it out of `chezmoi diff`.
+Embedding a fragment from `.chezmoitemplates/<os>/` keeps it inside the script, so `run_onchange_` tracks it and `diff.scriptContents: false` keeps it out of `chezmoi diff`.
 
 - Embed a static fragment with `{{ include ".chezmoitemplates/<os>/<name>" | trim }}`.
 - Embed a fragment that reads chezmoi data with `{{ includeTemplate "<os>/<name>" . | trim }}`.
-- Skip the `template` action for fragments, as it can't be piped to `trim`.
 - A fragment runs in the parent's shell with the parent's options, so it has no shebang and no `set`.
+- Guard a fragment's body with `if` where an `exit` would end the parent.
 - Add the `.tmpl` suffix only when the template syntax breaks shellcheck.
-- Guard a fragment's body with `if` instead of calling `exit`, which would end the parent.
 
-## Agent plugins
+## Agents
 
-Set an unselected plugin to `false` in `.chezmoitemplates/plugins.json.tmpl`, because the sync uninstalls `false` entries and leaves deleted ones installed.
+- Cover every runtime the `ai.runtimes` prompt offers, checking an unselected one's docs online.
+- Set an unselected plugin to `false` in `.chezmoitemplates/plugins.json.tmpl`, since the sync uninstalls `false` entries and leaves deleted ones installed.
+
+### sbx
+
+The entry point is `~/.sbxenv.yaml` (`dot_sbxenv.yaml.tmpl`), started with `sbx env run`.
+It mounts the host harness read-only.
+It composes `dot_sbx/kits/<agent>.yaml` with `dot_sbx/kits/tools.yaml`.
+
+- Kits follow Sandbox Kit v3 as the latest sbx release implements it, not the nix-installed version.
+- Tokens reach the sandbox only through `sbx secret` and the proxy, never as a credential file or the mise secrets file.
+- Declare a credential service in a kit only when the agent's published kit lacks it (`sbx kit inspect docker.io/sbx/<agent>:latest`), since two owners of one service conflict.
 
 ## Keep in sync
 
@@ -83,16 +74,16 @@ Set an unselected plugin to `false` in `.chezmoitemplates/plugins.json.tmpl`, be
   - `private_dot_claude/settings.partial.json`: `permissions.allow`, `permissions.ask`, `permissions.deny`
   - `dot_vscode-server/data/Machine/settings.copilot.partial.json`: `chat.tools.terminal.autoApprove`
 
-## Checks
+## README
 
-Run `shellcheck` on each changed shell script without the `.tmpl` suffix.
+The [README.md](README.md) explains the setup to its users, with tables for prompts, tool bundles, desktop apps and agent components.
+Read it when a task touches one of those.
+Write in it only what a user sees or does, leaving mechanisms, config internals and binary names out.
 
-## Boundaries
+## Checks and boundaries
 
-- Read-only chezmoi commands are fine: `cat`, `data`, `diff`, `managed`.
-- Every chezmoi command runs `scripts/bootstrap.sh` first, which installs nix on a machine without it.
-- Never run `apply`, `init`, `update`, `execute-template` or any other command that changes state, unless asked.
-
-## References
-
-- Context7 library ID for chezmoi docs: `/websites/chezmoi_io`.
+- Run `shellcheck` on each changed shell script without the `.tmpl` suffix.
+- Read-only chezmoi commands are fine: `cat`, `data`, `diff`, `ignored`, `managed`.
+- Every chezmoi command runs `scripts/bootstrap.sh` first (`read-source-state` hook), which installs nix on a machine without it, so it exits fast once its work is done.
+- Its GC-rooted env at `~/.local/state/chezmoi/env` lets `modify_*.py.tmpl` render on a fresh machine.
+- Run `apply`, `init`, `update`, `execute-template` or any other state-changing command only when asked.

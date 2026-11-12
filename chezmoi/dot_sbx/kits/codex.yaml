@@ -1,0 +1,53 @@
+# syntax=docker/sandbox-kit:3
+# yaml-language-server: $schema=https://raw.githubusercontent.com/docker/sandbox-kit-spec/main/schema/kit.schema.json
+
+schemaVersion: "3"
+kind: set
+displayName: codex dotfiles
+description: codex without the dcg, mempalace and protected-paths plugins, the harness is mounted by ~/.sbxenv.yaml
+version: 0.0.0
+licenses: [MIT]
+
+capabilities:
+  - group:
+      name: plugins-off
+      capabilities:
+        - type: com.docker.sandbox/lifecycle@1
+          config:
+            files:
+              # managed_config.toml is the top config layer, above the user config.toml.
+              - path: /etc/codex/managed_config.toml
+                content: |
+                  [plugins."dcg@one-for-all"]
+                  enabled = false
+                  [plugins."mempalace@mempalace"]
+                  enabled = false
+                  [plugins."protected-paths@one-for-all"]
+                  enabled = false
+
+  - group:
+      name: github
+      capabilities:
+        # - type: com.docker.sandbox/network-policy@1
+        #   config:
+        #     runtime:
+        #       allow:
+        #         - api.github.com
+        #         - github.com
+        #         - raw.githubusercontent.com
+        - type: com.docker.sandbox/credential@1
+          optional: true
+          description: GitHub token for gh, from sbx secret set github
+          config:
+            service: github
+            phase: runtime
+            apiKey:
+              name: GH_TOKEN
+              proxyManaged: true
+              inject:
+                - { domain: api.github.com, header: Authorization, format: "Bearer %s" }
+                - { domain: github.com, scheme: basic, username: x-access-token }
+                - { domain: raw.githubusercontent.com, header: Authorization, format: "Bearer %s" }
+
+kits:
+  - ref: docker.io/sbx/codex:latest

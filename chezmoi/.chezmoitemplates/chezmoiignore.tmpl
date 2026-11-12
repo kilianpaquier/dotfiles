@@ -61,6 +61,18 @@
 .copilot
 {{- end }}
 
+{{- range $agent := list "claude" "codex" "copilot" }}
+{{- if not (has $agent $.ai.runtimes) }}
+.sbx/kits/{{ $agent }}.yaml
+{{- end }}
+{{- end }}
+
+{{- if eq (len .ai.runtimes) 0 }}
+.config/sandboxes/sandboxes/settings.json
+.sbx/kits/tools.yaml
+.sbxenv.yaml
+{{- end }}
+
 {{- if or (eq .machine.kind "desktop") (not (has "vscode" .ide)) }}
 .local/bin/code
 .vscode-server

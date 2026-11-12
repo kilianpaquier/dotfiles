@@ -4,7 +4,7 @@ schema_version: 1
 
 id: chezmoi.gitlab
 name: gitlab
-version: 1.3.0
+version: 0.0.0
 description: Mutating and disabled glab subcommands, which no dcg built-in pack covers.
 
 # gates pattern evaluation: dcg skips this pack entirely unless one of these appears in the command

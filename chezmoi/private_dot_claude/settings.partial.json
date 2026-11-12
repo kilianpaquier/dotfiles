@@ -76,6 +76,9 @@
         "claude-opus-5": {
             "effortLevel": "high"
         },
+        "claude-opus-5-5": {
+            "effortLevel": "high"
+        },
         "claude-sonnet-5": {
             "effortLevel": "medium"
         }
@@ -337,6 +340,7 @@
             ]
         }
     },
+    "showClearContextOnPlanAccept": true,
     "showMessageTimestamps": true,
     "showTurnDuration": true,
     "syntaxHighlightingDisabled": false,

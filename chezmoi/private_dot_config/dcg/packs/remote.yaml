@@ -4,7 +4,7 @@ schema_version: 1
 
 id: chezmoi.remote
 name: system
-version: 2.1.0
+version: 0.0.0
 description: Network fetchers that the WebFetch tool replaces.
 
 # gates pattern evaluation: dcg skips this pack entirely unless one of these appears in the command

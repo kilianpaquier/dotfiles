@@ -1,0 +1,12 @@
+# syntax=docker/sandbox-kit:3
+# yaml-language-server: $schema=https://raw.githubusercontent.com/docker/sandbox-kit-spec/main/schema/kit.schema.json
+
+schemaVersion: "3"
+kind: set
+displayName: copilot dotfiles
+description: copilot, the harness is mounted by ~/.sbxenv.yaml
+version: 0.0.0
+licenses: [MIT]
+
+kits:
+  - ref: docker.io/sbx/copilot:latest

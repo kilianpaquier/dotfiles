@@ -58,6 +58,7 @@ ZSH_COMPLETIONS=(
   "kubectl completion zsh"
   "kustomize completion zsh"
   "plumber completion zsh"
+  "sbx completion zsh"
   "sops completion zsh"
   "task --completion zsh"
   "uv generate-shell-completion zsh"

@@ -3,4 +3,9 @@
     (joinPath .chezmoi.homeDir ".local" "share" "chezmoi")
     (joinPath .chezmoi.homeDir "workspaces")) }}
 
-{{- includeTemplate "scripts/json-merge.py" (dict "indent" 2 "override" list "set" $set "sort" (list (list "trustedFolders"))) }}
+{{- includeTemplate "scripts/json-merge.py" (dict
+  "indent" 2
+  "override" list
+  "set" $set
+  "sort" (list (list "trustedFolders"))
+  "unset" list) }}

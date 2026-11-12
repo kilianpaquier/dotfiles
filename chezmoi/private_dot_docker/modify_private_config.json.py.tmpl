@@ -1,2 +1,6 @@
-{{- includeTemplate "scripts/json-merge.py"
-    (dict "indent" "'\\t'" "override" list "set" (dict "credsStore" "secretservice") "sort" list) }}
+{{- includeTemplate "scripts/json-merge.py" (dict
+  "indent" "'\\t'"
+  "override" list
+  "set" (dict "credsStore" "secretservice")
+  "sort" list
+  "unset" list) }}

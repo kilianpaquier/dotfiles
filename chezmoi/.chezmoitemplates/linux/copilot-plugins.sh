@@ -4,11 +4,14 @@
 copilot plugin marketplace update
 
 installed=" $(copilot plugin list --json | jq -r '.[] | .name + "@" + .marketplace' | tr '\n' ' ')"
-for plugin in $(jq -r '.enabledPlugins | to_entries[] | select(.value) | .key' "$HOME/.copilot/settings.json"); do
+for plugin in $(jq -r '.enabledPlugins | keys[]' "$HOME/.copilot/settings.json"); do
   case "$installed" in *" $plugin "*) continue ;; esac
   copilot plugin install "$plugin" || true
 done
-for plugin in $(jq -r '.enabledPlugins | to_entries[] | select(.value | not) | .key' "$HOME/.copilot/settings.json"); do
+
+# shellcheck disable=SC2154
+# $disabled comes from the parent script and stays unquoted to split it into plugin ids.
+for plugin in $disabled; do
   case "$installed" in *" $plugin "*) copilot plugin uninstall "$plugin" || true ;; esac
 done
 copilot plugin update --all

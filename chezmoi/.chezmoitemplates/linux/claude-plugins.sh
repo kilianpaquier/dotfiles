@@ -10,11 +10,14 @@ done
 claude plugin marketplace update || true
 
 installed=" $(claude plugin list --json | jq -r '.[].id' | tr '\n' ' ')"
-for plugin in $(jq -r '.enabledPlugins | to_entries[] | select(.value) | .key' "$HOME/.claude/settings.json"); do
+for plugin in $(jq -r '.enabledPlugins | keys[]' "$HOME/.claude/settings.json"); do
   case "$installed" in *" $plugin "*) continue ;; esac
   claude plugin install "$plugin" || true
 done
-for plugin in $(jq -r '.enabledPlugins | to_entries[] | select(.value | not) | .key' "$HOME/.claude/settings.json"); do
+
+# shellcheck disable=SC2154
+# $disabled comes from the parent script and stays unquoted to split it into plugin ids.
+for plugin in $disabled; do
   case "$installed" in *" $plugin "*) claude plugin uninstall "$plugin" || true ;; esac
 done
 claude plugin list --json | jq -r '.[].id' | xargs -r -n1 claude plugin update -y

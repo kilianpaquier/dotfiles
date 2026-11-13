@@ -12,6 +12,7 @@ set -e
 
 {{- if has "claude" .ai.runtimes }}
 
+disabled="{{ range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" true) .) | fromJson }}{{ if not $on }} {{ $id }}{{ end }}{{ end }}"
 {{ include ".chezmoitemplates/linux/claude-plugins.sh" | trim }}
 {{- end }}
 
@@ -22,6 +23,7 @@ codex plugin marketplace upgrade
 
 {{- if has "copilot" .ai.runtimes }}
 
+disabled="{{ range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" false) .) | fromJson }}{{ if not $on }} {{ $id }}{{ end }}{{ end }}"
 {{ include ".chezmoitemplates/linux/copilot-plugins.sh" | trim }}
 {{- end }}
 

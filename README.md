@@ -135,6 +135,7 @@ Two profiles exist, `home` and `soprasteria`.
 | Whether to sign commits with the SSH key                             | `true`                 |                       | `git.ssh`            |
 | Which AI agent runtimes to install (`claude`, `codex`, `copilot`)    | Depends on the profile |                       | `ai.runtimes`        |
 | Which agent plugins to enable (`cave-talk`, `humanizer`, `ponytail`) | Depends on the profile | at least one agent    | `ai.plugins`         |
+| Which sandboxes to run the agents in (`nono`, `sbx`, `srt`)          |                        | at least one agent    | `ai.sandboxes`       |
 | Which container runtimes to install (`docker` rootless, `podman`)    | Depends on the profile |                       | `container.runtimes` |
 | Which container engine gitlab-ci-local should use                    |                        | two runtimes selected | `container.engine`   |
 | Which tool manager to use (`mise`)                                   | `mise`                 |                       | `tools_management`   |
@@ -188,7 +189,6 @@ When choosing zsh here, the following plugins are provided by default within `~/
 
 | Plugin             | Source                                                      | Purpose                                                                                              |
 | ------------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `ssh-agent`        | [ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)               | Starts ssh-agent on shell start and loads your SSH keys into it                                      |
 | `history`          | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Timestamps each command, writes it immediately, and shares it live across sessions, deduping repeats |
 | `completions`      | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Caches shell completions of the tools listed in `ZSH_COMPLETIONS` (edit it in `~/.env.zsh`)          |
 | `disk-cleanup`     | [zsh-plugins](https://github.com/kilianpaquier/zsh-plugins) | Adds a `disk-cleanup` command that clears dev-tool caches and old installed versions                 |
@@ -234,7 +234,7 @@ Dev tools are grouped into bundles that [**mise**](https://mise.jdx.dev) install
 The next apply reconciles them with your **chezmoi** configuration, so a tool you select or add gets installed while one you unselect or remove gets uninstalled.
 Anything you installed by hand with **mise** stays, unless **chezmoi** manages it.
 
-Secrets such as `GITLAB_TOKEN` go in the `[env]` table of `~/.config/mise/conf.d/00-secrets.toml`,
+Secrets such as `GITLAB_TOKEN` go in the `[env]` table of `~/.config/mise/config.secrets.toml` (not reachable by sandboxed agents),
 which **chezmoi** creates empty and never overwrites.
 Either paste the value directly, or read it from **gopass** when the store should stay the only place holding it.
 
@@ -349,35 +349,40 @@ Which ones are installed depends on the chosen runtime, the tools installed with
 | `kotlin-lsp`                | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `kotlin` in `tools.mise`, `claude` and `copilot` only    |
 | `mempalace`                 | Hooks, MCP, Skills | [mempalace](https://github.com/mempalace/mempalace)                | `mempalace` in `tools.mise`                              |
 | `ponytail`                  | Hooks, Skills      | [ponytail](https://github.com/DietrichGebert/ponytail)             | `ponytail` in `ai.plugins`                               |
-| `protected-paths`           | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | always                                                   |
 | `schema-converter`          | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | always                                                   |
 | `terraform-ls`              | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `terraform` in `tools.mise`, `claude` and `copilot` only |
 | `tofu-ls`                   | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `opentofu` in `tools.mise`, `claude` and `copilot` only  |
 
 ### Agent sandboxes
 
-#### Light sandbox
+The `ai.sandboxes` prompt picks how your agents are isolated, on the host with **nono** or **srt**, or in a microVM with **sbx**.
 
-**Claude Code** and **Copilot** run their shell commands in a sandbox by default, for the daily work you review.
-It blocks tool installs (`go install`, `mise install`), so run those yourself, and writes only to:
-- The working directory.
-- The **chezmoi** source directory.
-- Your workspaces, in `~/workspaces`.
-- The caches of your dev tools (`~/.cache/go`, `~/.cache/pip`, `~/.cache/uv`...).
+#### Host sandbox
 
-Commands that need your keys (`git`, `gh`, `glab`, `docker`, `podman`) run outside it, and **Copilot** asks before each one.
+Start the agent from `~/workspaces` or the **chezmoi** source directory, through
+[**nono**](https://nono.sh) or [**srt**](https://github.com/anthropic-experimental/sandbox-runtime):
+
+```sh
+nono run --profile dotfiles-claude -- claude
+nono run --profile dotfiles-codex -- codex --no-daemon
+nono run --profile dotfiles-copilot -- copilot
+
+srt --settings ~/.config/srt/settings.json -- claude
+srt --settings ~/.config/srt/settings.json -- codex --no-daemon
+srt --settings ~/.config/srt/settings.json -- copilot
+```
+
+The agent works on your projects without seeing your secrets, while still signing commits and calling **GitLab** and **GitHub** with your credentials.
+It can't change its own settings, hooks or plugins, and it can't install tools, run containers, reach databases or `git push`, so you do those yourself.
 
 > [!warning]
-> The agents can read the tokens in your **mise** secrets file.
-
-To turn it off for one session, start **Claude Code** with `claude --settings '{"sandbox": {"enabled": false}}'`, or run `/sandbox disable` in **Copilot**.
+> A plain `claude`, `codex` or `copilot`, or an agent your IDE starts, runs with no sandbox at all.
 
 #### Full sandbox (sbx)
 
-For unattended runs, untrusted repositories or long tasks, [**Docker Sandboxes**](https://docs.docker.com/ai/sandboxes/) runs the whole agent in a microVM,
-as long as your user is in the `kvm` group.
-The agent sees your settings, plugins, rules and tools read-only, while your **GitLab** and **GitHub** tokens stay on the host.
-The sandbox goes through your proxy and trusts the CA certificates installed in `/usr/local/share/ca-certificates`.
+For unattended runs, untrusted repositories or long tasks, [**Docker Sandboxes**](https://docs.docker.com/ai/sandboxes/) runs the whole agent in a microVM, provided your user is in the `kvm` group.
+Your **GitLab** and **GitHub** tokens stay on the host, and the agent signs commits with your SSH key but can't log in to either over SSH.
+As with the host sandboxes, it reaches allowlisted hosts without asking and asks you before any other.
 
 Set it up once, then start an agent from a project:
 

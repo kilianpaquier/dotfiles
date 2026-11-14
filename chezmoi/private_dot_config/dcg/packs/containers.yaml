@@ -5,9 +5,7 @@ schema_version: 1
 id: chezmoi.containers
 name: containers
 version: 0.0.0
-description: |
-  Options of docker and podman that drop the container isolation or mount the host.
-  Both run outside the sandbox.
+description: Options of docker and podman that drop the container isolation or mount the host.
 
 # gates pattern evaluation: dcg skips this pack entirely unless one of these appears in the command
 keywords:

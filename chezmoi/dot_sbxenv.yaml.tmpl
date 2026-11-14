@@ -12,10 +12,10 @@ args:
 workspace: {{ "${{ env.projectDir }}" }}
 
 kits:
-  - {{ .chezmoi.homeDir }}/.sbx/kits/{{ "${{ env.args.agent }}" }}.yaml
-  - {{ .chezmoi.homeDir }}/.sbx/kits/tools.yaml
+  - {{ .chezmoi.homeDir }}/.sbx/kits/{{ "${{ env.args.agent }}" }}
+  - {{ .chezmoi.homeDir }}/.sbx/kits/tools
 
-# Read-only, never a credential file (.claude/.credentials.json, .codex/auth.json, .copilot/config.json, mise conf.d/00-secrets.toml).
+# Read-only, never a credential file (.claude/.credentials.json, .codex/auth.json, .copilot/config.json, mise config.secrets.toml).
 additionalWorkspaces:
   - { path: {{ .chezmoi.homeDir }}/.config/mise/config.toml, target: /home/agent/.config/mise/config.toml, readOnly: true }
   - { path: {{ .chezmoi.homeDir }}/.config/mise/conf.d/10-settings.toml, target: /home/agent/.config/mise/conf.d/10-settings.toml, readOnly: true }
@@ -25,10 +25,11 @@ additionalWorkspaces:
 {{- end }}
 
 {{- if has "claude" .ai.runtimes }}
+  # settings.json mounts as managed settings because sbx seeds the writable ~/.claude/settings.json at start.
   # installed_plugins.json and known_marketplaces.json hold absolute host paths, so the plugins also mount at their host path.
   - { path: {{ .chezmoi.homeDir }}/.claude/plugins, readOnly: true }
   - { path: {{ .chezmoi.homeDir }}/.claude/plugins, target: /home/agent/.claude/plugins, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.claude/settings.json, target: /home/agent/.claude/settings.json, readOnly: true }
+  - { path: {{ .chezmoi.homeDir }}/.claude/settings.json, target: /etc/claude-code/managed-settings.json, readOnly: true }
   - { path: {{ .chezmoi.homeDir }}/.claude/CLAUDE.md, target: /home/agent/.claude/CLAUDE.md, readOnly: true }
   - { path: {{ .chezmoi.homeDir }}/.claude/RTK.md, target: /home/agent/.claude/RTK.md, readOnly: true }
   - { path: {{ .chezmoi.homeDir }}/.claude/rules, target: /home/agent/.claude/rules, readOnly: true }

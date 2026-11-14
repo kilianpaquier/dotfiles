@@ -1,0 +1,107 @@
+{{- $rollback := .sandbox.write_dirs }}
+{{- range $agent := .ai.runtimes }}
+{{- with index $.sandbox.agents $agent }}{{ $rollback = concat $rollback .write .write_files }}{{ end }}
+{{- end -}}
+
+{{- $excludes := list }}
+{{- range $dir := $rollback }}{{ $excludes = append $excludes (printf "%s%s" $.chezmoi.homeDir (trimPrefix "~" $dir)) }}{{- end -}}
+
+{{- $bypass := list }}
+{{- $readFiles := .sandbox.read_files }}
+{{- $sockets := list }}
+{{- if .git.ssh }}
+{{- $bypass = append $bypass "~/.ssh/id_ed25519.pub" }}
+{{- $readFiles = append $readFiles "~/.ssh/id_ed25519.pub" }}
+{{- $sockets = append $sockets (printf "/run/user/%s/ssh-agent" .chezmoi.uid) }}
+{{- end -}}
+
+{
+    "credential_capture": {
+        "github": {
+            "cache_ttl_secs": 900,
+            "command": ["printf", "%s", "$GITHUB_TOKEN"],
+            "timeout_secs": 10
+        },
+        "gitlab": {
+            "cache_ttl_secs": 900,
+            "command": ["printf", "%s", "$GITLAB_TOKEN"],
+            "timeout_secs": 10
+        }
+    },
+    "extends": "dotfiles-local",
+    "environment": {
+        "deny_vars": ["*_ACCESS_KEY*", "*_API_KEY", "*_PASSWORD", "*_SECRET", "*_SECRET_*", "*_TOKEN", "SOPS_AGE_KEY"]
+    },
+    "filesystem": {
+        "allow": {{ concat .sandbox.workspaces .sandbox.write_dirs | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "allow_file": {{ .sandbox.write_files | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "bypass_protection": {{ $bypass | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "read": {{ .sandbox.read_dirs | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "read_file": {{ $readFiles | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "unix_socket": {{ $sockets | sortAlpha | toPrettyJson "    " | indent 8 | trim }}
+    },
+    "groups": {
+        "include": ["nix_runtime"]
+    },
+{{- if not (contains "microsoft" (.chezmoi.kernel.osrelease | lower)) }}
+    "linux": {
+        "af_unix_mediation": "pathname"
+    },
+{{- end }}
+    "meta": {
+        "name": "dotfiles"
+    },
+    "network": {
+        "credentials": ["github_api", "github_raw", "github_web", "gitlab"],
+        "custom_credentials": {
+            "github_api": {
+                "credential_format": "Bearer {}",
+                "credential_key": "cmd://github",
+                "env_var": "GITHUB_TOKEN",
+                "inject_header": "Authorization",
+                "upstream": "https://api.github.com"
+            },
+            "github_raw": {
+                "credential_format": "Bearer {}",
+                "credential_key": "cmd://github",
+                "env_var": "GITHUB_TOKEN",
+                "inject_header": "Authorization",
+                "upstream": "https://raw.githubusercontent.com"
+            },
+            "github_web": {
+                "credential_format": "Bearer {}",
+                "credential_key": "cmd://github",
+                "endpoint_rules": [
+                    { "method": "GET", "path": "/*/*/archive/**" },
+                    { "method": "GET", "path": "/*/*/releases/download/**" }
+                ],
+                "env_var": "GITHUB_TOKEN",
+                "inject_header": "Authorization",
+                "upstream": "https://github.com"
+            },
+            "gitlab": {
+                "credential_format": "{}",
+                "credential_key": "cmd://gitlab",
+                "endpoint_rules": [
+                    { "method": "*", "path": "/api/**" }
+                ],
+                "env_var": "GITLAB_TOKEN",
+                "inject_header": "PRIVATE-TOKEN",
+                "upstream": "https://gitlab.com"
+            }
+        },
+        "deny_domain": ["altssh.gitlab.com", "github.com:22", "github.com:2222", "gitlab.com:22", "gitlab.com:2222", "ssh.github.com"],
+        "network_profile": null
+    },
+    "rollback": {
+        "exclude_patterns": {{ $excludes | sortAlpha | toPrettyJson "    " | indent 8 | trim }}
+    },
+{{- if contains "microsoft" (.chezmoi.kernel.osrelease | lower) }}
+    "security": {
+        "wsl2_proxy_policy": "insecure_proxy"
+    },
+{{- end }}
+    "workdir": {
+        "access": "none"
+    }
+}

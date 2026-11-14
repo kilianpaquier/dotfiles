@@ -1,0 +1,11 @@
+{
+    "extends": "default",
+    "filesystem": {
+        "allow": [],
+        "read": [],
+        "read_file": []
+    },
+    "meta": {
+        "name": "dotfiles-local"
+    }
+}

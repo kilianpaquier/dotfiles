@@ -34,19 +34,19 @@ umask 022
 
 # shellcheck disable=SC1091
 # source nix to expand PATH with home-manager installed tools
-if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
-  . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+if [ -f "$HOME/.local/state/nix/profile/etc/profile.d/nix.sh" ]; then
+  . "$HOME/.local/state/nix/profile/etc/profile.d/nix.sh"
 elif [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
 # set LD_LIBRARY_PATH so it includes nix user level libraries
-[ -d "$HOME/.nix-profile/lib" ] && export LD_LIBRARY_PATH="$HOME/.nix-profile/lib${LD_LIBRARY_PATH:+":$LD_LIBRARY_PATH"}"
+[ -d "$HOME/.local/state/nix/profile/lib" ] && export LD_LIBRARY_PATH="$HOME/.local/state/nix/profile/lib${LD_LIBRARY_PATH:+":$LD_LIBRARY_PATH"}"
 
 # source nix defined environment variables
-if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+if [ -f "$HOME/.local/state/nix/profile/etc/profile.d/hm-session-vars.sh" ]; then
   # shellcheck disable=SC1091
-  . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+  . "$HOME/.local/state/nix/profile/etc/profile.d/hm-session-vars.sh"
 elif [ -f "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" ]; then
   # shellcheck disable=SC1090
   . "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
@@ -55,13 +55,16 @@ fi
 # set DOCKER_HOST so docker CLI targets the rootless daemon if it's installed
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/docker.service" ] && export DOCKER_HOST="unix://${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/docker.sock"
 
+# set SSH_AUTH_SOCK so ssh tools target the home-manager ssh-agent if it's running
+[ -S "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/ssh-agent" ] && export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/ssh-agent"
+
 unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
 
 # set PATH so it includes krew if it exists
 command -v kubectl-krew >/dev/null 2>&1 && PATH="${KREW_ROOT:-"$HOME/.krew"}/bin:$PATH"
 
 # source mise env and aliases
-command -v mise >/dev/null 2>&1 && eval "$(mise env | grep -v 'PATH=')"
+command -v mise >/dev/null 2>&1 && eval "$(MISE_ENV=secrets mise env | grep -v 'PATH=')"
 
 # set go cache variables
 if command -v go >/dev/null 2>&1; then

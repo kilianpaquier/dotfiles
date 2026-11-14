@@ -56,7 +56,7 @@
 {{- $email := "" }}
 {{- $git_ssh := false }}
 {{- $plugins := list }}
-{{- $rules := dig "ai" "rules" true . }}
+{{- $sandboxes := list }}
 {{- $tools_management := list }}
 {{- if $dev }}
   {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
@@ -66,6 +66,7 @@
 
   {{- if gt (len $agent_runtimes) 0 }}
     {{- $plugins = promptMultichoiceOnce . "ai.plugins" "Which agent plugin(s) would you like to install" $data.plugins (index $data.default_plugins $profile) }}
+    {{- $sandboxes = promptMultichoiceOnce . "ai.sandboxes" "Which sandbox(es) should run the agent runtimes" (list "nono" "sbx" "srt") }}
   {{- end }}
 
   {{- $container_runtimes = promptMultichoiceOnce . "container.runtimes" "Which container runtime(s) would you like to install" $data.container_runtimes (index $data.default_container_runtimes $profile) }}
@@ -119,17 +120,28 @@ interpreters:
 {{- end }}
 
 data:
+{{- if eq .chezmoi.os "windows" }}
+  gaming: {{ $gaming }}
+  ide:{{ if eq (len $ide) 0 }} []{{ else }}{{ $ide | toYaml | trim | nindent 4 }}{{ end }}
+  machine:
+    name: {{ $machine_name }}
+  profile: {{ $profile }}
+  shell: {{ $shell }}
+  user:
+    username: {{ $username }}
+  wsl: {{ $wsl }}
+{{- else }}
   ai:
-    plugins:{{ $plugins | toYaml | trim | nindent 6 }}
-    rules: {{ $rules }}
-    runtimes:{{ $agent_runtimes | toYaml | trim | nindent 6 }}
+    plugins:{{ if eq (len $plugins) 0 }} []{{ else }}{{ $plugins | toYaml | trim | nindent 6 }}{{ end }}
+    rules: {{ dig "ai" "rules" true . }}
+    runtimes:{{ if eq (len $agent_runtimes) 0 }} []{{ else }}{{ $agent_runtimes | toYaml | trim | nindent 6 }}{{ end }}
+    sandboxes:{{ if eq (len $sandboxes) 0 }} []{{ else }}{{ $sandboxes | toYaml | trim | nindent 6 }}{{ end }}
   container:
     engine: {{ $container_engine }}
-    runtimes:{{ $container_runtimes | toYaml | trim | nindent 6 }}
-  gaming: {{ $gaming }}
+    runtimes:{{ if eq (len $container_runtimes) 0 }} []{{ else }}{{ $container_runtimes | toYaml | trim | nindent 6 }}{{ end }}
   git:
     ssh: {{ $git_ssh }}
-  ide:{{ $ide | toYaml | trim | nindent 4 }}
+  ide:{{ if eq (len $ide) 0 }} []{{ else }}{{ $ide | toYaml | trim | nindent 4 }}{{ end }}
   machine:
     kind: {{ $machine }}
     name: {{ $machine_name }}
@@ -138,10 +150,10 @@ data:
   shell: {{ $shell }}
   tools:
 {{- range $manager := $managers }}
-    {{ $manager }}:{{ index $tools $manager | toYaml | trim | nindent 6 }}
+    {{ $manager }}:{{ if eq (len (index $tools $manager)) 0 }} []{{ else }}{{ index $tools $manager | toYaml | trim | nindent 6 }}{{ end }}
 {{- end }}
-  tools_management:{{ $tools_management | toYaml | trim | nindent 4 }}
+  tools_management:{{ if eq (len $tools_management) 0 }} []{{ else }}{{ $tools_management | toYaml | trim | nindent 4 }}{{ end }}
   user:
     email: {{ $email }}
     username: {{ $username }}
-  wsl: {{ $wsl }}
+{{- end }}

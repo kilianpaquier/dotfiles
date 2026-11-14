@@ -10,8 +10,10 @@ set -e
 # shellcheck disable=SC1091
 . "$(dirname "$0")/sudo.sh"
 
-env="$HOME/.local/state/chezmoi/env"
-single="$HOME/.nix-profile/etc/profile.d/nix.sh"
+# nix.conf only gets this setting from the first home-manager switch, which runs after this hook
+export NIX_CONFIG="use-xdg-base-directories = true"
+
+single="$HOME/.local/state/nix/profile/etc/profile.d/nix.sh"
 multi=/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 # renovate: datasource=github-tags packageName=NixOS/nix
@@ -31,9 +33,9 @@ if [ ! -f "$single" ] && [ ! -f "$multi" ]; then
   fi
 
   if command -v curl >/dev/null 2>&1; then
-    curl -fsSL "$nix_installer" | sh -s -- --no-daemon --no-modify-profile
+    curl -fsSL "$nix_installer" | sh -s -- --no-channel-add --no-daemon --no-modify-profile
   elif command -v wget >/dev/null 2>&1; then
-    wget -qO- "$nix_installer" | sh -s -- --no-daemon --no-modify-profile
+    wget -qO- "$nix_installer" | sh -s -- --no-channel-add --no-daemon --no-modify-profile
   else
     error "Neither curl nor wget is installed, one is needed to install nix"
   fi
@@ -42,7 +44,14 @@ fi
 # shellcheck disable=SC1090
 if [ -f "$single" ]; then . "$single"; else . "$multi"; fi
 
+# the installer's channel step reads its certificates from ~/.nix-profile, which the XDG setting never creates
+if [ -f "$single" ] && [ ! -e "$HOME/.local/state/nix/defexpr/channels/nixpkgs" ]; then
+  nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
+  nix-channel --update
+fi
+
 # tools the modify_ scripts need, a GC-rooted build independent from home.nix and its apply order
+env="$HOME/.local/state/chezmoi/env"
 if [ ! -x "$env/bin/python3" ]; then
   mkdir -p "$(dirname "$env")"
   nix-build -E 'with import <nixpkgs> {}; buildEnv { name = "chezmoi-env"; paths = [ jq (python3.withPackages (ps: [ ps.tomlkit ])) ]; }' -o "$env"

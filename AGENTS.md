@@ -1,89 +1,49 @@
 # chezmoi
 
-Dotfiles managed by [chezmoi](https://www.chezmoi.io/), with Linux packages installed by home-manager (nix).
-The source root is `chezmoi/`, set in `.chezmoiroot`.
-Paths below are relative to it, except `symlinks/` and repo-root files.
+Dotfiles managed by [chezmoi](https://www.chezmoi.io/).
+The source root is `chezmoi/` (`.chezmoiroot`), and paths below are relative to it.
 
-## Before changing anything
+## Run chezmoi
 
-- Check the upstream standard first (man pages, official docs, Context7 `/websites/chezmoi_io` for chezmoi), and follow the mechanism it documents.
-- Check how sibling files already solve the same problem (checks, warnings, layout), and match them.
-- Propose a workaround only when neither gives an answer, and say so.
+- Expect every chezmoi command to run `scripts/bootstrap.sh` first (the `read-source-state` hook), which installs nix on a machine without it.
+- Run `apply`, `init` and `update` only when asked.
 
-## Where things go
+## Place a path to ignore, delete or remove
 
-- Linux packages go in `private_dot_config/home-manager/home.nix.tmpl`, with attrs from `nixpkgs-unstable` only.
+Linux and Windows render their own chezmoi data. Linux has no `.wsl`, Windows has no `.ai`.
+Read an OS's data only in its own branch, since the branch not taken is never evaluated.
+chezmoi deletes no ignored target and `.chezmoiremove` skips ignored targets, so a managed path leaves a machine through the prune script and an unmanaged one through `.chezmoiremove.tmpl`.
 
-### Removing paths
+1. Pick the row that matches the path.
 
-The right file depends on whether chezmoi ever managed the path.
+   | Path                                         | Example                             | Add it to                           |
+   | -------------------------------------------- | ----------------------------------- | ----------------------------------- |
+   | Never managed by chezmoi                     | `.cache/uv` once `uv` is deselected | `.chezmoiremove.tmpl`               |
+   | Managed here, deleted once deselected        | `.kube` once `k8s` is deselected    | `.chezmoitemplates/deselected.tmpl` |
+   | Managed on the other OS                      | `AppData` on Linux                  | `.chezmoitemplates/deselected.tmpl` |
+   | Managed here, and a tool or the user owns it | `workspaces` on a Linux desktop     | `.chezmoiignore.tmpl`               |
 
-- Paths chezmoi never managed (caches, tool state) go in `.chezmoiremove.tmpl`.
-- Paths chezmoi managed until an option got deselected go in `.chezmoitemplates/chezmoiignore.tmpl`.
-- The `run_onchange_after_60-prune-deselected.sh.tmpl` script deletes those when the selection changes.
-- Paths that never apply to an OS go in `.chezmoiignore.tmpl` itself, where nothing prunes them.
+2. Add the line under the condition of its option, in the branch of the OS that reads that option.
+3. Complete the pair for a path that differs by OS.
+   - A new Windows-managed path: exclude it in the Windows branch of `.chezmoiignore.tmpl` (`!`, and one `!` per parent directory), and list it in the Linux branch of `deselected.tmpl`.
+   - A new Linux path that no option controls: list it in the Windows branch of `deselected.tmpl`.
+   - A new Linux path that an option controls: nothing more, since Windows renders `deselected.tmpl` with every option deselected and ignores everything else (`**`).
+4. List the files, not the directory, when the tool keeps its own data there (`.ssh/known_hosts`, not `.ssh`), since deleting a directory removes its history and credentials too.
 
-## Scripts
+Done when the path sits in exactly one row's file, and in its pair when step 3 applies.
 
-- Add a date stamp comment only when upstream drifts on its own (mise tools, agent plugins, winget).
-- A script depending on a file outside its body puts that file's `sha256sum` in a comment, so `run_onchange_` sees changes.
+## Write a script
 
-### Fragments
+- Start a script that reruns when upstream drifts on its own with a date stamp, like the mise tools one: `# date: {{ now | date "2006-01-02" }}`.
+- Record the hash of a file outside the script's body, so `run_onchange_` reruns: `# mise config: {{ includeTemplate "…" . | sha256sum }}`.
+- Embed a static fragment with `include` and a fragment that reads chezmoi data with `includeTemplate`.
 
-Embedding a fragment from `.chezmoitemplates/<os>/` keeps it inside the script, so `run_onchange_` tracks it and `diff.scriptContents: false` keeps it out of `chezmoi diff`.
+## Keep files in sync
 
-- Embed a static fragment with `{{ include ".chezmoitemplates/<os>/<name>" | trim }}`.
-- Embed a fragment that reads chezmoi data with `{{ includeTemplate "<os>/<name>" . | trim }}`.
-- A fragment runs in the parent's shell with the parent's options, so it has no shebang and no `set`.
-- Guard a fragment's body with `if` where an `exit` would end the parent.
-- Add the `.tmpl` suffix only when the template syntax breaks shellcheck.
+Change the second file in the same commit as the first:
 
-## Agents
-
-- Cover every runtime the `ai.runtimes` prompt offers, checking an unselected one's docs online.
-- Set an unselected plugin to `false` in `.chezmoitemplates/plugins.json.tmpl`, since the sync uninstalls `false` entries and leaves deleted ones installed.
-
-### sbx
-
-The entry point is `~/.sbxenv.yaml` (`dot_sbxenv.yaml.tmpl`), started with `sbx env run`.
-It mounts the host harness read-only.
-It composes `dot_sbx/kits/<agent>.yaml` with `dot_sbx/kits/tools.yaml`.
-
-- Kits follow Sandbox Kit v3 as the latest sbx release implements it, not the nix-installed version.
-- Tokens reach the sandbox only through `sbx secret` and the proxy, never as a credential file or the mise secrets file.
-- Declare a credential service in a kit only when the agent's published kit lacks it (`sbx kit inspect docker.io/sbx/<agent>:latest`), since two owners of one service conflict.
-
-## Keep in sync
-
-- A new prompt in `.chezmoi.yaml.tmpl`: the README prompts tables.
-- A new mise bundle:
-  - `.chezmoidata/tools.yaml`
-  - the `$bundles` dict in `private_dot_config/mise/modify_config.toml.py.tmpl`
-  - the README tools table
-  - its caches in `.chezmoiremove.tmpl`, its managed config in `.chezmoitemplates/chezmoiignore.tmpl`
-- A new agent plugin: `.chezmoitemplates/plugins.json.tmpl` and the README agent components table.
-- A desktop app in `home.nix.tmpl`: its counterpart in `.chezmoitemplates/windows/winget-sync.ps1` and the README desktop apps table.
-- Trusted directories:
-  - `private_dot_claude/settings.partial.json`: `permissions.additionalDirectories`
-  - `private_dot_copilot/modify_private_config.json.py.tmpl`: `trustedFolders`
-- URL permissions:
-  - `private_dot_claude/settings.partial.json`: `WebFetch(domain:...)`
-  - `private_dot_copilot/settings.partial.json`: `allowedUrls`
-  - `dot_vscode-server/data/Machine/settings.copilot.partial.json`: `chat.tools.urls.autoApprove`
-- Tool permissions:
-  - `private_dot_claude/settings.partial.json`: `permissions.allow`, `permissions.ask`, `permissions.deny`
-  - `dot_vscode-server/data/Machine/settings.copilot.partial.json`: `chat.tools.terminal.autoApprove`
-
-## README
-
-The [README.md](README.md) explains the setup to its users, with tables for prompts, tool bundles, desktop apps and agent components.
-Read it when a task touches one of those.
-Write in it only what a user sees or does, leaving mechanisms, config internals and binary names out.
-
-## Checks and boundaries
-
-- Run `shellcheck` on each changed shell script without the `.tmpl` suffix.
-- Read-only chezmoi commands are fine: `cat`, `data`, `diff`, `ignored`, `managed`.
-- Every chezmoi command runs `scripts/bootstrap.sh` first (`read-source-state` hook), which installs nix on a machine without it, so it exits fast once its work is done.
-- Its GC-rooted env at `~/.local/state/chezmoi/env` lets `modify_*.py.tmpl` render on a fresh machine.
-- Run `apply`, `init`, `update`, `execute-template` or any other state-changing command only when asked.
+- A prompt in `.chezmoi.yaml.tmpl` and its row in the README prompts table.
+- A desktop app in `home.nix.tmpl` and in `winget-sync.ps1`.
+- A tool permission in `private_dot_claude/settings.partial.json` (`permissions`) and in `dot_vscode-server/data/Machine/settings.copilot.partial.json` (`chat.tools.terminal.autoApprove`).
+- A URL permission in `private_dot_claude/settings.partial.json` (`WebFetch(domain:…)`), `private_dot_copilot/settings.partial.json` (`allowedUrls`) and `dot_vscode-server/data/Machine/settings.copilot.partial.json` (`chat.tools.urls.autoApprove`).
+- A host the agents reach in `.chezmoidata/sandbox.yaml` (`sandbox.network.allow`), which srt and the sbx tools kit both render.

@@ -2,19 +2,19 @@
 {{- $unset := list }}
 
 {{- if has "claude" .ai.runtimes }}
-{{- $_ := set $set "kit.shortcuts.claude" (joinPath .chezmoi.homeDir ".sbx" "kits" "claude.yaml") }}
+{{- $_ := set $set "kit.shortcuts.claude" (joinPath .chezmoi.homeDir ".sbx" "kits" "claude") }}
 {{- else }}
 {{- $unset = append $unset (list "kit.shortcuts.claude") }}
 {{- end }}
 
 {{- if has "codex" .ai.runtimes }}
-{{- $_ := set $set "kit.shortcuts.codex" (joinPath .chezmoi.homeDir ".sbx" "kits" "codex.yaml") }}
+{{- $_ := set $set "kit.shortcuts.codex" (joinPath .chezmoi.homeDir ".sbx" "kits" "codex") }}
 {{- else }}
 {{- $unset = append $unset (list "kit.shortcuts.codex") }}
 {{- end }}
 
 {{- if has "copilot" .ai.runtimes }}
-{{- $_ := set $set "kit.shortcuts.copilot" (joinPath .chezmoi.homeDir ".sbx" "kits" "copilot.yaml") }}
+{{- $_ := set $set "kit.shortcuts.copilot" (joinPath .chezmoi.homeDir ".sbx" "kits" "copilot") }}
 {{- else }}
 {{- $unset = append $unset (list "kit.shortcuts.copilot") }}
 {{- end }}

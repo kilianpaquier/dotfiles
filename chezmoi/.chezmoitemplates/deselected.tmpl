@@ -1,0 +1,138 @@
+{{- /* Managed paths this machine deletes, since chezmoi never deletes an ignored target: the ones of its deselected options and the ones of the other OS. */ -}}
+{{- $data := dict
+    "ai" (dict "runtimes" (list) "sandboxes" (list))
+    "container" (dict "runtimes" (list))
+    "git" (dict "ssh" false)
+    "ide" (list)
+    "machine" (dict "kind" "desktop")
+    "shell" "bash"
+    "tools" (dict "mise" (list))
+    "tools_management" (list) }}
+{{- if eq .chezmoi.os "linux" }}{{- $data = . }}{{- end }}
+
+{{- if eq .chezmoi.os "windows" }}
+.bash_aliases
+.bash_logout
+.bashenv
+.bashrc
+.config/environment.d
+.config/home-manager
+.gnupg/gpg-agent.conf
+.profile
+{{- if not .wsl }}
+.wslconfig
+{{- end }}
+{{- end }}
+
+{{- if eq .chezmoi.os "linux" }}
+.config/git/git-prompt.sh
+.inputrc
+.wslconfig
+AppData
+{{- end }}
+
+{{- if not (has "mise" $data.tools_management) }}
+.config/mise
+{{- end }}
+
+{{- if or (not (has "gitlab-ci-local" $data.tools.mise)) (eq (len $data.container.runtimes) 0) }}
+.gitlab-ci-local
+{{- end }}
+
+{{- if eq $data.machine.kind "desktop" }}
+.config/git/config
+.config/git/ignore
+.config/gopass/config
+{{- end }}
+
+{{- if not $data.git.ssh }}
+.config/git/ssh-sign.sh
+{{- end }}
+
+{{- if not (or (has "opentofu" $data.tools.mise) (has "terraform" $data.tools.mise)) }}
+.terraformrc
+{{- end }}
+
+{{- if not (has "gh" $data.tools.mise) }}
+.config/gh
+{{- end }}
+
+{{- if not (has "glab" $data.tools.mise) }}
+.config/glab-cli
+{{- end }}
+
+{{- if not (has "k8s" $data.tools.mise) }}
+.kube
+{{- end }}
+
+{{- if eq (len $data.container.runtimes) 0 }}
+.docker/config.json
+{{- end }}
+
+{{- if not (has "podman" $data.container.runtimes) }}
+.config/containers
+{{- end }}
+
+{{- if not (has "agentsview" $data.tools.mise) }}
+.agentsview
+{{- end }}
+
+{{- if or (eq (len $data.ai.runtimes) 0) (not (has "codegraph" $data.tools.mise)) }}
+.codegraph
+{{- end }}
+
+{{- if or (eq (len $data.ai.runtimes) 0) (not (has "destructive-command-guard" $data.tools.mise)) }}
+.config/dcg
+{{- end }}
+
+{{- if or (eq (len $data.ai.runtimes) 0) (not (has "rtk" $data.tools.mise)) }}
+.config/rtk
+{{- end }}
+
+{{- if eq (len $data.ai.runtimes) 0 }}
+.apm
+{{- end }}
+
+{{- if not (has "claude" $data.ai.runtimes) }}
+.claude
+{{- end }}
+
+{{- if not (has "codex" $data.ai.runtimes) }}
+.codex
+{{- end }}
+
+{{- if not (has "copilot" $data.ai.runtimes) }}
+.copilot
+{{- end }}
+
+{{- range $agent := list "claude" "codex" "copilot" }}
+{{- if not (has $agent $data.ai.runtimes) }}
+.sbx/kits/{{ $agent }}
+{{- end }}
+{{- end }}
+
+{{- if not (has "nono" $data.ai.sandboxes) }}
+.config/nono
+{{- end }}
+
+{{- if not (has "srt" $data.ai.sandboxes) }}
+.config/srt
+{{- end }}
+
+{{- if not (has "sbx" $data.ai.sandboxes) }}
+.config/sandboxes
+.sbx
+.sbxenv.yaml
+{{- end }}
+
+{{- if or (eq $data.machine.kind "desktop") (not (has "vscode" $data.ide)) }}
+.local/bin/code
+.vscode-server/data/Machine/settings.json
+{{- end }}
+
+{{- if ne $data.shell "zsh" }}
+.env.zsh
+.zlogout
+.zprofile
+.zshrc
+{{- end }}

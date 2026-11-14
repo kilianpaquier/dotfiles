@@ -3,8 +3,8 @@
 
 schemaVersion: "3"
 kind: set
-displayName: claude dotfiles
-description: claude without the dcg, mempalace and protected-paths plugins, the harness is mounted by ~/.sbxenv.yaml
+displayName: codex dotfiles
+description: codex configuration, the harness is mounted by ~/.sbxenv.yaml
 version: 0.0.0
 licenses: [MIT]
 
@@ -15,23 +15,16 @@ capabilities:
         - type: com.docker.sandbox/lifecycle@1
           config:
             files:
-              # A managed false blocks a plugin at every scope.
-              - path: /etc/claude-code/managed-settings.d/50-dotfiles.json
+              - path: /etc/codex/managed_config.toml
                 content: |
-                  {"enabledPlugins": {"dcg@one-for-all": false, "mempalace@mempalace": false, "protected-paths@one-for-all": false}}
+                  [plugins."mempalace@mempalace"]
+                  enabled = false
 
   - group:
       name: github
+      optional: true
       capabilities:
-        # - type: com.docker.sandbox/network-policy@1
-        #   config:
-        #     runtime:
-        #       allow:
-        #         - api.github.com
-        #         - github.com
-        #         - raw.githubusercontent.com
         - type: com.docker.sandbox/credential@1
-          optional: true
           description: GitHub token for gh, from sbx secret set github
           config:
             service: github
@@ -45,4 +38,4 @@ capabilities:
                 - { domain: raw.githubusercontent.com, header: Authorization, format: "Bearer %s" }
 
 kits:
-  - ref: docker.io/sbx/claude:latest
+  - ref: docker.io/sbx/codex:latest

@@ -13,14 +13,14 @@
 {{- $unset := list }}
 
 {{- range $id, $enabled := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" false) .) | fromJson }}
-{{- if $enabled }}
-{{- $_ := set $plugins $id (dict "enabled" true) }}
-{{- else }}
-{{- $unset = append $unset (list "plugins" $id) }}
-{{- end }}
+{{- if $enabled }}{{- $_ := set $plugins $id (dict "enabled" true) }}{{- else }}{{- $unset = append $unset (list "plugins" $id) }}{{- end }}
 {{- end }}
 
 {{- includeTemplate "scripts/toml-merge.py" (dict
-  "set" (dict "marketplaces" $marketplaces "plugins" $plugins)
+  "set" (dict
+    "marketplaces" $marketplaces
+    "plugins" $plugins
+    "sandbox_mode" "danger-full-access"
+    "sqlite_home" (printf "%s/.codex/sqlite" .chezmoi.homeDir))
   "sort" list
   "unset" $unset) }}

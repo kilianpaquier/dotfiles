@@ -1,53 +1,19 @@
 {{- $set := include "private_dot_copilot/settings.partial.json" | fromJson }}
 
 {{- $enabled_plugins := dict }}
-{{- $unset := list }}
+{{- $unset := list (list "sandbox") }}
 
 {{- range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" false) .) | fromJson }}
 {{- if $on }}{{- $_ := set $enabled_plugins $id true }}{{- else }}{{- $unset = append $unset (list "enabledPlugins" $id) }}{{- end }}
 {{- end }}
 {{- $_ := set $set "enabledPlugins" $enabled_plugins }}
 
-{{- $_ := set $set.sandbox "userPolicy" (dict "filesystem" (dict
-  "readonlyPaths" (list
-    "/nix/store"
-    (printf "/run/user/%s/bus" .chezmoi.uid)
-    (joinPath .chezmoi.homeDir ".cache" "go" "bin")
-    (joinPath .chezmoi.homeDir ".config" "glab-cli")
-    (joinPath .chezmoi.homeDir ".config" "mise")
-    (joinPath .chezmoi.homeDir ".copilot" "agents")
-    (joinPath .chezmoi.homeDir ".copilot" "copilot-instructions.md")
-    (joinPath .chezmoi.homeDir ".copilot" "hooks")
-    (joinPath .chezmoi.homeDir ".copilot" "installed-plugins")
-    (joinPath .chezmoi.homeDir ".copilot" "instructions")
-    (joinPath .chezmoi.homeDir ".copilot" "skills")
-    (joinPath .chezmoi.homeDir ".local" "share" "mise")
-    (joinPath .chezmoi.homeDir ".nix-profile"))
-  "readwritePaths" (list
-    (joinPath .chezmoi.homeDir ".cache" "go")
-    (joinPath .chezmoi.homeDir ".cache" "go-build")
-    (joinPath .chezmoi.homeDir ".cache" "goimports")
-    (joinPath .chezmoi.homeDir ".cache" "golangci-lint")
-    (joinPath .chezmoi.homeDir ".cache" "gopls")
-    (joinPath .chezmoi.homeDir ".cache" "hugo_cache")
-    (joinPath .chezmoi.homeDir ".cache" "pip")
-    (joinPath .chezmoi.homeDir ".cache" "pre-commit")
-    (joinPath .chezmoi.homeDir ".cache" "typescript")
-    (joinPath .chezmoi.homeDir ".cache" "uv")
-    (joinPath .chezmoi.homeDir ".cache" "virtualenv")
-    (joinPath .chezmoi.homeDir ".copilot" "session-state")
-    (joinPath .chezmoi.homeDir ".local" "share" "chezmoi")
-    (joinPath .chezmoi.homeDir "workspaces")))) }}
-
 {{- includeTemplate "scripts/json-merge.py" (dict
   "indent" 2
   "override" (list
     (list "allowedUrls")
-    (list "deniedUrls")
-    (list "sandbox" "userPolicy" "filesystem" "readonlyPaths")
-    (list "sandbox" "userPolicy" "filesystem" "readwritePaths"))
+    (list "deniedUrls"))
   "set" $set
   "sort" (list
-    (list "enabledPlugins")
-    (list "sandbox"))
+    (list "enabledPlugins"))
   "unset" $unset) }}

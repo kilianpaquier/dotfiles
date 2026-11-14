@@ -5,70 +5,70 @@
 {{- $shell := has "shell" .tools.mise }}
 {{- $terraform := has "terraform" .tools.mise }}
 {
-  "lspServers": {
+    "lspServers": {
 {{- if $go }}
-    "go": {
-      "command": "gopls",
-      "args": [],
-      "fileExtensions": {
-        ".go": "go"
-      }
-    },
+        "go": {
+            "command": "gopls",
+            "args": [],
+            "fileExtensions": {
+                ".go": "go"
+            }
+        },
 {{- end }}
 {{- if $java }}
-    "java": {
-      "command": "jdtls",
-      "args": [],
-      "fileExtensions": {
-        ".java": "java"
-      }
-    },
+        "java": {
+            "command": "jdtls",
+            "args": [],
+            "fileExtensions": {
+                ".java": "java"
+            }
+        },
 {{- end }}
 {{- if $kotlin }}
-    "kotlin": {
-      "command": "kotlin-lsp",
-      "args": ["--stdio"],
-      "fileExtensions": {
-        ".kt": "kotlin",
-        ".kts": "kotlin"
-      }
-    },
+        "kotlin": {
+            "command": "kotlin-lsp",
+            "args": ["--stdio"],
+            "fileExtensions": {
+                ".kt": "kotlin",
+                ".kts": "kotlin"
+            }
+        },
 {{- end }}
 {{- if $opentofu }}
-    "opentofu": {
-      "command": "tofu-ls",
-      "args": ["serve"],
-      "fileExtensions": {
-        ".tf": "opentofu",
-        ".tfvars": "opentofu-vars",
-        ".tofu": "opentofu"
-      }
-    },
+        "opentofu": {
+            "command": "tofu-ls",
+            "args": ["serve"],
+            "fileExtensions": {
+                ".tf": "opentofu",
+                ".tfvars": "opentofu-vars",
+                ".tofu": "opentofu"
+            }
+        },
 {{- end }}
 {{- if $shell }}
-    "shellscript": {
-      "command": "bash-language-server",
-      "args": ["start"],
-      "fileExtensions": {
-        ".bash": "shellscript",
-        ".sh": "shellscript"
-      }
-    },
+        "shellscript": {
+            "command": "bash-language-server",
+            "args": ["start"],
+            "fileExtensions": {
+                ".bash": "shellscript",
+                ".sh": "shellscript"
+            }
+        },
 {{- end }}
 {{- if $terraform }}
-    "terraform": {
-      "command": "terraform-ls",
-      "args": ["serve"],
-      "fileExtensions": {
-        ".policy.hcl": "terraform-policy",
-        ".policytest.hcl": "terraform-policytest",
-        ".tf": "terraform",
-        ".tfcomponent.hcl": "terraform-stack",
-        ".tfdeploy.hcl": "terraform-deploy",
-        ".tfquery.hcl": "terraform-search",
-        ".tfvars": "terraform-vars"
-      }
-    },
+        "terraform": {
+            "command": "terraform-ls",
+            "args": ["serve"],
+            "fileExtensions": {
+                ".policy.hcl": "terraform-policy",
+                ".policytest.hcl": "terraform-policytest",
+                ".tf": "terraform",
+                ".tfcomponent.hcl": "terraform-stack",
+                ".tfdeploy.hcl": "terraform-deploy",
+                ".tfquery.hcl": "terraform-search",
+                ".tfvars": "terraform-vars"
+            }
+        },
 {{- end }}
-  }
+    }
 }

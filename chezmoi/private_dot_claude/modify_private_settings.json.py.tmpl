@@ -1,7 +1,7 @@
 {{- $set := include "private_dot_claude/settings.partial.json" | fromJson }}
 
 {{- $enabled_plugins := dict }}
-{{- $unset := list }}
+{{- $unset := list (list "sandbox") }}
 
 {{- range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" true) .) | fromJson }}
 {{- if $on }}{{- $_ := set $enabled_plugins $id true }}{{- else }}{{- $unset = append $unset (list "enabledPlugins" $id) }}{{- end }}

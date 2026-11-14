@@ -1,0 +1,59 @@
+{{- $read := concat .sandbox.read_dirs .sandbox.read_files }}
+{{- $write := concat (list "/tmp") .sandbox.workspaces .sandbox.write_dirs .sandbox.write_files }}
+{{- $deny_write := list }}
+
+{{- range $agent := .ai.runtimes }}
+{{- with index $.sandbox.agents $agent }}
+{{- $read = concat $read .read .read_files }}
+{{- $write = concat $write .write .write_files }}
+{{- $deny_write = concat $deny_write (dig "deny_write" (list) .) }}
+{{- end }}
+{{- end }}
+
+{{- if .git.ssh }}{{ $read = concat $read (list (printf "/run/user/%s/ssh-agent" .chezmoi.uid) "~/.ssh/id_ed25519.pub") }}{{- end -}}
+
+{
+    "credentials": {
+        "envVars": [
+            {
+                "injectHosts": ["*.githubcopilot.com", "api.github.com", "raw.githubusercontent.com"],
+                "mode": "mask",
+                "name": "GITHUB_TOKEN"
+            },
+            {
+                "injectHosts": ["gitlab.com"],
+                "mode": "mask",
+                "name": "GITLAB_TOKEN"
+            },
+            { "mode": "deny", "name": "ANTHROPIC_API_KEY" },
+            { "mode": "deny", "name": "AWS_ACCESS_KEY_ID" },
+            { "mode": "deny", "name": "AWS_SECRET_ACCESS_KEY" },
+            { "mode": "deny", "name": "AWS_SESSION_TOKEN" },
+            { "mode": "deny", "name": "CI_JOB_TOKEN" },
+            { "mode": "deny", "name": "GH_TOKEN" },
+            { "mode": "deny", "name": "HF_TOKEN" },
+            { "mode": "deny", "name": "NPM_TOKEN" },
+            { "mode": "deny", "name": "OPENAI_API_KEY" },
+            { "mode": "deny", "name": "PULUMI_ACCESS_TOKEN" },
+            { "mode": "deny", "name": "SOPS_AGE_KEY" },
+            { "mode": "deny", "name": "VAULT_TOKEN" }
+        ]
+    },
+    "filesystem": {
+        "allowRead": {{ $read | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "allowWrite": {{ $write | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "denyRead": ["/run/user/{{ .chezmoi.uid }}", "~"],
+        "denyWrite": {{ $deny_write | sortAlpha | toPrettyJson "    " | indent 8 | trim }}
+    },
+    "mandatoryDenySearchDepth": 6,
+    "network": {
+        "allowAllUnixSockets": true,
+        "allowedDomains": {{ .sandbox.network.allow | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "deniedDomainReasons": {
+            "*:22": "SSH is blocked in the sandbox, so git push and fetch over SSH must run on the host",
+            "*:2222": "SSH is blocked in the sandbox, so git push and fetch over SSH must run on the host"
+        },
+        "deniedDomains": ["*:22", "*:2222"],
+        "tlsTerminate": {}
+    }
+}

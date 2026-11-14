@@ -92,8 +92,8 @@ if ! shopt -oq posix; then
   elif [ -f "/etc/bash_completion" ]; then
     # shellcheck disable=SC1091
     . /etc/bash_completion
-  elif [ -f "$HOME/.nix-profile/share/bash-completion/bash_completion" ]; then
+  elif [ -f "$HOME/.local/state/nix/profile/share/bash-completion/bash_completion" ]; then
     # shellcheck disable=SC1091
-    . "$HOME/.nix-profile/share/bash-completion/bash_completion"
+    . "$HOME/.local/state/nix/profile/share/bash-completion/bash_completion"
   fi
 fi

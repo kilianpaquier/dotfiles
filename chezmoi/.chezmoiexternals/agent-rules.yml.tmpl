@@ -1,3 +1,4 @@
+{{- if ne .chezmoi.os "windows" }}
 {{- $url := "https://github.com/kilianpaquier/agent-rules/archive/refs/heads/main.tar.gz" }}
 {{- with env "GITHUB_TOKEN" }}{{ $url = replace "https://" (printf "https://x-access-token:%s@" .) $url }}{{ end }}
 {{- if and .ai.rules (has "claude" .ai.runtimes) }}
@@ -17,4 +18,5 @@
     - "*/.apm/instructions/**"
   stripComponents: 3
   refreshPeriod: 24h
+{{- end }}
 {{- end }}

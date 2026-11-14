@@ -4,10 +4,13 @@
 
 {{- if has "mise" .tools_management }}{{- $packages = append $packages "mise" }}{{- end }}
 
-{{- if gt (len .ai.runtimes) 0 }}{{- $packages = concat $packages (list "apm-cli" "docker-sbx") }}{{- end }}
-{{- if has "claude" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "claude-code") }}{{- end }}
+{{- if gt (len .ai.runtimes) 0 }}{{- $packages = append $packages "apm-cli" }}{{- end }}
+{{- if has "claude" .ai.runtimes }}{{- $packages = append $packages "claude-code" }}{{- end }}
 {{- if has "codex" .ai.runtimes }}{{- $packages = append $packages "codex" }}{{- end }}
-{{- if has "copilot" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "github-copilot-cli" "iptables" "slirp4netns") }}{{- end }}
+{{- if has "copilot" .ai.runtimes }}{{- $packages = append $packages "github-copilot-cli" }}{{- end }}
+{{- if has "nono" .ai.sandboxes }}{{- $packages = append $packages "nono" }}{{- end }}
+{{- if has "sbx" .ai.sandboxes }}{{- $packages = append $packages "docker-sbx" }}{{- end }}
+{{- if has "srt" .ai.sandboxes }}{{- $packages = concat $packages (list "bubblewrap" "sandbox-runtime") }}{{- end }}
 
 {{- if has "docker" .container.runtimes }}{{- $packages = concat $packages (list "docker" "passt") }}{{- end }}
 {{- if has "podman" .container.runtimes }}{{- $packages = concat $packages (list "podman" "podman-compose" "docker-compose") }}{{- end }}
@@ -25,7 +28,7 @@
 
 {
   # user extension point, a symlink into the dotfiles repo
-  imports = [ ./local.nix ];
+  imports = [ ./home.local.nix ];
 
   home.username = "{{ .chezmoi.username }}";
   home.homeDirectory = "{{ .chezmoi.homeDir }}";
@@ -57,6 +60,13 @@
     options = "--delete-older-than 30d";
   };
 
+  # the profile lives in ~/.local/state/nix instead of the ~/.nix-profile symlink
+  nix.package = pkgs.nix;
+  nix.settings.use-xdg-base-directories = true;
+
+  # one ssh-agent at a fixed socket ($XDG_RUNTIME_DIR/ssh-agent), so the host sandboxes can grant that single path
+  services.ssh-agent.enable = true;
+
 {{- if or (glob "/usr/share/wayland-sessions/*") (glob "/usr/share/xsessions/*") (stat "/mnt/wslg") }}
 
   # GPU libraries for nix graphical applications on a non-NixOS host
@@ -83,7 +93,7 @@
   ];
 {{- end }}
 
-{{- if gt (len .ai.runtimes) 0 }}
+{{- if has "sbx" .ai.sandboxes }}
 
   # sbx setup ssh writes the sbx store path into the SSH config, so it reruns on each switch.
   home.activation.sbx = lib.hm.dag.entryAfter [ "installPackages" ] ''
@@ -118,7 +128,7 @@
       Environment = [
         "DOCKERD_ROOTLESS_ROOTLESSKIT_NET=pasta"
         "DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=implicit"
-        "PATH=%h/.nix-profile/bin:/usr/bin:/bin"
+        "PATH=${config.home.profileDirectory}/bin:/usr/bin:/bin"
       ];
       ExecStart = "${pkgs.docker}/bin/dockerd-rootless";
     };

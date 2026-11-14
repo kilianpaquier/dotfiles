@@ -7,7 +7,7 @@ set -e
 
 # chezmoi never removes an ignored target, drop the ones it managed before the option was deselected
 
-{{- range includeTemplate "chezmoiignore.tmpl" . | splitList "\n" | compact }}
+{{- range includeTemplate "deselected.tmpl" . | splitList "\n" | compact }}
 rm -rf "$HOME/{{ . }}"
 {{- end }}
 

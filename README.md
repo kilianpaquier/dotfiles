@@ -363,20 +363,18 @@ Start the agent from `~/workspaces` or the **chezmoi** source directory, through
 [**nono**](https://nono.sh) or [**srt**](https://github.com/anthropic-experimental/sandbox-runtime):
 
 ```sh
-nono run --profile dotfiles-claude -- claude
-nono run --profile dotfiles-codex -- codex --no-daemon
-nono run --profile dotfiles-copilot -- copilot
+nono run claude
+nono run copilot
 
-srt --settings ~/.config/srt/settings.json -- claude
-srt --settings ~/.config/srt/settings.json -- codex --no-daemon
-srt --settings ~/.config/srt/settings.json -- copilot
+srt claude
+srt copilot
 ```
 
 The agent works on your projects without seeing your secrets, while still signing commits and calling **GitLab** and **GitHub** with your credentials.
 It can't change its own settings, hooks or plugins, and it can't install tools, run containers, reach databases or `git push`, so you do those yourself.
 
 > [!warning]
-> A plain `claude`, `codex` or `copilot`, or an agent your IDE starts, runs with no sandbox at all.
+> A plain `claude` or `copilot`, or an agent your IDE starts, runs with no sandbox at all.
 
 #### Full sandbox (sbx)
 
@@ -389,10 +387,9 @@ Set it up once, then start an agent from a project:
 ```sh
 sbx login
 sbx secret set anthropic                        # Claude Code API key, or /login inside the sandbox for a subscription
-sbx secret set openai --oauth                   # Codex sign-in, in your browser
 sbx secret set github --command 'gh auth token' # gh, and Copilot sign-in
 sbx secret set gitlab                           # GitLab token with the api scope
-sbx env run                                     # or sbx env run --env-arg agent=codex
+sbx env run
 ```
 
 ### Servers

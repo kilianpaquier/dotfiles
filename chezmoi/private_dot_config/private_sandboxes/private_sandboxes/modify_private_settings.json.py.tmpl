@@ -1,16 +1,4 @@
 {{- $set := dict "feature.ssh" (dict "enabled" true) }}
 {{- $unset := list }}
 
-{{- if has "claude" .ai.runtimes }}
-{{- $_ := set $set "kit.shortcuts.claude" (joinPath .chezmoi.homeDir ".sbx" "kits" "claude") }}
-{{- else }}
-{{- $unset = append $unset (list "kit.shortcuts.claude") }}
-{{- end }}
-
-{{- if has "copilot" .ai.runtimes }}
-{{- $_ := set $set "kit.shortcuts.copilot" (joinPath .chezmoi.homeDir ".sbx" "kits" "copilot") }}
-{{- else }}
-{{- $unset = append $unset (list "kit.shortcuts.copilot") }}
-{{- end }}
-
 {{- includeTemplate "scripts/json-merge.py" (dict "indent" 2 "override" list "set" $set "sort" list "unset" $unset) }}

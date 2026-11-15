@@ -92,32 +92,6 @@
   ];
 {{- end }}
 
-{{- if has "sbx" .ai.sandboxes }}
-
-  # sbx setup ssh writes the sbx store path into the SSH config, so it reruns on each switch.
-  home.activation.sbx = lib.hm.dag.entryAfter [ "installPackages" ] ''
-    sbx=${lib.getExe' pkgs.docker-sbx "sbx"}
-
-    # setup ssh fails while signed out, and only a terminal can sign in
-    if ! run $sbx setup ssh >/dev/null 2>&1; then
-      if [ -t 0 ]; then
-        run $sbx login
-        run $sbx setup ssh >/dev/null
-      else
-        warnEcho "sbx isn't signed in, run: sbx login, then home-manager switch"
-      fi
-    fi
-
-    # init refuses to replace an existing global policy, which is fine on a rerun
-    if ! policy=$(run $sbx policy init allow-all 2>&1); then
-      case "$policy" in
-        *"already initialized"*) ;;
-        *) warnEcho "sbx network policy isn't set: $policy" ;;
-      esac
-    fi
-  '';
-{{- end }}
-
 {{- if has "docker" .container.runtimes }}
 
   systemd.user.services.docker = {

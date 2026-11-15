@@ -1,0 +1,25 @@
+{{- $allow_write := concat .sandbox.host.allow_write (list (print "/tmp/claude-" .chezmoi.uid)) }}
+{{- $deny_domains := .sandbox.network.deny_domains }}
+
+{{- $deny_reasons := dict }}
+{{- range .sandbox.network.deny_ports }}
+{{- $deny_domains = append $deny_domains (printf "*:%v" .) }}
+{{- $_ := set $deny_reasons (printf "*:%v" .) "Port blocked, related actions must be made on the host by the user" }}
+{{- end }}
+
+{
+    "filesystem": {
+        "allowRead": {{ .sandbox.host.allow_read | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "allowWrite": {{ $allow_write | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "denyRead": {{ .sandbox.host.deny_read | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "denyWrite": {{ .sandbox.host.deny_write | sortAlpha | toPrettyJson "    " | indent 8 | trim }}
+    },
+    "mandatoryDenySearchDepth": 6,
+    "network": {
+        "allowAllUnixSockets": false,
+        "allowedDomains": {{ .sandbox.network.allow_domains | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "deniedDomainReasons": {{ $deny_reasons | toPrettyJson "    " | indent 8 | trim }},
+        "deniedDomains": {{ $deny_domains | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "tlsTerminate": {}
+    }
+}

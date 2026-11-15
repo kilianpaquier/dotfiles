@@ -22,12 +22,16 @@
 .cache/copilot
 {{- end }}
 
+{{- if eq (len .ai.sandboxes) 0 }}
+.cache/sandboxes
+{{- end }}
+
 {{- if not (has "nono" .ai.sandboxes) }}
 .local/state/nono
 {{- end }}
 
 {{- if not (has "sbx" .ai.sandboxes) }}
-.cache/sandboxes
+.sbx
 .local/share/sandboxes
 .local/state/sandboxes
 {{- end }}

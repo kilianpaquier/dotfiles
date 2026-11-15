@@ -18,10 +18,6 @@
 .local/state/claude
 {{- end }}
 
-{{- if not (has "codex" .ai.runtimes) }}
-.cache/codex
-{{- end }}
-
 {{- if not (has "copilot" .ai.runtimes) }}
 .cache/copilot
 {{- end }}

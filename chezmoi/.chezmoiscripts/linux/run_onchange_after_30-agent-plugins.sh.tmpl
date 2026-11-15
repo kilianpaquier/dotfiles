@@ -16,11 +16,6 @@ disabled="{{ range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict 
 {{ include ".chezmoitemplates/linux/claude-plugins.sh" | trim }}
 {{- end }}
 
-{{- if has "codex" .ai.runtimes }}
-
-codex plugin marketplace upgrade
-{{- end }}
-
 {{- if has "copilot" .ai.runtimes }}
 
 disabled="{{ range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict "lsps" false) .) | fromJson }}{{ if not $on }} {{ $id }}{{ end }}{{ end }}"

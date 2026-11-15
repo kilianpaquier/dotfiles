@@ -133,7 +133,7 @@ Two profiles exist, `home` and `soprasteria`.
 | -------------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
 | Email to use as git committer                                        |                        |                       | `user.email`         |
 | Whether to sign commits with the SSH key                             | `true`                 |                       | `git.ssh`            |
-| Which AI agent runtimes to install (`claude`, `codex`, `copilot`)    | Depends on the profile |                       | `ai.runtimes`        |
+| Which AI agent runtimes to install (`claude`, `copilot`)             | Depends on the profile |                       | `ai.runtimes`        |
 | Which agent plugins to enable (`cave-talk`, `humanizer`, `ponytail`) | Depends on the profile | at least one agent    | `ai.plugins`         |
 | Which sandboxes to run the agents in (`nono`, `sbx`, `srt`)          |                        | at least one agent    | `ai.sandboxes`       |
 | Which container runtimes to install (`docker` rootless, `podman`)    | Depends on the profile |                       | `container.runtimes` |

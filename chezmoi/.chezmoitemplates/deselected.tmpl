@@ -97,15 +97,11 @@ AppData
 .claude
 {{- end }}
 
-{{- if not (has "codex" $data.ai.runtimes) }}
-.codex
-{{- end }}
-
 {{- if not (has "copilot" $data.ai.runtimes) }}
 .copilot
 {{- end }}
 
-{{- range $agent := list "claude" "codex" "copilot" }}
+{{- range $agent := list "claude" "copilot" }}
 {{- if not (has $agent $data.ai.runtimes) }}
 .sbx/kits/{{ $agent }}
 {{- end }}

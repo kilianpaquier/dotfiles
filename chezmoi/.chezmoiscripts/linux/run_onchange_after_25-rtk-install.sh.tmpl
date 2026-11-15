@@ -14,9 +14,6 @@ set -e
 {{- if has "claude" .ai.runtimes }}
 rtk init -g --auto-patch
 {{- end }}
-{{- if has "codex" .ai.runtimes }}
-rtk init -g --codex
-{{- end }}
 {{- if has "copilot" .ai.runtimes }}
 rtk init -g --copilot --auto-patch
 {{- end }}

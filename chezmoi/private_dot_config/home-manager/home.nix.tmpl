@@ -6,7 +6,6 @@
 
 {{- if gt (len .ai.runtimes) 0 }}{{- $packages = append $packages "apm-cli" }}{{- end }}
 {{- if has "claude" .ai.runtimes }}{{- $packages = append $packages "claude-code" }}{{- end }}
-{{- if has "codex" .ai.runtimes }}{{- $packages = append $packages "codex" }}{{- end }}
 {{- if has "copilot" .ai.runtimes }}{{- $packages = append $packages "github-copilot-cli" }}{{- end }}
 {{- if has "nono" .ai.sandboxes }}{{- $packages = append $packages "nono" }}{{- end }}
 {{- if has "sbx" .ai.sandboxes }}{{- $packages = append $packages "docker-sbx" }}{{- end }}

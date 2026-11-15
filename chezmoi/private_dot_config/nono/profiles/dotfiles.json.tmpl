@@ -90,7 +90,7 @@
                 "upstream": "https://gitlab.com"
             }
         },
-        "deny_domain": ["altssh.gitlab.com", "github.com:22", "github.com:2222", "gitlab.com:22", "gitlab.com:2222", "ssh.github.com"],
+        "deny_domain": {{ .sandbox.network.deny | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "network_profile": null
     },
     "rollback": {

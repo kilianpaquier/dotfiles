@@ -17,44 +17,16 @@ kits:
 
 # Read-only, never a credential file (.claude/.credentials.json, .codex/auth.json, .copilot/config.json, mise config.secrets.toml).
 additionalWorkspaces:
-  - { path: {{ .chezmoi.homeDir }}/.config/mise/config.toml, target: /home/agent/.config/mise/config.toml, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.config/mise/conf.d/10-settings.toml, target: /home/agent/.config/mise/conf.d/10-settings.toml, readOnly: true }
-
 {{- if stat "/usr/local/share/ca-certificates" }}
   - { path: /usr/local/share/ca-certificates, target: /usr/local/share/ca-certificates/host, readOnly: true }
 {{- end }}
 
-{{- if has "claude" .ai.runtimes }}
-  # settings.json mounts as managed settings because sbx seeds the writable ~/.claude/settings.json at start.
-  # installed_plugins.json and known_marketplaces.json hold absolute host paths, so the plugins also mount at their host path.
-  - { path: {{ .chezmoi.homeDir }}/.claude/plugins, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.claude/plugins, target: /home/agent/.claude/plugins, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.claude/settings.json, target: /etc/claude-code/managed-settings.json, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.claude/CLAUDE.md, target: /home/agent/.claude/CLAUDE.md, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.claude/RTK.md, target: /home/agent/.claude/RTK.md, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.claude/rules, target: /home/agent/.claude/rules, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.claude/skills, target: /home/agent/.claude/skills, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.claude/agents, target: /home/agent/.claude/agents, readOnly: true }
+{{- range $agent := .ai.runtimes }}
+{{- with index $.sandbox.agents $agent }}
+{{- range $path := concat .read .read_files }}
+  - { path: {{ $.chezmoi.homeDir }}{{ trimPrefix "~" $path }}, target: /home/agent{{ trimPrefix "~" $path }}, readOnly: true }
 {{- end }}
-
-{{- if has "codex" .ai.runtimes }}
-  - { path: {{ .chezmoi.homeDir }}/.codex/config.toml, target: /home/agent/.codex/config.toml, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.codex/AGENTS.md, target: /home/agent/.codex/AGENTS.md, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.codex/RTK.md, target: /home/agent/.codex/RTK.md, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.codex/hooks.json, target: /home/agent/.codex/hooks.json, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.codex/plugins/cache, target: /home/agent/.codex/plugins/cache, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.agents/skills, target: /home/agent/.agents/skills, readOnly: true }
 {{- end }}
-
-{{- if has "copilot" .ai.runtimes }}
-  - { path: {{ .chezmoi.homeDir }}/.copilot/settings.json, target: /home/agent/.copilot/settings.json, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.copilot/lsp-config.json, target: /home/agent/.copilot/lsp-config.json, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.copilot/copilot-instructions.md, target: /home/agent/.copilot/copilot-instructions.md, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.copilot/agents, target: /home/agent/.copilot/agents, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.copilot/hooks, target: /home/agent/.copilot/hooks, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.copilot/installed-plugins, target: /home/agent/.copilot/installed-plugins, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.copilot/instructions, target: /home/agent/.copilot/instructions, readOnly: true }
-  - { path: {{ .chezmoi.homeDir }}/.copilot/skills, target: /home/agent/.copilot/skills, readOnly: true }
 {{- end }}
 
 sandboxOptions:

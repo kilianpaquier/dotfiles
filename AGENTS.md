@@ -46,4 +46,5 @@ Change the second file in the same commit as the first:
 - A desktop app in `home.nix.tmpl` and in `winget-sync.ps1`.
 - A tool permission in `private_dot_claude/settings.partial.json` (`permissions`) and in `dot_vscode-server/data/Machine/settings.copilot.partial.json` (`chat.tools.terminal.autoApprove`).
 - A URL permission in `private_dot_claude/settings.partial.json` (`WebFetch(domain:…)`), `private_dot_copilot/settings.partial.json` (`allowedUrls`) and `dot_vscode-server/data/Machine/settings.copilot.partial.json` (`chat.tools.urls.autoApprove`).
-- A host the agents reach in `.chezmoidata/sandbox.yaml` (`sandbox.network.allow`), which srt and the sbx tools kit both render.
+- A host the agents reach in `.chezmoidata/sandbox.yaml` (`sandbox.network.allow`), which srt and the sbx tools kit render.
+- A path or host an agent reaches in `.chezmoidata/sandbox.yaml`, never inline in a sandbox template, so every sandbox renders it.

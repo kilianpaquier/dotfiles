@@ -34,7 +34,7 @@ def main():
     wanted = json.loads(r'''{{ toJson .set }}''')
 
     # assign overridden paths in place, delete+reinsert would move the key to the dict's end
-    for path in json.loads(r'''{{ toJson (.override | default list) }}'''):
+    for path in json.loads(r'''{{ toJson .override }}'''):
         *parents, key = path
         src = lookup(wanted, parents)
         if src is None or key not in src:
@@ -46,14 +46,22 @@ def main():
     merge(doc, wanted)
 
     # remove unwanted keys
-    for *parents, key in json.loads(r'''{{ toJson (.unset | default list) }}'''):
+    for *parents, key in json.loads(r'''{{ toJson .unset }}'''):
         table = lookup(doc, parents)
         if isinstance(table, dict):
             table.pop(key, None)
 
-    # sort merged list values or dict keys in place; the sentinel sorts a string after any longer string it prefixes
+    # sort merged list values or dict keys in place
+    # the sentinel sorts a string after any longer string it prefixes
     sort_key = lambda item: str(item).lower() + "￿"
-    for path in json.loads(r'''{{ toJson (.sort | default list) }}'''):
+    for path in json.loads(r'''{{ toJson .sort }}'''):
+        # an empty path sorts the root keys
+        if not path:
+            items = sorted(doc.items(), key=lambda item: sort_key(item[0]))
+            doc.clear()
+            doc.update(items)
+            continue
+
         *parents, key = path
         table = lookup(doc, parents)
         if table is None or key not in table:

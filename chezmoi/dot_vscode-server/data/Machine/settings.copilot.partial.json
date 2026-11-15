@@ -1,6 +1,4 @@
 {
-    "chat.useClaudeHooks": false,
-    "chat.useClaudeMdFile": false,
     "chat.hookFilesLocations": {
         ".claude/settings.json": false,
         ".claude/settings.local.json": false,
@@ -127,6 +125,8 @@
         "https://www.schemastore.org": true,
         "https://www.skills.sh": true
     },
+    "chat.useClaudeHooks": false,
+    "chat.useClaudeMdFile": false,
     "github.copilot.enable": {
         "dotenv": false,
         "http": false,

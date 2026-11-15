@@ -1,5 +1,6 @@
 {{- includeTemplate "scripts/ini-merge.py" (dict
   "indent" "\t"
+  "sort" list
   "set" (dict
     "age" (dict "agent-enabled" "true" "agent-timeout" "3600")
     "core" (dict "autopush" "false" "autosync" "false" "noreminder" "true" "notifications" "false")

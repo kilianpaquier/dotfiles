@@ -2,7 +2,6 @@
 
 {{- if has "copilot" .ai.runtimes }}
 {{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.copilot.partial.json" | fromJson) }}
-{{- $_ := set $set "github.copilot.chat.additionalReadAccessPaths" (list (joinPath .chezmoi.homeDir ".copilot" "instructions")) }}
 {{- else }}
 {{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.no-copilot.partial.json" | fromJson) }}
 {{- end }}
@@ -11,5 +10,5 @@
   "indent" 4
   "override" (list (list "chat.tools.terminal.autoApprove") (list "chat.tools.urls.autoApprove"))
   "set" $set
-  "sort" (list (list "chat.tools.terminal.autoApprove") (list "chat.tools.urls.autoApprove"))
+  "sort" (list (list) (list "chat.tools.terminal.autoApprove") (list "chat.tools.urls.autoApprove"))
   "unset" list) }}

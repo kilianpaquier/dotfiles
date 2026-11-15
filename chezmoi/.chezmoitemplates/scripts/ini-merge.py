@@ -12,9 +12,22 @@ def main():
     config.read_dict(json.loads(r'''{{ toJson .set }}'''))
     indent = json.loads(r'''{{ toJson .indent }}''')
 
-    for section in config.sections():
+    # an empty path sorts the sections, a section name sorts its keys
+    sort = json.loads(r'''{{ toJson .sort }}''')
+
+    # the sentinel sorts a string after any longer string it prefixes
+    sort_key = lambda item: str(item).lower() + "￿"
+
+    sections = config.sections()
+    if [] in sort:
+        sections.sort(key=sort_key)
+
+    for section in sections:
         sys.stdout.write(f"[{section}]\n")
-        for key, value in config[section].items():
+        items = list(config[section].items())
+        if [section] in sort:
+            items.sort(key=lambda item: sort_key(item[0]))
+        for key, value in items:
             sys.stdout.write(f"{indent}{key} = {value}\n")
 
 if __name__ == "__main__":

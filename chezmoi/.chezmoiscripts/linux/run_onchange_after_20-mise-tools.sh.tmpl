@@ -3,7 +3,9 @@
 set -e
 
 # date: {{ now | date "2006-01-02" }}
-# mise config: {{ includeTemplate "private_dot_config/mise/modify_config.toml.py.tmpl" . | sha256sum }}
+# mise config: {{ list
+  (includeTemplate "private_dot_config/mise/modify_config.toml.py.tmpl" .)
+  (includeTemplate "private_dot_config/mise/modify_private_config.secrets.toml.py.tmpl" .) | join "" | sha256sum }}
 
 # shellcheck disable=SC1091
 [ ! -f "$HOME/.profile" ] || . "$HOME/.profile"

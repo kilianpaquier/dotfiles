@@ -135,7 +135,7 @@ Two profiles exist, `home` and `soprasteria`.
 | Whether to sign commits with the SSH key                             | `true`                 |                       | `git.ssh`            |
 | Which AI agent runtimes to install (`claude`, `copilot`)             | Depends on the profile |                       | `ai.runtimes`        |
 | Which agent plugins to enable (`cave-talk`, `humanizer`, `ponytail`) | Depends on the profile | at least one agent    | `ai.plugins`         |
-| Which sandboxes to run the agents in (`nono`, `sbx`, `srt`)          |                        | at least one agent    | `ai.sandboxes`       |
+| Which sandboxes to run the agents in (`sbx`, `srt`)                  |                        | at least one agent    | `ai.sandboxes`       |
 | Which container runtimes to install (`docker` rootless, `podman`)    | Depends on the profile |                       | `container.runtimes` |
 | Which container engine gitlab-ci-local should use                    |                        | two runtimes selected | `container.engine`   |
 | Which tool manager to use (`mise`)                                   | `mise`                 |                       | `tools_management`   |
@@ -339,7 +339,7 @@ Which ones are installed depends on the chosen runtime, the tools installed with
 | `destructive-command-guard` | Hooks              | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | `destructive-command-guard` in `tools.mise`              |
 | `docker`                    | Skills             | [docker/skills](https://github.com/docker/skills)                  | At least one `container.runtimes` selected               |
 | `exam-drill`                | Skills             | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | always                                                   |
-| `feature-dev`               | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | always                                                   |
+| `feature-dev`               | Agents, Skills     | [one-for-all](https://github.com/kilianpaquier/ai-integration)     | `feature-dev` in `ai.plugins`                            |
 | `find-skills`               | Skills             | [vercel-labs/skills](https://github.com/vercel-labs/skills)        | always                                                   |
 | `go`                        | Skills             | [spf13/go-skills](https://github.com/spf13/go-skills)              | `go` in `tools.mise`                                     |
 | `gopls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `go` in `tools.mise`, `claude` and `copilot` only        |
@@ -355,17 +355,13 @@ Which ones are installed depends on the chosen runtime, the tools installed with
 
 ### Agent sandboxes
 
-The `ai.sandboxes` prompt picks how your agents are isolated, on the host with **nono** or **srt**, or in a microVM with **sbx**.
+The `ai.sandboxes` prompt picks how your agents are isolated, on the host with **srt**, or in a microVM with **sbx**.
 
 #### Host sandbox
 
-Start the agent from `~/workspaces` or the **chezmoi** source directory, through
-[**nono**](https://nono.sh) or [**srt**](https://github.com/anthropic-experimental/sandbox-runtime):
+Start the agent from `~/workspaces` or the **chezmoi** source directory, through [**srt**](https://github.com/anthropic-experimental/sandbox-runtime):
 
 ```sh
-nono run claude
-nono run copilot
-
 srt claude
 srt copilot
 ```

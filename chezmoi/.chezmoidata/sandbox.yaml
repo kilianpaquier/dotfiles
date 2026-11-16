@@ -1,70 +1,170 @@
 sandbox:
+  # Host sandboxes (shared kernel) configuration, it applies to srt (anthropic sandbox runtime) and nono (open source project)
   host:
-    allow_read:
+    deny_read:
+      - /boot
+      - /efi
+      - /home
+      - /media
+      - /mnt
+      - /root
+      - /run/credentials
+      - /run/secrets
+      - /run/user
+      - /var/lib/private
+      - /var/log
+      - /var/run/credentials
+    deny_write: []
+    read_file:
       # Git configuration (signing, aliases, etc.)
       - ~/.ssh/id_ed25519.pub
-      - ~/.config/git
       - ~/.gitconfig
 
-      # Binaries accesses
-      - ~/.local/bin
-      - ~/.local/state/nix
-
-      # RC files
-      - ~/.bash_aliases
-      - ~/.bashenv
-      - ~/.bashrc
-      - ~/.env.zsh
-      - ~/.profile
-      - ~/.zprofile
-      - ~/.zshrc
-
       # Mise binaries accesses
-      - ~/.config/mise/conf.d
       - ~/.config/mise/config.toml
       - ~/.config/mise/miserc.toml
-      - ~/.local/share/mise
 
       # Claude harness
       - ~/.claude.json
-      - ~/.claude/agents
       - ~/.claude/CLAUDE.md
-      - ~/.claude/plugins
       - ~/.claude/RTK.md
-      - ~/.claude/rules
       - ~/.claude/settings.json
+
+      # Copilot harness
+      - ~/.copilot/config.json
+      - ~/.copilot/copilot-instructions.md
+      - ~/.copilot/lsp-config.json
+      - ~/.copilot/mcp-config.json
+      - ~/.copilot/permissions-config.json
+      - ~/.copilot/settings.json
+
+      # RC files
+      # - ~/.bash_aliases
+      # - ~/.bash_logout
+      # - ~/.bashenv
+      # - ~/.bashrc
+      # - ~/.env.zsh
+      # - ~/.p10k.zsh
+      # - ~/.profile
+      # - ~/.zlogout
+      # - ~/.zprofile
+      # - ~/.zshenv
+      # - ~/.zshrc
+    read_dir:
+      # Git configuration (signing, aliases, etc.)
+      - ~/.config/git
+
+      # Binaries accesses
+      - ~/.bun
+      - ~/.local/bin
+      - ~/.local/lib
+      - ~/.local/share/uv
+      - ~/.local/state/nix
+
+      # RC directories
+      # - ~/.cache/zsh
+      # - ~/.cache/zsh4humans
+
+      # Mise binaries accesses
+      # - ~/.cache/mise
+      - ~/.config/mise/conf.d
+      - ~/.local/share/mise
+
+      # Claude harness
+      - ~/.claude/agents
+      - ~/.claude/plugins
+      - ~/.claude/rules
+      - ~/.claude/skills
+
+      # Copilot harness
+      - ~/.copilot/.cache
+      - ~/.copilot/agents
+      - ~/.copilot/extensions
+      - ~/.copilot/hooks
+      - ~/.copilot/installed-plugins
+      - ~/.copilot/instructions
+      - ~/.copilot/plugin-data
+      - ~/.copilot/skills
+      - ~/.copilot/servers
+    write_file: []
+    write_dir:
+      - "."
+      - ~/workspaces
+      - /tmp/claude
+
+      # Claude harness
+      - ~/.claude/debug
+      - ~/.claude/plans
+      - ~/.claude/session-env
+
+      # Copilot harness
+      - ~/.copilot/command-history-state
+      - ~/.copilot/ide
+      - ~/.copilot/logs
+      - ~/.copilot/session-state
+      - ~/.copilot/sidebar-session-state
+
+  # Full sandboxes (seperated kernel), it applies to sbx only
+  full:
+    allow_read: # FIXME not working, maybe the kit way could be less painful, kit claude / copilot fails on harness mount and shell kit fails on mise / binaries PATH part
+      # Git configuration (signing, aliases, etc.)
+      - ~/.config/git
+      - ~/.ssh/id_ed25519.pub
+      - ~/.gitconfig
+
+      # Binaries accesses
+      - /nix/store
+      - ~/.bun
+      - ~/.local/bin
+      - ~/.local/lib
+      - ~/.local/share/uv
+      - ~/.local/state/nix
+
+      # Mise binaries accesses
+      - ~/.config/mise/config.toml
+      - ~/.config/mise/miserc.toml
+      # - ~/.cache/mise
+      - ~/.config/mise/conf.d
+      - ~/.local/share/mise
+
+      # RC files
+      # - ~/.bash_aliases
+      # - ~/.bash_logout
+      # - ~/.bashenv
+      # - ~/.bashrc
+      # - ~/.env.zsh
+      # - ~/.p10k.zsh
+      # - ~/.profile
+      # - ~/.zlogout
+      # - ~/.zprofile
+      # - ~/.zshenv
+      # - ~/.zshrc
+
+      # Claude harness
+      - ~/.claude.json
+      - ~/.claude/CLAUDE.md
+      - ~/.claude/RTK.md
+      - ~/.claude/settings.json # FIXME the mounting disables dangerous mode which should be on by default with sbx (the whole purpose)
+      - ~/.claude/agents
+      - ~/.claude/plugins
+      - ~/.claude/rules
       - ~/.claude/skills
 
       # Copilot harness
       - ~/.copilot/agents
+      - ~/.copilot/config.json
       - ~/.copilot/copilot-instructions.md
       - ~/.copilot/hooks
       - ~/.copilot/installed-plugins
       - ~/.copilot/instructions
       - ~/.copilot/lsp-config.json
-      - ~/.copilot/settings.json
+      - ~/.copilot/settings.json # fine, not overridden by copilot sbx
       - ~/.copilot/skills
-    deny_read:
-      - "~"
-      - /run/user # block sockets
-    allow_write:
-      - "."
-      - ~/workspaces
-
-      # Claude harness
-      - ~/.claude/plans
-      - ~/.claude/session-env
-
-      # Copilot harness
-    deny_write: []
-
-  full:
-    allow_read: []
     allow_write: []
 
   # Network constraints
   network:
-    allow_domains:
+    allow_domain:
       - "*.githubcopilot.com"
       - "*.k8s.io"
       - "*.kubernetes.io"
@@ -75,7 +175,6 @@ sandbox:
       - antigravity.google
       - api.anthropic.com
       - api.github.com
-      - api.githubcopilot.com
       - api.openai.com
       - archive.apache.org
       - artifacthub.io
@@ -130,6 +229,7 @@ sandbox:
       - ghcr.io
       - git-scm.com
       - github.com
+      - githubcopilot.com
       - gitlab.com
       - go.dev
       - gohugo.io
@@ -212,13 +312,13 @@ sandbox:
       - www.rtk-ai.app
       - www.schemastore.org
       - www.skills.sh
-    deny_domains:
+    deny_domain:
       - altssh.gitlab.com
       - github.com:22
       - github.com:2222
       - gitlab.com:22
       - gitlab.com:2222
       - ssh.github.com
-    deny_ports:
+    deny_port:
       - 22
       - 2222

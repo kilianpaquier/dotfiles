@@ -14,9 +14,10 @@ def lookup(table, path):
 
 def merge(table, wanted):
     for key, value in wanted.items():
-        if isinstance(value, dict) and isinstance(table.get(key), dict):
-            merge(table[key], value)
-        else:
+        existing = table.get(key)
+        if isinstance(value, dict) and isinstance(existing, dict):
+            merge(existing, value)
+        elif value != "" or key not in table:
             table[key] = value
 
 def main():
@@ -37,7 +38,7 @@ def main():
         for key in sorted(table):
             table[key] = table.pop(key)
 
-    sys.stdout.write(tomlkit.dumps(doc))
+    sys.stdout.write(tomlkit.dumps(doc).lstrip("\n"))
 
 if __name__ == "__main__":
     main()

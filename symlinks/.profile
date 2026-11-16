@@ -29,9 +29,6 @@ umask 022
 # set PATH so it includes bun global dependencies
 [ -d "$HOME/.bun/bin" ] && PATH="$HOME/.bun/bin:$PATH"
 
-# set PATH so it includes mise shims if it exists
-[ -d "$HOME/.local/share/mise/shims" ] && PATH="$HOME/.local/share/mise/shims:$PATH"
-
 # shellcheck disable=SC1091
 # source nix to expand PATH with home-manager installed tools
 if [ -f "$HOME/.local/state/nix/profile/etc/profile.d/nix.sh" ]; then
@@ -52,6 +49,10 @@ elif [ -f "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" ]; the
   . "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
 fi
 
+# set PATH so it includes mise shims and command wrappers if it exists
+[ -d "$HOME/.local/share/mise/shims" ] && PATH="$HOME/.local/share/mise/shims:$PATH"
+[ -d "$HOME/.local/share/mise/command-wrappers/bin" ] && PATH="$HOME/.local/share/mise/command-wrappers/bin:$PATH"
+
 # set DOCKER_HOST so docker CLI targets the rootless daemon if it's installed
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/docker.service" ] && export DOCKER_HOST="unix://${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/docker.sock"
 
@@ -64,7 +65,8 @@ unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
 command -v kubectl-krew >/dev/null 2>&1 && PATH="${KREW_ROOT:-"$HOME/.krew"}/bin:$PATH"
 
 # source mise env and aliases
-command -v mise >/dev/null 2>&1 && eval "$(MISE_ENV=secrets mise env | grep -v 'PATH=')"
+export MISE_ENV=secrets
+command -v mise >/dev/null 2>&1 && eval "$(mise env | grep -v 'PATH=')"
 
 # set go cache variables
 if command -v go >/dev/null 2>&1; then

@@ -1,4 +1,6 @@
-{{- $set := dict "feature.ssh" (dict "enabled" true) }}
+{{- $set := dict
+  "env.rememberHostCommands" true
+  "feature.ssh" (dict "enabled" true) }}
 {{- $unset := list }}
 
-{{- includeTemplate "scripts/json-merge.py" (dict "indent" 2 "override" list "set" $set "sort" list "unset" $unset) }}
+{{- includeTemplate "scripts/json-merge.py" (dict "indent" 2 "override" list "set" $set "sort" (list (list)) "unset" $unset) }}

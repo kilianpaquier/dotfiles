@@ -26,10 +26,6 @@
 .cache/sandboxes
 {{- end }}
 
-{{- if not (has "nono" .ai.sandboxes) }}
-.local/state/nono
-{{- end }}
-
 {{- if not (has "sbx" .ai.sandboxes) }}
 .sbx
 .local/share/sandboxes

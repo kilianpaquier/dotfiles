@@ -1,12 +1,6 @@
-{{- $go := has "go" .tools.mise }}
-{{- $java := has "java" .tools.mise }}
-{{- $kotlin := has "kotlin" .tools.mise }}
-{{- $opentofu := has "opentofu" .tools.mise }}
-{{- $shell := has "shell" .tools.mise }}
-{{- $terraform := has "terraform" .tools.mise }}
 {
     "lspServers": {
-{{- if $go }}
+{{- if has "go" .tools.mise }}
         "go": {
             "command": "gopls",
             "args": [],
@@ -15,7 +9,7 @@
             }
         },
 {{- end }}
-{{- if $java }}
+{{- if has "java" .tools.mise }}
         "java": {
             "command": "jdtls",
             "args": [],
@@ -24,7 +18,7 @@
             }
         },
 {{- end }}
-{{- if $kotlin }}
+{{- if has "kotlin" .tools.mise }}
         "kotlin": {
             "command": "kotlin-lsp",
             "args": ["--stdio"],
@@ -34,7 +28,7 @@
             }
         },
 {{- end }}
-{{- if $opentofu }}
+{{- if has "opentofu" .tools.mise }}
         "opentofu": {
             "command": "tofu-ls",
             "args": ["serve"],
@@ -45,7 +39,7 @@
             }
         },
 {{- end }}
-{{- if $shell }}
+{{- if has "shell" .tools.mise }}
         "shellscript": {
             "command": "bash-language-server",
             "args": ["start"],
@@ -55,7 +49,7 @@
             }
         },
 {{- end }}
-{{- if $terraform }}
+{{- if has "terraform" .tools.mise }}
         "terraform": {
             "command": "terraform-ls",
             "args": ["serve"],

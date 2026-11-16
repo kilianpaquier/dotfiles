@@ -1,15 +1,71 @@
-{{- $allow_write := concat .sandbox.host.allow_write (list (print "/tmp/claude-" .chezmoi.uid)) }}
-{{- $deny_domains := .sandbox.network.deny_domains }}
+{{- $allow_write := concat .sandbox.host.write_dir .sandbox.host.write_file (list (print "/tmp/claude-" .chezmoi.uid)) }}
+{{- $deny_domain := .sandbox.network.deny_domain }}
 
-{{- $deny_reasons := dict }}
-{{- range .sandbox.network.deny_ports }}
-{{- $deny_domains = append $deny_domains (printf "*:%v" .) }}
-{{- $_ := set $deny_reasons (printf "*:%v" .) "Port blocked, related actions must be made on the host by the user" }}
-{{- end }}
+{{- $deny_reason := dict }}
+{{- range .sandbox.network.deny_port }}
+{{- $deny_domain = append $deny_domain (printf "*:%v" .) }}
+{{- $_ := set $deny_reason (printf "*:%v" .) "Port blocked, related actions must be made on the host by the user" }}
+{{- end -}}
 
 {
+    "credentials": {
+        "envVars": [
+            {
+                "name": "ANTHROPIC_API_KEY",
+                "mode": "mask",
+                "extract": "^(.+)$",
+                "onExtractNoMatch": "deny",
+                "injectHosts": ["api.anthropic.com"]
+            },
+            {
+                "name": "ANTHROPIC_AUTH_TOKEN",
+                "mode": "mask",
+                "extract": "^(.+)$",
+                "onExtractNoMatch": "deny",
+                "injectHosts": ["api.anthropic.com"]
+            },
+            {
+                "name": "CLAUDE_CODE_OAUTH_TOKEN",
+                "mode": "mask",
+                "extract": "^(.+)$",
+                "onExtractNoMatch": "deny",
+                "injectHosts": ["api.anthropic.com"]
+            },
+            {
+                "name": "COPILOT_GITHUB_TOKEN",
+                "mode": "mask",
+                "extract": "^(?:gho_|ghu_|github_pat_)(.+)$",
+                "onExtractNoMatch": "deny",
+                "injectHosts": [
+                    "*.githubcopilot.com",
+                    "api.github.com",
+                    "githubcopilot.com"
+                ]
+            },
+            {
+                "name": "GITHUB_TOKEN",
+                "mode": "mask",
+                "extract": "^(.+)$",
+                "onExtractNoMatch": "deny",
+                "injectHosts": [
+                  "api.github.com",
+                  "uploads.github.com"
+                ]
+            },
+            {
+                "name": "GH_TOKEN",
+                "mode": "mask",
+                "extract": "^(.+)$",
+                "onExtractNoMatch": "deny",
+                "injectHosts": [
+                  "api.github.com",
+                  "uploads.github.com"
+                ]
+            }
+        ]
+    },
     "filesystem": {
-        "allowRead": {{ .sandbox.host.allow_read | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "allowRead": {{ concat .sandbox.host.read_dir .sandbox.host.read_file | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "allowWrite": {{ $allow_write | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "denyRead": {{ .sandbox.host.deny_read | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "denyWrite": {{ .sandbox.host.deny_write | sortAlpha | toPrettyJson "    " | indent 8 | trim }}
@@ -17,9 +73,9 @@
     "mandatoryDenySearchDepth": 6,
     "network": {
         "allowAllUnixSockets": false,
-        "allowedDomains": {{ .sandbox.network.allow_domains | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
-        "deniedDomainReasons": {{ $deny_reasons | toPrettyJson "    " | indent 8 | trim }},
-        "deniedDomains": {{ $deny_domains | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "allowedDomains": {{ .sandbox.network.allow_domain | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "deniedDomainReasons": {{ $deny_reason | toPrettyJson "    " | indent 8 | trim }},
+        "deniedDomains": {{ $deny_domain | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "tlsTerminate": {}
     }
 }

@@ -1,13 +1,21 @@
 schemaVersion: "1"
 
-agent: {{ "${{ env.args.agent }}" }}
 args:
   agent:
     default: {{ first .ai.runtimes }}
     enum: {{ .ai.runtimes | toJson }}
     description: agent to run
 
+# force shell since agent comes from local installation and avoid harness mount read filesystem issues
+agent: shell
+
 workspace: {{ "${{ env.projectDir }}" }}
+
+entrypoint:
+  - {{ "${{ env.args.agent }}" }}
+
+env:
+  HOME: {{ .chezmoi.homeDir }}
 
 additionalWorkspaces:
 {{- if stat "/usr/local/share/ca-certificates" }}
@@ -15,13 +23,13 @@ additionalWorkspaces:
 {{- end }}
 
   # Read only paths
-{{- range $path := concat .sandbox.full.allow_read }}
-  - { path: {{ $.chezmoi.homeDir }}{{ trimPrefix "~" $path }}, target: /home/agent{{ trimPrefix "~" $path }}, readOnly: true }
+{{- range $path := concat .sandbox.full.allow_read | sortAlpha }}
+  - { path: {{ replace "~" $.chezmoi.homeDir $path }}, target: {{ replace "~" $.chezmoi.homeDir $path }}, readOnly: true }
 {{- end }}
 
   # Write paths
-{{- range $path := concat .sandbox.full.allow_write }}
-  - { path: {{ $.chezmoi.homeDir }}{{ trimPrefix "~" $path }}, target: /home/agent{{ trimPrefix "~" $path }} }
+{{- range $path := concat .sandbox.full.allow_write | sortAlpha }}
+  - { path: {{ replace "~" $.chezmoi.homeDir $path }}, target: {{ replace "~" $.chezmoi.homeDir $path }} }
 {{- end }}
 
 sandboxOptions:

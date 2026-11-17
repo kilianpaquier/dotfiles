@@ -312,13 +312,13 @@ sandbox:
       - www.rtk-ai.app
       - www.schemastore.org
       - www.skills.sh
-    deny_domain:
-      - altssh.gitlab.com
-      - github.com:22
-      - github.com:2222
-      - gitlab.com:22
-      - gitlab.com:2222
-      - ssh.github.com
+    deny_domain: []
+      # - altssh.gitlab.com
+      # - github.com:22
+      # - github.com:2222
+      # - gitlab.com:22
+      # - gitlab.com:2222
+      # - ssh.github.com
     deny_port:
       - 22
       - 2222

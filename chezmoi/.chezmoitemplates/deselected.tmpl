@@ -101,12 +101,6 @@ AppData
 .copilot
 {{- end }}
 
-{{- range $agent := list "claude" "copilot" }}
-{{- if not (has $agent $data.ai.runtimes) }}
-.sbx/kits/{{ $agent }}
-{{- end }}
-{{- end }}
-
 {{- if not (has "srt" $data.ai.sandboxes) }}
 .config/srt
 {{- end }}
@@ -114,7 +108,6 @@ AppData
 {{- if not (has "sbx" $data.ai.sandboxes) }}
 .config/sandboxes
 .sbx
-.sbxenv.yaml
 {{- end }}
 
 {{- if or (eq $data.machine.kind "desktop") (not (has "vscode" $data.ide)) }}

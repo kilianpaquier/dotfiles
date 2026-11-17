@@ -61,6 +61,20 @@
                   "api.github.com",
                   "uploads.github.com"
                 ]
+            },
+            {
+                "name": "GITLAB_TOKEN",
+                "mode": "mask",
+                "extract": "^(.+)$",
+                "onExtractNoMatch": "deny",
+                "injectHosts": ["api.gitlab.com"]
+            },
+            {
+                "name": "GL_TOKEN",
+                "mode": "mask",
+                "extract": "^(.+)$",
+                "onExtractNoMatch": "deny",
+                "injectHosts": ["api.gitlab.com"]
             }
         ]
     },

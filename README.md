@@ -129,17 +129,17 @@ Two profiles exist, `home` and `soprasteria`.
 
 ### Workstation and server
 
-| Prompt                                                               | Default                | When                  | Key                  |
-| -------------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
-| Email to use as git committer                                        |                        |                       | `user.email`         |
-| Whether to sign commits with the SSH key                             | `true`                 |                       | `git.ssh`            |
-| Which AI agent runtimes to install (`claude`, `copilot`)             | Depends on the profile |                       | `ai.runtimes`        |
-| Which agent plugins to enable (`cave-talk`, `humanizer`, `ponytail`) | Depends on the profile | at least one agent    | `ai.plugins`         |
-| Which sandboxes to run the agents in (`sbx`, `srt`)                  |                        | at least one agent    | `ai.sandboxes`       |
-| Which container runtimes to install (`docker` rootless, `podman`)    | Depends on the profile |                       | `container.runtimes` |
-| Which container engine gitlab-ci-local should use                    |                        | two runtimes selected | `container.engine`   |
-| Which tool manager to use (`mise`)                                   | `mise`                 |                       | `tools_management`   |
-| Which tool bundles to install, see [Tooling](#tooling)               | Depends on the profile | `mise` selected       | `tools.mise`         |
+| Prompt                                                                              | Default                | When                  | Key                  |
+| ----------------------------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
+| Email to use as git committer                                                       |                        |                       | `user.email`         |
+| Whether to sign commits with the SSH key                                            | `true`                 |                       | `git.ssh`            |
+| Which AI agent runtimes to install (`claude`, `copilot`)                            | Depends on the profile |                       | `ai.runtimes`        |
+| Which agent plugins to enable (`cave-talk`, `feature-dev`, `humanizer`, `ponytail`) | Depends on the profile | at least one agent    | `ai.plugins`         |
+| Which sandboxes to run the agents in (`sbx`, `srt`)                                 |                        | at least one agent    | `ai.sandboxes`       |
+| Which container runtimes to install (`docker` rootless, `podman`)                   | Depends on the profile |                       | `container.runtimes` |
+| Which container engine gitlab-ci-local should use                                   |                        | two runtimes selected | `container.engine`   |
+| Which tool manager to use (`mise`)                                                  | `mise`                 |                       | `tools_management`   |
+| Which tool bundles to install, see [Tooling](#tooling)                              | Depends on the profile | `mise` selected       | `tools.mise`         |
 
 ### Server only
 

@@ -81,7 +81,7 @@ fi
 
 # set convenient variable ssh keys lifetime within ssh-agent (e.g. ssh-add -t "$SSH_AGENT_TIMEOUT")
 export SSH_AGENT_TIMEOUT=3600
-
+# use a private mask for gopass since it's the keyring (saves secrets)
 export GOPASS_UMASK=077
-
+# use '$$' to source the profile once per PID (and usually its sub-shells too, like '(...)' calls)
 export PROFILE_SOURCED=$$

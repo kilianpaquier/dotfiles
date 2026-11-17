@@ -1,6 +1,8 @@
 {{- if eq .chezmoi.os "windows" }}
 # Windows
 .chezmoiscripts/linux/**
+.gnupg
+.ssh
 {{- end }}
 
 {{- if eq .chezmoi.os "linux" }}

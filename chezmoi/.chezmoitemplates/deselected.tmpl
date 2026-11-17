@@ -17,8 +17,9 @@
 .bashrc
 .config/environment.d
 .config/home-manager
-.gnupg/gpg-agent.conf
+.config/gopass
 .profile
+workspaces
 {{- if not .wsl }}
 .wslconfig
 {{- end }}
@@ -42,7 +43,7 @@ AppData
 {{- if eq $data.machine.kind "desktop" }}
 .config/git/config
 .config/git/ignore
-.config/gopass/config
+.config/gopass
 {{- end }}
 
 {{- if not $data.git.ssh }}
@@ -66,7 +67,7 @@ AppData
 {{- end }}
 
 {{- if eq (len $data.container.runtimes) 0 }}
-.docker/config.json
+.docker
 {{- end }}
 
 {{- if not (has "podman" $data.container.runtimes) }}
@@ -102,7 +103,7 @@ AppData
 {{- end }}
 
 {{- if not (has "srt" $data.ai.sandboxes) }}
-.config/srt
+.srt-settings.json
 {{- end }}
 
 {{- if not (has "sbx" $data.ai.sandboxes) }}
@@ -112,7 +113,7 @@ AppData
 
 {{- if or (eq $data.machine.kind "desktop") (not (has "vscode" $data.ide)) }}
 .local/bin/code
-.vscode-server/data/Machine/settings.json
+.vscode-server
 {{- end }}
 
 {{- if ne $data.shell "zsh" }}

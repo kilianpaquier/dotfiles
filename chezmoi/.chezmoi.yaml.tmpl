@@ -88,7 +88,7 @@ update:
 # disable scripts diff review (hides only their content)
 # switch back to true won't be overridden with subsequent 'chezmoi init'
 diff:
-  scriptContents: {{ dig "diff" "scriptContents" false . }}
+  scriptContents: {{ dig "diff" "scriptContents" (eq .chezmoi.os "windows") . }}
 
 {{- if ne .chezmoi.os "windows" }}
 

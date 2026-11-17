@@ -1,7 +1,8 @@
 {{- if ne .chezmoi.os "windows" }}
 {{- $url := "https://github.com/kilianpaquier/agent-rules/archive/refs/heads/main.tar.gz" }}
-{{- with env "GITHUB_TOKEN" }}{{ $url = replace "https://" (printf "https://x-access-token:%s@" .) $url }}{{ end }}
-{{- if and .ai.rules (has "claude" .ai.runtimes) }}
+{{- $token := env "GITHUB_TOKEN" | default (env "GH_TOKEN") | default "" }}
+{{- with $token }}{{ $url = replace "https://" (printf "https://x-access-token:%s@" .) $url }}{{ end }}
+{{- if and (has "claude" .ai.runtimes) (not (has ".claude/rules" .ignore)) }}
 .claude/rules:
   type: archive
   url: {{ $url | quote }}
@@ -10,7 +11,7 @@
   stripComponents: 3
   refreshPeriod: 24h
 {{- end }}
-{{- if and .ai.rules (has "copilot" .ai.runtimes) }}
+{{- if and (has "copilot" .ai.runtimes) (not (has ".copilot/instructions" .ignore)) }}
 .copilot/instructions:
   type: archive
   url: {{ $url | quote }}

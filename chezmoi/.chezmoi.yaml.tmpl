@@ -36,18 +36,9 @@
 
 {{- $tools := dict }}
 {{- $bundle_summary := list }}
-{{- range $manager := $managers -}}
+{{- range $manager := $managers }}
   {{- $_ := set $tools $manager (list) }}
   {{- $bundle_summary = append $bundle_summary (printf "%s: %s" $manager ((index $data.tools $manager) | join ", ")) }}
-{{- end -}}
-
-# available agent runtimes: {{ $data.agent_runtimes | join ", " }}
-# available agent plugins: {{ $data.plugins | join ", " }}
-# available containers: {{ $data.container_runtimes | join ", " }}
-# available tools_management: {{ $managers | join ", " }}
-# available tools per manager:
-{{- range $bundle_summary }}
-#   - {{ . }}
 {{- end }}
 
 {{- $agent_runtimes := list }}
@@ -76,7 +67,7 @@
     {{- $container_engine = promptChoiceOnce . "container.engine" "Which container engine should tools default to" $container_runtimes }}
   {{- end }}
 
-  {{- $_ := warnf "available tools per manager:\n  %s" ($bundle_summary | join "\n  ") }}
+  {{- $_ := warnf "\navailable tools per manager:\n  %s" ($bundle_summary | join "\n  ") }}
 
   {{- $tools_management = promptMultichoiceOnce . "tools_management" "Which tool manager(s) would you like to use" $managers (index $data.default_managers $profile) }}
 
@@ -86,14 +77,15 @@
         (print "Which tools would you like to install via " $manager)
         (index $data.tools $manager) (index $data.default_tools $profile)) }}
   {{- end }}
-{{- end }}
+{{- end -}}
 
 umask: 0o22
 
-# pulled changes run scripts, review them with chezmoi diff before chezmoi apply
+# disable auto apply on 'chezmoi update' to let diff review before apply
 update:
   apply: false
 
+# disable scripts diff review (hides only their content)
 diff:
   scriptContents: false
 
@@ -121,39 +113,88 @@ interpreters:
 
 data:
 {{- if eq .chezmoi.os "windows" }}
+  # Which work profile applies ('home' or 'soprasteria')
+  profile: {{ $profile }}
+  # Whether this is a gaming machine (adds EA, Epic, Steam, Ubisoft...)
+  # This option only works when 'profile' is 'home' (obviously)
   gaming: {{ $gaming }}
-  ide:{{ if eq (len $ide) 0 }} []{{ else }}{{ $ide | toYaml | trim | nindent 4 }}{{ end }}
   machine:
+    # Name for this machine, used as the SSH key comment or server hostname
     name: {{ $machine_name }}
-  profile: {{ $profile }}
-  shell: {{ $shell }}
+
   user:
+    # Username used as git committer and in the SSH key comment
     username: {{ $username }}
-  wsl: {{ $wsl }}
-{{- else }}
-  ai:
-    plugins:{{ if eq (len $plugins) 0 }} []{{ else }}{{ $plugins | toYaml | trim | nindent 6 }}{{ end }}
-    rules: {{ dig "ai" "rules" true . }}
-    runtimes:{{ if eq (len $agent_runtimes) 0 }} []{{ else }}{{ $agent_runtimes | toYaml | trim | nindent 6 }}{{ end }}
-    sandboxes:{{ if eq (len $sandboxes) 0 }} []{{ else }}{{ $sandboxes | toYaml | trim | nindent 6 }}{{ end }}
-  container:
-    engine: {{ $container_engine }}
-    runtimes:{{ if eq (len $container_runtimes) 0 }} []{{ else }}{{ $container_runtimes | toYaml | trim | nindent 6 }}{{ end }}
-  git:
-    ssh: {{ $git_ssh }}
+
+  # Which IDEs to install ('intellij', 'vscode', 'zed')
   ide:{{ if eq (len $ide) 0 }} []{{ else }}{{ $ide | toYaml | trim | nindent 4 }}{{ end }}
-  machine:
-    kind: {{ $machine }}
-    name: {{ $machine_name }}
-    timezone: {{ $timezone }}
-  profile: {{ $profile }}
+  # Default shell ('git-bash' or 'powershell')
   shell: {{ $shell }}
+  # Whether to install and configure WSL
+  wsl: {{ $wsl }}
+
+  # Files to exclude from chezmoi generation, in case you'd want to own some
+  #
+  # Note that some files are by default merged, allowing you to enrich them without loosing custom changes on 'chezmoi apply'
+  ignore:{{ with (dig "ignore" list .) }}{{ . | toYaml | trim | nindent 4 }}{{ else }} []{{ end }}
+{{- else }}
+  # Which work profile applies ('home' or 'soprasteria')
+  profile: {{ $profile }}
+  machine:
+    # What kind of machine this is ('desktop', 'workstation', 'server')
+    kind: {{ $machine }}
+    # Name for this machine, used as the SSH key comment or server hostname
+    name: {{ $machine_name }}
+    # Timezone to define on the host when 'machine.kind' is 'server'
+    timezone: {{ $timezone }}
+
+  user:
+    # Email to use as git committer
+    email: {{ $email }}
+    # Username used as git committer and in the SSH key comment
+    username: {{ $username }}
+
+  git:
+    # Whether to sign commits with the SSH key
+    ssh: {{ $git_ssh }}
+  # Which IDEs to install ('intellij', 'vscode', 'zed')
+  ide:{{ if eq (len $ide) 0 }} []{{ else }}{{ $ide | toYaml | trim | nindent 4 }}{{ end }}
+  # Default shell ('bash' or 'zsh')
+  shell: {{ $shell }}
+
+  container:
+    # Which container engine gitlab-ci-local should use
+    engine: {{ $container_engine }}
+    # Which container runtimes to install ({{ $data.container_runtimes | join ", " }})
+    runtimes:{{ if eq (len $container_runtimes) 0 }} []{{ else }}{{ $container_runtimes | toYaml | trim | nindent 6 }}{{ end }}
+
+  ai:
+    # Which agent plugins to enable ({{ $data.plugins | join ", " }})
+    #
+    # When selected, the following plugins are installed on all choosen runtimes below
+    plugins:{{ if eq (len $plugins) 0 }} []{{ else }}{{ $plugins | toYaml | trim | nindent 6 }}{{ end }}
+    # Which AI agent runtimes to install ({{ $data.agent_runtimes | join ", " }})
+    runtimes:{{ if eq (len $agent_runtimes) 0 }} []{{ else }}{{ $agent_runtimes | toYaml | trim | nindent 6 }}{{ end }}
+    # Which sandboxes to run the agents in ('sbx', 'srt')
+    #
+    # Even when on, agents do not run by default in sandboxes, please see the README
+    sandboxes:{{ if eq (len $sandboxes) 0 }} []{{ else }}{{ $sandboxes | toYaml | trim | nindent 6 }}{{ end }}
+
+  # Files to exclude from chezmoi generation, in case you'd want to own some
+  #
+  # Note that some files are by default merged, allowing you to enrich them without loosing custom changes on 'chezmoi apply'
+  ignore:{{ with (dig "ignore" list .) }}{{ . | toYaml | trim | nindent 4 }}{{ else }} []{{ end }}
+
+  # Which tool manager to use ('mise')
+  tools_management:{{ if eq (len $tools_management) 0 }} []{{ else }}{{ $tools_management | toYaml | trim | nindent 4 }}{{ end }}
+  # Which tool bundles to install
+  #
+  # available tools per manager:
+  {{- range $bundle_summary }}
+  #   - {{ . }}
+  {{- end }}
   tools:
 {{- range $manager := $managers }}
     {{ $manager }}:{{ if eq (len (index $tools $manager)) 0 }} []{{ else }}{{ index $tools $manager | toYaml | trim | nindent 6 }}{{ end }}
 {{- end }}
-  tools_management:{{ if eq (len $tools_management) 0 }} []{{ else }}{{ $tools_management | toYaml | trim | nindent 4 }}{{ end }}
-  user:
-    email: {{ $email }}
-    username: {{ $username }}
 {{- end }}

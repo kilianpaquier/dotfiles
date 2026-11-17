@@ -23,7 +23,7 @@ $wanted = @(
   'IDRIX.VeraCrypt',
   'Yubico.Authenticator', 'Yubico.YubiKeyManagerCLI', 'Yubico.YubiKeySmartCardMinidriver'
 {{- end }}
-{{- if .gaming }}
+{{- if and (eq .profile "home") .gaming }}
   'CPUID.CPU-Z', 'OCBase.OCCT.Personal', 'REALiX.HWiNFO', 'Guru3D.Afterburner', 'Guru3D.RTSS'
   'Ubisoft.Connect', 'Valve.Steam', 'WeMod.WeMod'
 {{- end }}

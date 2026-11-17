@@ -5,10 +5,16 @@ chezmoi_jq="$HOME/.local/state/chezmoi/env/bin/jq"
 # use GitHub keys instead of SSH checks to ensure it's verified by default (SSL/TLS retrieval).
 github_keys() {
   # jq from the bootstrap env, home.nix packages are not on PATH during the file phase
+  token="{{ env "GITHUB_TOKEN" | default (env "GH_TOKEN") | default "" }}"
+
   if command -v curl >/dev/null 2>&1; then
-    curl -fsSL https://api.github.com/meta
+    set -- -fsSL
+    [ -z "$token" ] || set -- "$@" -H "Authorization: Bearer $token"
+    curl "$@" https://api.github.com/meta
   else
-    wget -qO- https://api.github.com/meta
+    set -- -qO-
+    [ -z "$token" ] || set -- "$@" --header="Authorization: Bearer $token"
+    wget "$@" https://api.github.com/meta
   fi | "$chezmoi_jq" -r '.ssh_keys[] | "github.com " + .'
 }
 

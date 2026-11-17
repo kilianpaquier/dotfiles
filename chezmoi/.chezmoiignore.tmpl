@@ -1,19 +1,6 @@
 {{- if eq .chezmoi.os "windows" }}
 # Windows
-
-**
-!.chezmoiscripts
-!.chezmoiscripts/windows
-!.chezmoiscripts/windows/**
-!AppData
-!AppData/**
-!.config
-!.config/git
-!.config/git/git-prompt.sh
-!.inputrc
-{{- if .wsl }}
-!.wslconfig
-{{- end }}
+.chezmoiscripts/linux/**
 {{- end }}
 
 {{- if eq .chezmoi.os "linux" }}
@@ -46,9 +33,13 @@ workspaces
 {{- if has "rtk" .tools.mise }}
 .chezmoiscripts/linux/*-rtk-uninstall.sh
 {{- end }}
+{{- end }}
+
+{{- range .ignore }}
+{{ . }}
+{{- end }}
 
 {{ includeTemplate "deselected.tmpl" . }}
-{{- end }}
 
 # partials
 **/*.partial.*

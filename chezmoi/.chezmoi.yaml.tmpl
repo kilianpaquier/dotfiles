@@ -57,7 +57,7 @@
 
   {{- if gt (len $agent_runtimes) 0 }}
     {{- $plugins = promptMultichoiceOnce . "ai.plugins" "Which agent plugin(s) would you like to install" $data.plugins (index $data.default_plugins $profile) }}
-    {{- $sandboxes = promptMultichoiceOnce . "ai.sandboxes" "Which sandbox(es) should run the agent runtimes" (list "sbx" "srt") }}
+    {{- $sandboxes = promptMultichoiceOnce . "ai.sandboxes" "Which sandbox(es) should run the agent runtimes" (index $data.default_sandboxes $profile)  }}
   {{- end }}
 
   {{- $container_runtimes = promptMultichoiceOnce . "container.runtimes" "Which container runtime(s) would you like to install" $data.container_runtimes (index $data.default_container_runtimes $profile) }}
@@ -176,7 +176,7 @@ data:
     plugins:{{ if eq (len $plugins) 0 }} []{{ else }}{{ $plugins | toYaml | trim | nindent 6 }}{{ end }}
     # Which AI agent runtimes to install ({{ $data.agent_runtimes | join ", " }})
     runtimes:{{ if eq (len $agent_runtimes) 0 }} []{{ else }}{{ $agent_runtimes | toYaml | trim | nindent 6 }}{{ end }}
-    # Which sandboxes to run the agents in ('sbx', 'srt')
+    # Which sandboxes to run the agents in ({{ $data.sandboxes | join ", " }})
     #
     # Even when on, agents do not run by default in sandboxes, please see the README
     sandboxes:{{ if eq (len $sandboxes) 0 }} []{{ else }}{{ $sandboxes | toYaml | trim | nindent 6 }}{{ end }}

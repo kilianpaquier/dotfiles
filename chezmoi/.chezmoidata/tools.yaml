@@ -79,6 +79,11 @@ default_agent_runtimes:
   home: [claude, copilot]
   soprasteria: [copilot]
 
+sandboxes: [sbx, srt]
+default_sandboxes:
+  home: [sbx, srt]
+  soprasteria: []
+
 plugins: [cave-talk, feature-dev, humanizer, ponytail]
 default_plugins:
   home: [cave-talk, humanizer, ponytail]

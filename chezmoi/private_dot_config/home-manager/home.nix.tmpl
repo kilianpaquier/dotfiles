@@ -107,6 +107,18 @@
   };
 {{- end }}
 
+{{- if has "sbx" .ai.sandboxes }}
+
+  systemd.user.services.sbx = {
+    Install.WantedBy = [ "default.target" ];
+    Service = {
+      ExecStart = "${pkgs.docker-sbx}/bin/sbx daemon start";
+      Restart = "on-failure";
+      RestartSec = 30;
+    };
+  };
+{{- end }}
+
 {{- if has "agentsview" .tools.mise }}
 
   systemd.user.services.agentsview = {
@@ -128,6 +140,8 @@
         "GOPASS_UMASK=077"
       ];
       ExecStart = "${pkgs.gopass}/bin/gopass age agent start";
+      Restart = "on-failure";
+      RestartSec = 30;
     };
   };
 

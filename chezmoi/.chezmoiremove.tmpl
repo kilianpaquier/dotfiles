@@ -2,6 +2,7 @@
 
 {{- if ne .chezmoi.os "windows" }}
 .config/home-manager/scripts
+.config/mise/miserc.toml
 .config/wsl
 
 {{- if eq (len .ai.runtimes) 0 }}

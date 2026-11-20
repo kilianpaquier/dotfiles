@@ -22,7 +22,6 @@ sandbox:
 
       # Mise binaries accesses
       - ~/.config/mise/config.toml
-      - ~/.config/mise/miserc.toml
 
       # Claude harness
       - ~/.claude.json
@@ -122,7 +121,6 @@ sandbox:
 
       # Mise binaries accesses
       - ~/.config/mise/config.toml
-      - ~/.config/mise/miserc.toml
       # - ~/.cache/mise
       - ~/.config/mise/conf.d
       - ~/.local/share/mise

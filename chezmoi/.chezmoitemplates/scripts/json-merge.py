@@ -2,6 +2,7 @@
 
 import itertools
 import json
+import os
 import sys
 
 from functools import reduce
@@ -30,7 +31,10 @@ def main():
     head = list(itertools.takewhile(lambda line: line.startswith("//"), lines))
 
     text = "".join(lines[len(head):])
-    doc = json.loads(text) if text.strip() else {}
+    try:
+        doc = json.loads(text) if text.strip() else {}
+    except json.JSONDecodeError as err:
+        sys.exit(f"{os.environ.get('CHEZMOI_SOURCE_FILE', 'stdin')}: existing file is not valid JSON: {err}")
     wanted = json.loads(r'''{{ toJson .set }}''')
 
     # assign overridden paths in place, delete+reinsert would move the key to the dict's end

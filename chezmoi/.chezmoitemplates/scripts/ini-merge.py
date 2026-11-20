@@ -2,12 +2,16 @@
 
 import configparser
 import json
+import os
 import sys
 
 def main():
     config = configparser.ConfigParser(interpolation=None)
     config.optionxform = str
-    config.read_string(sys.stdin.read())
+    try:
+        config.read_string(sys.stdin.read())
+    except configparser.Error as err:
+        sys.exit(f"{os.environ.get('CHEZMOI_SOURCE_FILE', 'stdin')}: existing file is not valid INI: {err}")
 
     config.read_dict(json.loads(r'''{{ toJson .set }}'''))
     indent = json.loads(r'''{{ toJson .indent }}''')

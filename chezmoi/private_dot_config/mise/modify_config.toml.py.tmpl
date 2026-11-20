@@ -25,6 +25,9 @@
 
 {{- $tools := dict "age" "latest" "cosign" "latest" "node" "24" "sops" "latest" "usage" "latest" }}
 
+{{- if has "sbx" .ai.sandboxes }}{{ $_ := set $tools "sbx" "latest" }}{{- end }}
+{{- if has "srt" .ai.sandboxes }}{{ $_ := set $tools "srt" "latest" }}{{- end }}
+
 {{- range $bundle, $specs := $bundles }}
 {{- if has $bundle $.tools.mise }}{{ $_ := mergeOverwrite $tools $specs }}{{- end }}
 {{- end }}
@@ -35,6 +38,10 @@
 {{- range $id, $_ := $specs }}
 {{- if not (hasKey $tools $id) }}{{ $unset = append $unset (list "tools" $id) }}{{- end }}
 {{- end }}
+{{- end }}
+
+{{- range list "sbx" "srt" }}
+{{- if not (hasKey $tools .) }}{{ $unset = append $unset (list "tools" .) }}{{- end }}
 {{- end }}
 
 {{- includeTemplate "scripts/toml-merge.py" (dict "set" (dict "tools" $tools) "sort" (list (list "tools")) "unset" $unset) -}}

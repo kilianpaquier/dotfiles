@@ -120,18 +120,6 @@
   };
 {{- end }}
 
-{{- if has "sbx" .ai.sandboxes }}
-
-  systemd.user.services.sbx = {
-    Install.WantedBy = [ "default.target" ];
-    Service = {
-      ExecStart = "%h/.local/share/mise/shims/sbx daemon start";
-      Restart = "on-failure";
-      RestartSec = 30;
-    };
-  };
-{{- end }}
-
 {{- if has "agentsview" .tools.mise }}
 
   systemd.user.services.agentsview = {

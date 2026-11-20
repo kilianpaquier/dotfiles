@@ -79,15 +79,30 @@
   '';
 {{- end }}
 
-{{- if gt (len .ai.runtimes) 0 }}
+{{- if or (gt (len .ai.runtimes) 0) (has "podman" .container.runtimes) }}
 
-  # apm-cli pins websockets<17 while nixpkgs ships 17, drop once nixpkgs relaxes it.
   nixpkgs.overlays = [
+{{- if gt (len .ai.runtimes) 0 }}
+    # apm-cli pins websockets<17 while nixpkgs ships 17, drop once nixpkgs relaxes it.
     (final: prev: {
       apm-cli = prev.apm-cli.overridePythonAttrs (old: {
         pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "websockets" ];
       });
     })
+{{- end }}
+{{- if has "podman" .container.runtimes }}
+    # podman-compose 1.6.0 loops on depends_on service_healthy (#1422, #1541), drop once a release has #1608.
+    (final: prev: {
+      podman-compose = prev.podman-compose.overridePythonAttrs (old: {
+        version = "1.6.0-unstable-2026-11-13";
+        # the commit id is the integrity check, so no hash to compute
+        src = builtins.fetchGit {
+          url = "https://github.com/containers/podman-compose";
+          rev = "9063c48c0efca6cdcdf93c5fe142921fe4d100f1";
+        };
+      });
+    })
+{{- end }}
   ];
 {{- end }}
 

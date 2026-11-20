@@ -32,6 +32,23 @@ chezmoi deletes no ignored target and `.chezmoiremove` skips ignored targets, so
 
 Done when the path sits in exactly one row's file, and in its pair when step 3 applies.
 
+## Add a tool or runtime
+
+Check each item against a sibling tool (`docker`, `podman`) before planning:
+
+- Install in `home.nix.tmpl`, completion in `symlinks/.env.zsh`.
+- Config, after asking which keys chezmoi owns (a plain file) and which stay the tool's (a `modify_` script).
+- Path rows under "Place a path to ignore, delete or remove", and a stop or prune script when the tool leaves a process behind.
+- README prompt row and runtime section.
+- Every consumer of the option (`container.engine` feeds gitlab-ci-local).
+
+## Write a modify script
+
+- Include the `scripts/<format>-merge.py` of the file's format, which sets only the keys it lists.
+- Expect it to write nothing while the file doesn't exist, so a value the tool needs on its first run needs a plain file.
+- Never add a key to a `scripts/*-merge.py` that its other callers don't pass, since chezmoi fails on a missing key (`missingkey=error`).
+- Name a file of many keys `<name>.partial.<ext>`, since `.chezmoiignore.tmpl` skips `**/*.partial.*`.
+
 ## Write a script
 
 - Start a script that reruns when upstream drifts on its own with a date stamp, like the mise tools one: `# date: {{ now | date "2006-01-02" }}`.

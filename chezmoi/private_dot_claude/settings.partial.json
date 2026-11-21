@@ -14,7 +14,8 @@
     "defaultView": "chat",
     "effortLevel": "medium",
     "env": {
-        "CLAUDE_CODE_PLUGIN_PREFER_HTTPS": "1"
+        "CLAUDE_CODE_PLUGIN_PREFER_HTTPS": "1",
+        "CLAUDE_CODE_SHELL": "/usr/bin/bash"
     },
     "extraKnownMarketplaces": {
         "claude-code-lsps": {
@@ -105,6 +106,9 @@
             "mcp__plugin_gitlab_gitlab",
             "mcp__plugin_mempalace_mempalace",
             "mcp__plugin_opentofu_opentofu",
+            "Read(~/.claude/plugins)",
+            "Read(~/.claude/rules)",
+            "Read(~/.claude/skills)",
             "Read(~/.local/share/chezmoi/**)",
             "Read(~/workspaces/**)",
             "Skill",

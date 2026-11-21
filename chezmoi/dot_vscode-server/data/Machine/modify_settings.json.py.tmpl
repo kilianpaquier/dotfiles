@@ -6,6 +6,10 @@
 {{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.no-copilot.partial.json" | fromJson) }}
 {{- end }}
 
+{{- if has "claude" .ai.runtimes }}
+{{- $_ := set $set "claudeCode.claudeProcessWrapper" (printf "%s/.local/share/mise/command-wrappers/bin/claude" .chezmoi.homeDir) }}
+{{- end }}
+
 {{- includeTemplate "scripts/json-merge.py" (dict
   "indent" 4
   "override" (list (list "chat.tools.terminal.autoApprove") (list "chat.tools.urls.autoApprove"))

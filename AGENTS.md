@@ -5,7 +5,7 @@ The source root is `chezmoi/` (`.chezmoiroot`), and paths below are relative to 
 
 ## Run chezmoi
 
-- Expect every chezmoi command to run `scripts/bootstrap.sh` first (the `read-source-state` hook), which installs nix on a machine without it.
+- Expect every chezmoi command to run `scripts/bootstrap.sh` first (the `read-source-state` hook), which installs nix and mise on a machine without them.
 - Run `apply`, `init` and `update` only when asked.
 
 ## Place a path to ignore, delete or remove
@@ -29,8 +29,15 @@ chezmoi deletes no ignored target and `.chezmoiremove` skips ignored targets, so
    - A new Linux path that no option controls: list it in the Windows branch of `deselected.tmpl`.
    - A new Linux path that an option controls: nothing more, since Windows renders `deselected.tmpl` with every option deselected and ignores everything else (`**`).
 4. List the files, not the directory, when the tool keeps its own data there (`.ssh/known_hosts`, not `.ssh`), since deleting a directory removes its history and credentials too.
+5. After deleting a managed source file, list its target in `.chezmoiremove.tmpl` and drop its entries in `.chezmoidata/sandbox.yaml`, since chezmoi leaves the target in place.
 
 Done when the path sits in exactly one row's file, and in its pair when step 3 applies.
+
+## Place an environment variable
+
+- Put a variable a mise tool or an agent reads in `[env]` of `private_dot_config/mise/conf.d/10-settings.toml`, keys alphabetical.
+- Put a variable the login shell needs before mise runs in `symlinks/.profile` (`MISE_ENV`).
+- Never put one in `symlinks/.env.zsh`, which only configures zsh.
 
 ## Add a tool or runtime
 

@@ -2,9 +2,6 @@ machines: [desktop, server, workstation]
 profiles: [home, soprasteria]
 
 managers: [mise]
-default_managers:
-  home: [mise]
-  soprasteria: [mise]
 
 container_runtimes: [docker, podman]
 default_container_runtimes:

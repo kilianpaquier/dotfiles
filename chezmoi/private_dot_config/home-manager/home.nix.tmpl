@@ -2,8 +2,6 @@
 
 {{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "gnumake" "gnupg" "jq" "pinentry-curses" "python3" "ripgrep" "rsync" "socat" "tree" "unzip" "vim" "xdg-utils" }}
 
-{{- if has "mise" .tools_management }}{{- $packages = append $packages "mise" }}{{- end }}
-
 {{- if gt (len .ai.runtimes) 0 }}{{- $packages = append $packages "apm-cli" }}{{- end }}
 {{- if has "claude" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "claude-code") }}{{- end }}
 {{- if has "copilot" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "github-copilot-cli" "iptables" "slirp4netns") }}{{- end }}

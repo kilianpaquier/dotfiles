@@ -58,10 +58,7 @@ ZSH_COMPLETIONS=(
   "uv generate-shell-completion zsh"
   "uvx --generate-shell-completion zsh"
 )
-ZSH_COMPLETIONS_HELP=(
-  age
-  age-keygen
-)
+ZSH_COMPLETIONS_HELP=()
 
 # Load plugins asynchronously after z4h initialization
 plugins=(

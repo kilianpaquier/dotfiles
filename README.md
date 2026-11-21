@@ -138,7 +138,6 @@ Two profiles exist, `home` and `soprasteria`.
 | Which sandboxes to run the agents in (`sbx`, `srt`)                                 |                        | at least one agent    | `ai.sandboxes`       |
 | Which container runtimes to install (`docker` rootless, `podman`)                   | Depends on the profile |                       | `container.runtimes` |
 | Which container engine gitlab-ci-local should use                                   |                        | two runtimes selected | `container.engine`   |
-| Which tool manager to use (`mise`)                                                  | `mise`                 |                       | `tools_management`   |
 | Which tool bundles to install, see [Tooling](#tooling)                              | Depends on the profile | `mise` selected       | `tools.mise`         |
 
 ### Server only

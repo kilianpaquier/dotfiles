@@ -1,7 +1,7 @@
 # Force remove side directories not chezmoi managed.
 
 {{- if ne .chezmoi.os "windows" }}
-.config/home-manager/scripts
+# Remove chezmoi managed file paths
 .config/mise/miserc.toml
 .config/wsl
 
@@ -31,12 +31,6 @@
 .sbx
 .local/share/sandboxes
 .local/state/sandboxes
-{{- end }}
-
-{{- if not (has "mise" .tools_management) }}
-.cache/mise
-.local/share/mise
-.local/state/mise
 {{- end }}
 
 {{- if not (has "bun" .tools.mise) }}

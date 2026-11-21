@@ -1,11 +1,12 @@
 [settings]
 disable_backends = ["asdf", "conda", "pkgx", "spm", "s3", "ubi", "vfox"]
 disable_default_registry = true
-minimum_release_age = "7d"
+minimum_release_age = "4d"
 paranoid = ["plugins", "provenance"]
 trusted_config_paths = ["~/workspaces", "~/.local/share/chezmoi", "~/.local/share/chezmoi.worktrees"]
 
 [settings.npm]
+package_manager = "aube" # only aube supports provenance verification with 'npm:' dependencies
 shell_out = true
 
 [tool_alias]

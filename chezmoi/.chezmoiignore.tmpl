@@ -22,12 +22,6 @@ workspaces
 .chezmoiscripts/linux/*-sbx-reset.sh
 {{- end }}
 
-{{- if not (has "mise" .tools_management) }}
-.chezmoiscripts/linux/*-mise-tools.sh
-.chezmoiscripts/linux/*-rtk-install.sh
-.chezmoiscripts/linux/*-rtk-uninstall.sh
-{{- end }}
-
 {{- if or (eq (len .ai.runtimes) 0) (not (has "rtk" .tools.mise)) }}
 .chezmoiscripts/linux/*-rtk-install.sh
 {{- end }}

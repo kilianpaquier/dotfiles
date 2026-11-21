@@ -6,8 +6,7 @@
     "ide" (list)
     "machine" (dict "kind" "desktop")
     "shell" "bash"
-    "tools" (dict "mise" (list))
-    "tools_management" (list) }}
+    "tools" (dict "mise" (list)) }}
 {{- if eq .chezmoi.os "linux" }}{{- $data = . }}{{- end }}
 
 {{- if eq .chezmoi.os "windows" }}
@@ -31,10 +30,6 @@ workspaces
 .inputrc
 .wslconfig
 AppData
-{{- end }}
-
-{{- if not (has "mise" $data.tools_management) }}
-.config/mise
 {{- end }}
 
 {{- if or (not (has "gitlab-ci-local" $data.tools.mise)) (eq (len $data.container.runtimes) 0) }}

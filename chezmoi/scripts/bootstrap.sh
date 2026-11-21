@@ -57,6 +57,17 @@ if [ ! -x "$env/bin/python3" ]; then
   nix-build -E 'with import <nixpkgs> {}; buildEnv { name = "chezmoi-env"; paths = [ jq (python3.withPackages (ps: [ ps.tomlkit ])) ]; }' -o "$env"
 fi
 
+# same delay as minimum_release_age in 10-settings.toml, and an installed mise is left to mise self-update
+if [ ! -x "$HOME/.local/bin/mise" ]; then
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "https://mise.run" | MISE_INSTALL_PATH="$HOME/.local/bin/mise" MISE_MINIMUM_RELEASE_AGE=4d sh
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO- "https://mise.run" | MISE_INSTALL_PATH="$HOME/.local/bin/mise" MISE_MINIMUM_RELEASE_AGE=4d sh
+  else
+    error "Neither curl nor wget is installed, one is needed to install mise"
+  fi
+fi
+
 # home-manager init keeps an existing home.nix, otherwise its default one is overwritten in the file phase
 if ! command -v home-manager >/dev/null 2>&1; then
   nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager

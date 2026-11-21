@@ -48,7 +48,6 @@
 {{- $git_ssh := false }}
 {{- $plugins := list }}
 {{- $sandboxes := list }}
-{{- $tools_management := list }}
 {{- if $dev }}
   {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
 
@@ -69,14 +68,7 @@
 
   {{- $_ := warnf "\navailable tools per manager:\n  %s" ($bundle_summary | join "\n  ") }}
 
-  {{- $tools_management = promptMultichoiceOnce . "tools_management" "Which tool manager(s) would you like to use" $managers (index $data.default_managers $profile) }}
-
-  {{- range $manager := $tools_management }}
-    {{- $_ := set $tools $manager (promptMultichoiceOnce $
-        (print "tools." $manager)
-        (print "Which tools would you like to install via " $manager)
-        (index $data.tools $manager) (index $data.default_tools $profile)) }}
-  {{- end }}
+  {{- $_ := set $tools "mise" (promptMultichoiceOnce . "tools.mise" "Which tools would you like to install via mise" (index $data.tools "mise") (index $data.default_tools $profile)) }}
 {{- end -}}
 
 umask: 0o22
@@ -92,7 +84,7 @@ diff:
 
 {{- if ne .chezmoi.os "windows" }}
 
-# nix, home-manager and python must exist before any source state read
+# nix, home-manager, python and mise must exist before any source state read
 hooks:
   read-source-state:
     pre:
@@ -186,8 +178,6 @@ data:
   # Note that some files are by default merged, allowing you to enrich them without loosing custom changes on 'chezmoi apply'
   ignore:{{ with (dig "ignore" list .) }}{{ . | toYaml | trim | nindent 4 }}{{ else }} []{{ end }}
 
-  # Which tool manager to use ('mise')
-  tools_management:{{ if eq (len $tools_management) 0 }} []{{ else }}{{ $tools_management | toYaml | trim | nindent 4 }}{{ end }}
   # Which tool bundles to install
   #
   # available tools per manager:

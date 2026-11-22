@@ -18,9 +18,9 @@ if [ ! -d "$remote_cli" ]; then
   exit 127
 fi
 
-# outside a VS Code terminal, "code" needs the IPC socket of a running VS Code window,
-# some listening sockets never answer, the highest socket inode belongs to the last opened window
-if [ -z "$VSCODE_IPC_HOOK_CLI" ]; then
+# Outside a VS Code terminal, or with a socket inherited from a closed window (herdr server), "code" needs the IPC socket of a running window.
+# Some listening sockets never answer, so take the highest inode, which belongs to the last opened window.
+if [ -z "$VSCODE_IPC_HOOK_CLI" ] || [ -z "$(ss -Hxl src "$VSCODE_IPC_HOOK_CLI")" ]; then
   VSCODE_IPC_HOOK_CLI="$(ss -Hxl src "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/vscode-ipc-*" | awk '$6 > inode { inode = $6; sock = $5 } END { print sock }')"
   export VSCODE_IPC_HOOK_CLI
 fi

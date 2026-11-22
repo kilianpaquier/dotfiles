@@ -1,4 +1,4 @@
-{{- $allow_write := concat .sandbox.host.write_dir .sandbox.host.write_file (list (print "/tmp/claude-" .chezmoi.uid)) }}
+{{- $allow_write := append .sandbox.write (print "/tmp/claude-" .chezmoi.uid) }}
 {{- $deny_domain := .sandbox.network.deny_domain }}
 
 {{- $deny_reason := dict }}
@@ -79,10 +79,10 @@
         ]
     },
     "filesystem": {
-        "allowRead": {{ concat .sandbox.host.read_dir .sandbox.host.read_file | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "allowRead": {{ concat .sandbox.read .sandbox.read_host .sandbox.read_local | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "allowWrite": {{ $allow_write | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
-        "denyRead": {{ .sandbox.host.deny_read | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
-        "denyWrite": {{ .sandbox.host.deny_write | sortAlpha | toPrettyJson "    " | indent 8 | trim }}
+        "denyRead": {{ .sandbox.deny_read | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "denyWrite": {{ .sandbox.deny_write | sortAlpha | toPrettyJson "    " | indent 8 | trim }}
     },
     "mandatoryDenySearchDepth": 6,
     "network": {

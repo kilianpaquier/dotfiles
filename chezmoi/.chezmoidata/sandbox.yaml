@@ -1,189 +1,149 @@
 sandbox:
-  # Host sandboxes (shared kernel) configuration, it applies to srt (anthropic sandbox runtime) and nono (open source project)
-  host:
-    deny_read:
-      - /boot
-      - /efi
-      - /home
-      - /media
-      - /mnt
-      - /root
-      - /run/credentials
-      - /run/secrets
-      - /run/user
-      - /var/lib/private
-      - /var/log
-      - /var/run/credentials
-    deny_write: []
-    read_file:
-      # Git configuration (signing, aliases, etc.)
-      - ~/.ssh/id_ed25519.pub
-      - ~/.gitconfig
+  # Paths every sandbox reads (srt allows them, sbx and openshell copy them into the sandbox)
+  read:
+    # Git configuration (signing, aliases, etc.)
+    - ~/.config/git
+    - ~/.gitconfig
+    - ~/.ssh/id_ed25519.pub
 
-      # Mise binaries accesses
-      - ~/.config/mise/config.toml
+    # Mise configuration
+    - ~/.config/mise/conf.d
+    - ~/.config/mise/config.toml
 
-      # Claude harness
-      - ~/.claude.json
-      - ~/.claude/CLAUDE.md
-      - ~/.claude/RTK.md
-      - ~/.claude/settings.json
+    # Claude harness
+    - ~/.claude/RTK.md
+    - ~/.claude/agents
+    - ~/.claude/hooks
+    - ~/.claude/rules
+    - ~/.claude/skills
 
-      # Copilot harness
-      - ~/.copilot/config.json
-      - ~/.copilot/copilot-instructions.md
-      - ~/.copilot/lsp-config.json
-      - ~/.copilot/mcp-config.json
-      - ~/.copilot/permissions-config.json
-      - ~/.copilot/settings.json
+    # Copilot harness
+    - ~/.copilot/agents
+    - ~/.copilot/copilot-instructions.md
+    - ~/.copilot/hooks
+    - ~/.copilot/instructions
+    - ~/.copilot/lsp-config.json
+    - ~/.copilot/mcp-config.json
+    - ~/.copilot/settings.json
+    - ~/.copilot/skills
 
-      # OpenCode harness
-      - ~/.config/opencode/cli.json
-      - ~/.config/opencode/opencode.json
+    # Agent Skills (opencode, pi)
+    - ~/.agents/skills
 
-      # Pi harness
-      - ~/.pi/agent/keybindings.json
-      - ~/.pi/agent/mcp.json
-      - ~/.pi/agent/models.json
-      - ~/.pi/agent/settings.json
-      - ~/.pi/agent/trust.json
+    # OpenCode harness
+    - ~/.config/opencode/agents
+    - ~/.config/opencode/cli.json
+    - ~/.config/opencode/commands
+    - ~/.config/opencode/opencode.json
+    - ~/.config/opencode/plugins
+    - ~/.config/opencode/skills
 
-      # RC files
-      # - ~/.bash_aliases
-      # - ~/.bash_logout
-      # - ~/.bashenv
-      # - ~/.bashrc
-      # - ~/.env.zsh
-      # - ~/.p10k.zsh
-      # - ~/.profile
-      # - ~/.zlogout
-      # - ~/.zprofile
-      # - ~/.zshenv
-      # - ~/.zshrc
-    read_dir:
-      # Git configuration (signing, aliases, etc.)
-      - ~/.config/git
+    # Pi harness
+    - ~/.pi/agent/extensions
+    - ~/.pi/agent/keybindings.json
+    - ~/.pi/agent/mcp.json
+    - ~/.pi/agent/models.json
+    - ~/.pi/agent/prompts
+    - ~/.pi/agent/skills
+    - ~/.pi/agent/trust.json
 
-      # Binaries accesses
-      - ~/.bun
-      - ~/.local/bin
-      - ~/.local/lib
-      - ~/.local/share/uv
-      - ~/.local/state/nix
+  # Paths only srt reads, since it runs host binaries in place and an image would keep a copy of the login files
+  read_local:
+    # Binaries accesses
+    - ~/.bun
+    - ~/.local/bin
+    - ~/.local/lib
+    - ~/.local/share/mise
+    - ~/.local/share/uv
+    - ~/.local/state/nix
+    # - ~/.cache/mise
 
-      # RC directories
-      # - ~/.cache/zsh
-      # - ~/.cache/zsh4humans
+    # Claude harness
+    - ~/.claude.json
 
-      # Mise binaries accesses
-      # - ~/.cache/mise
-      - ~/.config/mise/conf.d
-      - ~/.local/share/mise
+    # Copilot harness
+    - ~/.copilot/config.json
 
-      # Claude harness
-      - ~/.claude/agents
-      - ~/.claude/plugins
-      - ~/.claude/rules
-      - ~/.claude/skills
+  # Paths only the shared kernel sandboxes read, since sbx seeds these files itself
+  read_host:
+    # Claude harness
+    - ~/.claude/CLAUDE.md
+    - ~/.claude/plugins
+    - ~/.claude/settings.json
 
-      # Copilot harness
-      - ~/.copilot/.cache
-      - ~/.copilot/agents
-      - ~/.copilot/extensions
-      - ~/.copilot/hooks
-      - ~/.copilot/installed-plugins
-      - ~/.copilot/instructions
-      - ~/.copilot/plugin-data
-      - ~/.copilot/skills
-      - ~/.copilot/servers
+    # Copilot harness
+    - ~/.copilot/.cache
+    - ~/.copilot/extensions
+    - ~/.copilot/installed-plugins
+    - ~/.copilot/permissions-config.json
+    - ~/.copilot/plugin-data
+    - ~/.copilot/servers
 
-      # Agent Skills (opencode, pi)
-      - ~/.agents/skills
+    # Pi harness
+    - ~/.pi/agent/git
+    - ~/.pi/agent/npm
+    - ~/.pi/agent/settings.json
 
-      # OpenCode harness
-      - ~/.config/opencode/agents
-      - ~/.config/opencode/commands
-      - ~/.config/opencode/plugins
-      - ~/.config/opencode/skills
+    # RC files
+    # - ~/.bash_aliases
+    # - ~/.bash_logout
+    # - ~/.bashenv
+    # - ~/.bashrc
+    # - ~/.env.zsh
+    # - ~/.p10k.zsh
+    # - ~/.profile
+    # - ~/.zlogout
+    # - ~/.zprofile
+    # - ~/.zshenv
+    # - ~/.zshrc
 
-      # Pi harness
-      - ~/.pi/agent/extensions
-      - ~/.pi/agent/git
-      - ~/.pi/agent/npm
-      - ~/.pi/agent/prompts
-      - ~/.pi/agent/skills
-    write_file:
-      # Pi harness
-      - ~/.pi/agent/mcp.log
-    write_dir:
-      - "."
-      - ~/workspaces
-      - /tmp/claude
+    # RC directories
+    # - ~/.cache/zsh
+    # - ~/.cache/zsh4humans
 
-      # Claude harness
-      - ~/.claude/debug
-      - ~/.claude/plans
-      - ~/.claude/session-env
+  # Paths only the shared kernel sandboxes write, since the other sandboxes make their whole home writable
+  write:
+    - "."
+    - ~/workspaces
+    - /tmp/claude
 
-      # Copilot harness
-      - ~/.copilot/command-history-state
-      - ~/.copilot/ide
-      - ~/.copilot/logs
-      - ~/.copilot/session-state
-      - ~/.copilot/sidebar-session-state
+    # Claude harness
+    - ~/.claude/debug
+    - ~/.claude/plans
+    - ~/.claude/session-env
 
-      # OpenCode harness
-      - ~/.cache/opencode
-      - ~/.local/share/opencode
-      - ~/.local/state/opencode
+    # Copilot harness
+    - ~/.copilot/command-history-state
+    - ~/.copilot/ide
+    - ~/.copilot/logs
+    - ~/.copilot/session-state
+    - ~/.copilot/sidebar-session-state
 
-      # Pi harness
-      - ~/.pi/agent/sessions
-      - ~/.pi/agent/tmp
+    # OpenCode harness
+    - ~/.cache/opencode
+    - ~/.local/share/opencode
+    - ~/.local/state/opencode
 
-  # Full sandboxes (seperated kernel), it applies to sbx only
-  full:
-    files:
-      common:
-        # Git configuration (signing, aliases, etc.)
-        - ~/.config/git
-        - ~/.gitconfig
-        - ~/.ssh/id_ed25519.pub
+    # Pi harness
+    - ~/.pi/agent/mcp.log
+    - ~/.pi/agent/sessions
+    - ~/.pi/agent/tmp
 
-        # Mise configuration
-        - ~/.config/mise/conf.d/10-settings.toml
-        - ~/.config/mise/config.toml
-      claude:
-        - ~/.claude/RTK.md
-        - ~/.claude/agents
-        - ~/.claude/rules
-        - ~/.claude/skills
-      copilot:
-        - ~/.copilot/agents
-        - ~/.copilot/copilot-instructions.md
-        - ~/.copilot/hooks
-        - ~/.copilot/instructions
-        - ~/.copilot/lsp-config.json
-        - ~/.copilot/mcp-config.json
-        - ~/.copilot/settings.json
-        - ~/.copilot/skills
-      opencode:
-        - ~/.agents/skills
-        - ~/.config/opencode/agents
-        - ~/.config/opencode/cli.json
-        - ~/.config/opencode/commands
-        - ~/.config/opencode/opencode.json
-        - ~/.config/opencode/plugins
-        - ~/.config/opencode/skills
-      pi:
-        - ~/.agents/skills
-        - ~/.pi/agent/extensions
-        - ~/.pi/agent/keybindings.json
-        - ~/.pi/agent/mcp.json
-        - ~/.pi/agent/models.json
-        - ~/.pi/agent/prompts
-        - ~/.pi/agent/skills
-        - ~/.pi/agent/trust.json
+  # Paths the shared kernel sandboxes deny
+  deny_read:
+    - /boot
+    - /efi
+    - /home
+    - /media
+    - /mnt
+    - /root
+    - /run/credentials
+    - /run/secrets
+    - /run/user
+    - /var/lib/private
+    - /var/log
+    - /var/run/credentials
+  deny_write: []
 
   # Network constraints
   network:

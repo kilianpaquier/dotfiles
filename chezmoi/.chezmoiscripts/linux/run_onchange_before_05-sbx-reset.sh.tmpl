@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+# sbx selected: {{ has "sbx" .ai.sandboxes }}
+
+# shellcheck disable=SC1091
+[ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
+
+! command -v sbx >/dev/null 2>&1 || sbx reset --force

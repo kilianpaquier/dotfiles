@@ -24,6 +24,8 @@
     (dict (has "terraform" .tools.mise) (dict "terraform" "latest" "terraform-ls" "latest" "tflint" "latest"))
     (dict (has "uv" .tools.mise) (dict "uv" "latest"))
     (dict (gt (len .ai.runtimes) 0) (dict "apm" "latest" "herdr" "latest"))
+    (dict (has "claude" .ai.runtimes) (dict "claude" "latest"))
+    (dict (has "copilot" .ai.runtimes) (dict "copilot" "latest"))
     (dict (has "opencode" .ai.runtimes) (dict "opencode" "latest"))
     (dict (has "pi" .ai.runtimes) (dict "pi" "latest"))
     (dict (has "sbx" .ai.sandboxes) (dict "sbx" "latest"))

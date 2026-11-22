@@ -7,7 +7,6 @@ set -e
 # shellcheck disable=SC1091
 [ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
 
-# the stop goes before mise prunes the binary, the server would keep running without it
 if command -v herdr >/dev/null 2>&1 && [ -S "$HOME/.config/herdr/herdr.sock" ]; then
   herdr server stop
 fi

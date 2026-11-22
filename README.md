@@ -326,7 +326,6 @@ gopass age agent lock
 
 The following components improve agent generation, responses and consumption.
 Which ones are installed depends on the chosen runtime, the tools installed with **mise** and the prompt choices.
-Every component but the APM skills (`find-skills`, `grill-me`, `grilling`) and `herdr` installs on `claude` and `copilot` only.
 
 | Component                   | Type               | Source                                                             | When                                                     |
 | --------------------------- | ------------------ | ------------------------------------------------------------------ | -------------------------------------------------------- |
@@ -354,6 +353,10 @@ Every component but the APM skills (`find-skills`, `grill-me`, `grilling`) and `
 | `terraform-ls`              | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `terraform` in `tools.mise`, `claude` and `copilot` only |
 | `tofu-ls`                   | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `opentofu` in `tools.mise`, `claude` and `copilot` only  |
 
+> ![warning]
+> For now, components coming from plugins (claude-code-lsps, docker/skills, humanizer, mempalace, one-for-all, ponytail, spf13/go-skills)
+> are not available on **OpenCode** and **Pi**.
+
 ### Agent sandboxes
 
 The `ai.sandboxes` prompt picks how your agents are isolated, on the host with **srt**, or in a microVM with **sbx**.
@@ -373,7 +376,8 @@ The agent works on your projects without seeing your secrets, while still signin
 It can't change its own settings, hooks or plugins, and it can't install tools, run containers, reach databases or `git push`, so you do those yourself.
 
 The **opencode** runtime keeps saved logins, **GitHub Copilot**'s device login included, in the same database as its sessions, which the sandbox can read and write.
-Prefer `ANTHROPIC_API_KEY` in `~/.config/mise/config.secrets.toml` over a saved login where the provider takes a key, since **srt** masks it from the agent.
+Prefer `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, or `CLAUDE_CODE_OAUTH_TOKEN` in `~/.config/mise/config.secrets.toml` over a saved login where the provider takes a key,
+since **srt** masks it from the agent.
 
 > [!warning]
 > A plain `claude`, `copilot`, `opencode` or `pi`, or an agent your IDE starts, runs with no sandbox at all.
@@ -382,7 +386,6 @@ Prefer `ANTHROPIC_API_KEY` in `~/.config/mise/config.secrets.toml` over a saved 
 
 For unattended runs, untrusted repositories or long tasks, [**Docker Sandboxes**](https://docs.docker.com/ai/sandboxes/) runs the whole agent in a microVM, provided your user is in the `kvm` group.
 Your **GitLab** and **GitHub** tokens stay on the host, and the agent signs commits with your SSH key but can't log in to either over SSH.
-As with the host sandboxes, it reaches allowlisted hosts without asking and asks you before any other.
 
 Set it up once, then start an agent from a project:
 
@@ -391,8 +394,10 @@ sbx login
 sbx secret set anthropic                        # Claude Code API key, or /login inside the sandbox for a subscription
 sbx secret set github --command 'gh auth token' # gh, and Copilot sign-in
 sbx secret set gitlab                           # GitLab token with the api scope
-sbx env run
 ```
+
+> [!warning]
+> For now, **sbx** doesn't get the local harness mounted, so running agents may not be efficient.
 
 ### Servers
 

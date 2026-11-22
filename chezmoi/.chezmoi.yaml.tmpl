@@ -56,7 +56,7 @@
 
   {{- if gt (len $agent_runtimes) 0 }}
     {{- $plugins = promptMultichoiceOnce . "ai.plugins" "Which agent plugin(s) would you like to install" $data.plugins (index $data.default_plugins $profile) }}
-    {{- $sandboxes = promptMultichoiceOnce . "ai.sandboxes" "Which sandbox(es) should run the agent runtimes" (index $data.default_sandboxes $profile)  }}
+    {{- $sandboxes = promptMultichoiceOnce . "ai.sandboxes" "Which sandbox(es) should run the agent runtimes" $data.sandboxes (index $data.default_sandboxes $profile)  }}
   {{- end }}
 
   {{- $container_runtimes = promptMultichoiceOnce . "container.runtimes" "Which container runtime(s) would you like to install" $data.container_runtimes (index $data.default_container_runtimes $profile) }}

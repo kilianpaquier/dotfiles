@@ -2,8 +2,8 @@
 
 {{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "gnumake" "gnupg" "jq" "pinentry-curses" "python3" "ripgrep" "rsync" "socat" "tree" "unzip" "vim" "xdg-utils" }}
 
-{{- if has "claude" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "claude-code") }}{{- end }}
-{{- if has "copilot" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "github-copilot-cli" "iptables" "slirp4netns") }}{{- end }}
+{{- if has "claude" .ai.runtimes }}{{- $packages = append $packages "bubblewrap" }}{{- end }}
+{{- if has "copilot" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "iptables" "slirp4netns") }}{{- end }}
 
 {{- if has "docker" .container.runtimes }}{{- $packages = concat $packages (list "docker" "passt") }}{{- end }}
 {{- if has "podman" .container.runtimes }}{{- $packages = concat $packages (list "podman" "podman-compose" "docker-compose") }}{{- end }}
@@ -29,9 +29,9 @@
   # home-manager state version, all updates must be done carefully to avoid breakage
   home.stateVersion = "26.05";
 
-{{- if or (eq .machine.kind "desktop") (has "claude" .ai.runtimes) (has "copilot" .ai.runtimes) }}
+{{- if eq .machine.kind "desktop" }}
 
-  # proprietary packages (claude-code, discord, github-copilot-cli, spotify, vscode) are refused by nixpkgs unless unfree is allowed.
+  # proprietary packages (discord, spotify, vscode) are refused by nixpkgs unless unfree is allowed.
   nixpkgs.config.allowUnfree = true;
 {{- end }}
 

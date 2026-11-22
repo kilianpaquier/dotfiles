@@ -1,50 +1,40 @@
-{{- $bundles := dict
-    "agentsview" (dict "agentsview" "latest")
-    "bun" (dict "bun" "latest")
-    "codegraph" (dict "codegraph" "latest")
-    "context7" (dict "context7" "latest" "context7-mcp" "latest")
-    "destructive-command-guard" (dict "destructive-command-guard" "latest")
-    "gh" (dict "gh" "latest")
-    "gitlab-ci-local" (dict "gitlab-ci-local" "latest")
-    "glab" (dict "glab" "latest")
-    "go" (dict "go" "latest" "golangci-lint" "latest")
-    "hugo" (dict "dart-sass" "latest" "hugo-extended" "latest")
-    "incus" (dict "incus" "latest")
-    "java" (dict "java" "lts" "maven" "latest")
-    "just" (dict "just" "latest")
-    "k8s" (dict "helm" "latest" "helm-ct" "latest" "helmfile" "latest" "krew" "latest" "kubectl" "latest" "kustomize" "latest")
-    "kotlin" (dict "kotlin" "latest")
-    "mempalace" (dict "mempalace" "latest")
-    "opentofu" (dict "opentofu" "latest" "tofu-ls" "latest" "tflint" "latest")
-    "pre-commit" (dict "pre-commit" "latest")
-    "pulumi" (dict "pulumi" "latest")
-    "rtk" (dict "rtk" "latest")
-    "shell" (dict "bash-language-server" "latest" "shellcheck" "latest")
-    "terraform" (dict "terraform" "latest" "terraform-ls" "latest" "tflint" "latest")
-    "uv" (dict "uv" "latest") }}
+{{- $bundles := mergeOverwrite (dict "false" (dict) "true" (dict))
+    (dict true (dict "age" "latest" "cosign" "latest" "node" "24" "sops" "latest" "usage" "latest"))
+    (dict (has "agentsview" .tools.mise) (dict "agentsview" "latest"))
+    (dict (has "bun" .tools.mise) (dict "bun" "latest"))
+    (dict (has "codegraph" .tools.mise) (dict "codegraph" "latest"))
+    (dict (has "context7" .tools.mise) (dict "context7" "latest" "context7-mcp" "latest"))
+    (dict (has "destructive-command-guard" .tools.mise) (dict "destructive-command-guard" "latest"))
+    (dict (has "gh" .tools.mise) (dict "gh" "latest"))
+    (dict (has "gitlab-ci-local" .tools.mise) (dict "gitlab-ci-local" "latest"))
+    (dict (has "glab" .tools.mise) (dict "glab" "latest"))
+    (dict (has "go" .tools.mise) (dict "go" "latest" "golangci-lint" "latest"))
+    (dict (has "hugo" .tools.mise) (dict "dart-sass" "latest" "hugo-extended" "latest"))
+    (dict (has "incus" .tools.mise) (dict "incus" "latest"))
+    (dict (has "java" .tools.mise) (dict "java" "lts" "maven" "latest"))
+    (dict (has "just" .tools.mise) (dict "just" "latest"))
+    (dict (has "k8s" .tools.mise) (dict "helm" "latest" "helm-ct" "latest" "helmfile" "latest" "krew" "latest" "kubectl" "latest" "kustomize" "latest"))
+    (dict (has "kotlin" .tools.mise) (dict "kotlin" "latest"))
+    (dict (has "mempalace" .tools.mise) (dict "mempalace" "latest"))
+    (dict (has "opentofu" .tools.mise) (dict "opentofu" "latest" "tofu-ls" "latest" "tflint" "latest"))
+    (dict (has "pre-commit" .tools.mise) (dict "pre-commit" "latest"))
+    (dict (has "pulumi" .tools.mise) (dict "pulumi" "latest"))
+    (dict (has "rtk" .tools.mise) (dict "rtk" "latest"))
+    (dict (has "shell" .tools.mise) (dict "bash-language-server" "latest" "shellcheck" "latest"))
+    (dict (has "terraform" .tools.mise) (dict "terraform" "latest" "terraform-ls" "latest" "tflint" "latest"))
+    (dict (has "uv" .tools.mise) (dict "uv" "latest"))
+    (dict (gt (len .ai.runtimes) 0) (dict "apm" "latest" "herdr" "latest"))
+    (dict (has "opencode" .ai.runtimes) (dict "opencode" "latest"))
+    (dict (has "pi" .ai.runtimes) (dict "pi" "latest"))
+    (dict (has "sbx" .ai.sandboxes) (dict "sbx" "latest"))
+    (dict (has "srt" .ai.sandboxes) (dict "srt" "latest")) }}
 
-{{- $tools := dict "age" "latest" "cosign" "latest" "node" "24" "sops" "latest" "usage" "latest" }}
-
-{{- if gt (len .ai.runtimes) 0 }}{{ $_ := set $tools "apm" "latest" }}{{ $_ = set $tools "herdr" "latest" }}{{- end }}
-{{- if has "opencode" .ai.runtimes }}{{ $_ := set $tools "opencode" "latest" }}{{- end }}
-{{- if has "pi" .ai.runtimes }}{{ $_ := set $tools "pi" "latest" }}{{- end }}
-{{- if has "sbx" .ai.sandboxes }}{{ $_ := set $tools "sbx" "latest" }}{{- end }}
-{{- if has "srt" .ai.sandboxes }}{{ $_ := set $tools "srt" "latest" }}{{- end }}
-
-{{- range $bundle, $specs := $bundles }}
-{{- if has $bundle $.tools.mise }}{{ $_ := mergeOverwrite $tools $specs }}{{- end }}
-{{- end }}
+{{- $tools := get $bundles "true" }}
 
 {{- /* a tool shared by two bundles stays as long as one of them is selected */ -}}
 {{- $unset := list }}
-{{- range $bundle, $specs := $bundles }}
-{{- range $id, $_ := $specs }}
+{{- range $id, $_ := get $bundles "false" }}
 {{- if not (hasKey $tools $id) }}{{ $unset = append $unset (list "tools" $id) }}{{- end }}
-{{- end }}
-{{- end }}
-
-{{- range list "apm" "herdr" "opencode" "pi" "sbx" "srt" }}
-{{- if not (hasKey $tools .) }}{{ $unset = append $unset (list "tools" .) }}{{- end }}
 {{- end }}
 
 {{- includeTemplate "scripts/toml-merge.py" (dict "set" (dict "tools" $tools) "sort" (list (list "tools")) "unset" $unset) -}}

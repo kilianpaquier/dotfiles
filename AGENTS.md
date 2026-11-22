@@ -23,27 +23,26 @@ Done when every file of the pair carries the entry.
 
 ## Paths across OSes
 
-**Linux** and **Windows** render their own **chezmoi** data (**Linux** has no `.wsl`, **Windows** has no `.ai`).
-A template reads an OS's data only in that OS's branch, since the branch not taken is never evaluated.
-Neither **chezmoi** nor `.chezmoiremove` deletes an ignored target.
-A managed path therefore leaves a machine through `.chezmoitemplates/deselected.tmpl`, and an unmanaged one through `.chezmoiremove.tmpl`.
+**Linux** and **Windows** render their own **chezmoi** data (**Linux** has no `.wsl`, **Windows** has no `.ai`),
+so a template reads an OS's data only in that OS's branch, since the branch not taken is never evaluated.
+Since neither **chezmoi** nor `.chezmoiremove` deletes an ignored target, a managed path leaves a machine through `.chezmoitemplates/deselected.tmpl`,
+and an unmanaged one through `.chezmoiremove.tmpl`.
 
 1. Pick the row that matches the path.
 
-   | Path                                         | Example                             | Add it to                           |
-   | -------------------------------------------- | ----------------------------------- | ----------------------------------- |
-   | Never managed by **chezmoi**                 | `.cache/uv` once `uv` is deselected | `.chezmoiremove.tmpl`               |
-   | Managed here, deleted once deselected        | `.kube` once `k8s` is deselected    | `.chezmoitemplates/deselected.tmpl` |
-   | Managed on the other OS                      | `AppData` on **Linux**              | `.chezmoitemplates/deselected.tmpl` |
-   | Managed here, and a tool or the user owns it | `workspaces` on a **Linux** desktop | `.chezmoiignore.tmpl`               |
+   | Path                                         | Example                                         | Add it to                           |
+   | -------------------------------------------- | ----------------------------------------------- | ----------------------------------- |
+   | Never managed by **chezmoi**                 | `.cache/uv` once `uv` is deselected             | `.chezmoiremove.tmpl`               |
+   | Managed here, deleted once deselected        | `.kube` once `k8s` is deselected                | `.chezmoitemplates/deselected.tmpl` |
+   | Managed on the other OS                      | `AppData` on **Linux**                          | `.chezmoitemplates/deselected.tmpl` |
+   | Managed here, and a tool or the user owns it | `.claude` on **Windows** or a **Linux** desktop | `.chezmoiignore.tmpl`               |
 
 2. Add it as a plain line under its option's condition, in the branch of the OS that reads that option.
 3. Give a path that differs by OS its **pair**.
    - A **Windows**-only path also goes in the **Linux** branch of `deselected.tmpl`.
    - A **Linux** path that no option controls also goes in the **Windows** branch of `deselected.tmpl`.
    - A **Linux** path that an option controls needs nothing more, since **Windows** renders `deselected.tmpl` with every option deselected.
-4. List the files rather than the directory when the tool keeps its own data there (`.ssh/known_hosts`, not `.ssh`), since deleting a directory removes its history and credentials too.
-5. When the change deletes a managed source file, list its target in `.chezmoiremove.tmpl`, since **chezmoi** leaves the target in place.
+4. When the change deletes a managed source file, list its target in `.chezmoiremove.tmpl`, since **chezmoi** leaves the target in place.
 
 Done when the path sits in exactly one row's file, plus its pair from step 3.
 

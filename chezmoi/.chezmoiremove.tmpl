@@ -1,8 +1,12 @@
 # Force remove side directories not chezmoi managed.
 
 {{- if ne .chezmoi.os "windows" }}
-# Remove chezmoi managed file paths
+# Remove old chezmoi managed file paths
+.boost
+.codex
+.config/home-manager/local.nix
 .config/mise/miserc.toml
+.config/protected-paths
 .config/wsl
 
 {{- if eq (len .ai.runtimes) 0 }}

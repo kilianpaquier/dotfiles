@@ -1,3 +1,11 @@
+{{- if or (eq .chezmoi.os "windows") (eq .machine.kind "desktop") }}
+.claude
+.config/git/config
+.config/git/ignore
+.copilot
+workspaces
+{{- end }}
+
 {{- if eq .chezmoi.os "windows" }}
 # Windows
 .chezmoiscripts/linux/**
@@ -8,11 +16,6 @@
 {{- if eq .chezmoi.os "linux" }}
 # Linux
 .chezmoiscripts/windows/**
-
-{{- if eq .machine.kind "desktop" }}
-.gitconfig
-workspaces
-{{- end }}
 
 {{- if eq (len .ai.runtimes) 0 }}
 .chezmoiscripts/linux/*-agent-plugins.sh

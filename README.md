@@ -326,7 +326,7 @@ gopass age agent lock
 
 The following components improve agent generation, responses and consumption.
 Which ones are installed depends on the chosen runtime, the tools installed with **mise** and the prompt choices.
-Every component but the APM skills (`find-skills`, `grill-me`, `grilling`) installs on `claude` and `copilot` only.
+Every component but the APM skills (`find-skills`, `grill-me`, `grilling`) and `herdr` installs on `claude` and `copilot` only.
 
 | Component                   | Type               | Source                                                             | When                                                     |
 | --------------------------- | ------------------ | ------------------------------------------------------------------ | -------------------------------------------------------- |
@@ -344,6 +344,7 @@ Every component but the APM skills (`find-skills`, `grill-me`, `grilling`) insta
 | `go`                        | Skills             | [spf13/go-skills](https://github.com/spf13/go-skills)              | `go` in `tools.mise`                                     |
 | `gopls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `go` in `tools.mise`, `claude` and `copilot` only        |
 | `grill-me`, `grilling`      | Skills             | [mattpocock/skills](https://github.com/mattpocock/skills)          | always                                                   |
+| `herdr`                     | Hooks              | [herdr](https://github.com/herdrdev/herdr)                         | At least one `ai.runtimes` selected                      |
 | `humanizer`                 | Skills             | [humanizer](https://github.com/blader/humanizer)                   | `humanizer` in `ai.plugins`                              |
 | `jdtls`                     | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `java` in `tools.mise`, `claude` and `copilot` only      |
 | `kotlin-lsp`                | Language server    | [claude-code-lsps](https://github.com/piebald-ai/claude-code-lsps) | `kotlin` in `tools.mise`, `claude` and `copilot` only    |

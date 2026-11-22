@@ -22,6 +22,10 @@ workspaces
 .chezmoiscripts/linux/*-sbx-reset.sh
 {{- end }}
 
+{{- if gt (len .ai.runtimes) 0 }}
+.chezmoiscripts/linux/*-herdr-stop.sh
+{{- end }}
+
 {{- if or (eq (len .ai.runtimes) 0) (not (has "rtk" .tools.mise)) }}
 .chezmoiscripts/linux/*-rtk-install.sh
 {{- end }}

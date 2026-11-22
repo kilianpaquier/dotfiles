@@ -25,7 +25,7 @@
 
 {{- $tools := dict "age" "latest" "cosign" "latest" "node" "24" "sops" "latest" "usage" "latest" }}
 
-{{- if gt (len .ai.runtimes) 0 }}{{ $_ := set $tools "apm" "latest" }}{{- end }}
+{{- if gt (len .ai.runtimes) 0 }}{{ $_ := set $tools "apm" "latest" }}{{ $_ = set $tools "herdr" "latest" }}{{- end }}
 {{- if has "opencode" .ai.runtimes }}{{ $_ := set $tools "opencode" "latest" }}{{- end }}
 {{- if has "pi" .ai.runtimes }}{{ $_ := set $tools "pi" "latest" }}{{- end }}
 {{- if has "sbx" .ai.sandboxes }}{{ $_ := set $tools "sbx" "latest" }}{{- end }}
@@ -43,7 +43,7 @@
 {{- end }}
 {{- end }}
 
-{{- range list "apm" "opencode" "pi" "sbx" "srt" }}
+{{- range list "apm" "herdr" "opencode" "pi" "sbx" "srt" }}
 {{- if not (hasKey $tools .) }}{{ $unset = append $unset (list "tools" .) }}{{- end }}
 {{- end }}
 

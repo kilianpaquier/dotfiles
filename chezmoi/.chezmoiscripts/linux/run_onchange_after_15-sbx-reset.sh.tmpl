@@ -7,7 +7,7 @@ set -e
 # shellcheck disable=SC1091
 [ ! -f "$HOME/.profile" ] || . "$HOME/.profile"
 
-# the reset goes before home-manager removes the binary, it also drops the sandboxes, secrets, SSH config, state and cache
+# the reset goes before mise prunes the binary, it also drops the sandboxes, secrets, SSH config, state and cache
 if command -v sbx >/dev/null 2>&1; then
   sbx reset --force
 fi

@@ -22,4 +22,8 @@ disabled="{{ range $id, $on := includeTemplate "plugins.json.tmpl" (merge (dict 
 {{ include ".chezmoitemplates/linux/copilot-plugins.sh" | trim }}
 {{- end }}
 
+# install is idempotent, and rewrites each hook script to the installed herdr version
+{{- range .ai.runtimes }}
+herdr integration install {{ . }}
+{{- end }}
 apm update -g -y

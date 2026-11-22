@@ -1,3 +1,3 @@
-{{- $set := include "private_dot_agentsview/config.partial.json" | fromJson }}
+{{- $set := include "private_dot_agentsview/config.partial.toml" | fromToml }}
 
 {{- includeTemplate "scripts/toml-merge.py" (dict "set" $set "sort" list "unset" list) }}

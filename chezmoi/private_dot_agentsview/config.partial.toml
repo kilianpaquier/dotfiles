@@ -1,0 +1,87 @@
+archive_content = "transcripts"
+disable_update_check = true
+disabled_agents = [
+    "aider",
+    "amp",
+    "antigravity",
+    "antigravity-cli",
+    "augure-code",
+    "augure-desktop",
+    "cline",
+    "codebuddy",
+    "codebuff",
+    "commandcode",
+    "cortex",
+    "cowork",
+    "crush",
+    "cursor",
+    "cursor-ide",
+    "deepseek-harness",
+    "deepseek-tui",
+    "devin",
+    "evener",
+    "forge",
+    "fx",
+    "gemini",
+    "goose",
+    "gptme",
+    "grok",
+    "hermes",
+    "icodemate",
+    "iflow",
+    "junie",
+    "kilo",
+    "kilo-legacy",
+    "kimi",
+    "kimi-work",
+    "kiro",
+    "kiro-ide",
+    "mimocode",
+    "muse",
+    "omnigent",
+    "omo",
+    "omp",
+    "openclaude",
+    "openclaw",
+    "opencodereview",
+    "openhands",
+    "piebald",
+    "poolside",
+    "posit-assistant",
+    "positron",
+    "prime-agent",
+    "qclaw",
+    "qoder",
+    "qwen",
+    "qwenpaw",
+    "reasonix",
+    "roocode",
+    "shelley",
+    "stepcode",
+    "tau",
+    "trae",
+    "traex",
+    "vibe",
+    "visualstudio-copilot",
+    "warp",
+    "windsurf",
+    "workbuddy",
+    "zcode",
+    "zed",
+    "zencoder",
+]
+port = 23847
+tool_result_images = "drop"
+zoom_level = 120
+
+[agents.claude]
+dirs = ["~/.claude/projects"]
+
+[agents.copilot]
+dirs = ["~/.copilot"]
+
+[agents.opencode]
+dirs = ["~/.local/share/opencode"]
+
+[agents.pi]
+dirs = ["~/.pi/agent/sessions"]

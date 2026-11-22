@@ -1,0 +1,3 @@
+{{- $set := include "private_dot_config/herdr/config.partial.toml" | fromToml }}
+
+{{- includeTemplate "scripts/toml-merge.py" (dict "set" $set "sort" list "unset" list) }}

@@ -88,6 +88,7 @@ AppData
 
 {{- if eq (len $data.ai.runtimes) 0 }}
 .apm
+.config/herdr
 {{- end }}
 
 {{- if not (has "claude" $data.ai.runtimes) }}

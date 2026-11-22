@@ -133,7 +133,7 @@ Two profiles exist, `home` and `soprasteria`.
 | ----------------------------------------------------------------------------------- | ---------------------- | --------------------- | -------------------- |
 | Email to use as git committer                                                       |                        |                       | `user.email`         |
 | Whether to sign commits with the SSH key                                            | `true`                 |                       | `git.ssh`            |
-| Which AI agent runtimes to install (`claude`, `copilot`)                            | Depends on the profile |                       | `ai.runtimes`        |
+| Which AI agent runtimes to install (`claude`, `copilot`, `opencode`, `pi`)          | Depends on the profile |                       | `ai.runtimes`        |
 | Which agent plugins to enable (`cave-talk`, `feature-dev`, `humanizer`, `ponytail`) | Depends on the profile | at least one agent    | `ai.plugins`         |
 | Which sandboxes to run the agents in (`sbx`, `srt`)                                 |                        | at least one agent    | `ai.sandboxes`       |
 | Which container runtimes to install (`docker` rootless, `podman`)                   | Depends on the profile |                       | `container.runtimes` |
@@ -326,6 +326,7 @@ gopass age agent lock
 
 The following components improve agent generation, responses and consumption.
 Which ones are installed depends on the chosen runtime, the tools installed with **mise** and the prompt choices.
+Every component but the APM skills (`find-skills`, `grill-me`, `grilling`) installs on `claude` and `copilot` only.
 
 | Component                   | Type               | Source                                                             | When                                                     |
 | --------------------------- | ------------------ | ------------------------------------------------------------------ | -------------------------------------------------------- |
@@ -363,13 +364,18 @@ Start the agent from `~/workspaces` or the **chezmoi** source directory, through
 ```sh
 srt claude
 srt copilot
+srt opencode
+srt pi
 ```
 
 The agent works on your projects without seeing your secrets, while still signing commits and calling **GitLab** and **GitHub** with your credentials.
 It can't change its own settings, hooks or plugins, and it can't install tools, run containers, reach databases or `git push`, so you do those yourself.
 
+The **opencode** runtime keeps saved logins, **GitHub Copilot**'s device login included, in the same database as its sessions, which the sandbox can read and write.
+Prefer `ANTHROPIC_API_KEY` in `~/.config/mise/config.secrets.toml` over a saved login where the provider takes a key, since **srt** masks it from the agent.
+
 > [!warning]
-> A plain `claude` or `copilot`, or an agent your IDE starts, runs with no sandbox at all.
+> A plain `claude`, `copilot`, `opencode` or `pi`, or an agent your IDE starts, runs with no sandbox at all.
 
 #### Full sandbox (sbx)
 

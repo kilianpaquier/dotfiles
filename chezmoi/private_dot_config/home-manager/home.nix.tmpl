@@ -2,7 +2,6 @@
 
 {{- $packages := list .shell "bash-completion" "file" "gcc" "gcc.cc.lib" "gettext" "git" "gnumake" "gnupg" "jq" "pinentry-curses" "python3" "ripgrep" "rsync" "socat" "tree" "unzip" "vim" "xdg-utils" }}
 
-{{- if gt (len .ai.runtimes) 0 }}{{- $packages = append $packages "apm-cli" }}{{- end }}
 {{- if has "claude" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "claude-code") }}{{- end }}
 {{- if has "copilot" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "github-copilot-cli" "iptables" "slirp4netns") }}{{- end }}
 
@@ -75,18 +74,9 @@
   '';
 {{- end }}
 
-{{- if or (gt (len .ai.runtimes) 0) (has "podman" .container.runtimes) }}
+{{- if has "podman" .container.runtimes }}
 
   nixpkgs.overlays = [
-{{- if gt (len .ai.runtimes) 0 }}
-    # apm-cli pins websockets<17 while nixpkgs ships 17, drop once nixpkgs relaxes it.
-    (final: prev: {
-      apm-cli = prev.apm-cli.overridePythonAttrs (old: {
-        pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [ "websockets" ];
-      });
-    })
-{{- end }}
-{{- if has "podman" .container.runtimes }}
     # podman-compose 1.6.0 loops on depends_on service_healthy (#1422, #1541), drop once a release has #1608.
     (final: prev: {
       podman-compose = prev.podman-compose.overridePythonAttrs (old: {
@@ -98,7 +88,6 @@
         };
       });
     })
-{{- end }}
   ];
 {{- end }}
 

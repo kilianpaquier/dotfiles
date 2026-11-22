@@ -40,7 +40,11 @@ def main():
         if table is None:
             continue
         for key in sorted(table):
-            table[key] = table.pop(key)
+            value = table.pop(key)
+            # A table tomlkit added carries a leading blank line, doubled once sorted after a table that ends with one.
+            if isinstance(value, tomlkit.items.Table):
+                value.trivia.indent = value.trivia.indent.lstrip("\n")
+            table[key] = value
 
     sys.stdout.write(tomlkit.dumps(doc).lstrip("\n"))
 

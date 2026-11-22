@@ -37,6 +37,17 @@ sandbox:
       - ~/.copilot/permissions-config.json
       - ~/.copilot/settings.json
 
+      # OpenCode harness
+      - ~/.config/opencode/cli.json
+      - ~/.config/opencode/opencode.json
+
+      # Pi harness
+      - ~/.pi/agent/keybindings.json
+      - ~/.pi/agent/mcp.json
+      - ~/.pi/agent/models.json
+      - ~/.pi/agent/settings.json
+      - ~/.pi/agent/trust.json
+
       # RC files
       # - ~/.bash_aliases
       # - ~/.bash_logout
@@ -85,7 +96,25 @@ sandbox:
       - ~/.copilot/plugin-data
       - ~/.copilot/skills
       - ~/.copilot/servers
-    write_file: []
+
+      # Agent Skills (opencode, pi)
+      - ~/.agents/skills
+
+      # OpenCode harness
+      - ~/.config/opencode/agents
+      - ~/.config/opencode/commands
+      - ~/.config/opencode/plugins
+      - ~/.config/opencode/skills
+
+      # Pi harness
+      - ~/.pi/agent/extensions
+      - ~/.pi/agent/git
+      - ~/.pi/agent/npm
+      - ~/.pi/agent/prompts
+      - ~/.pi/agent/skills
+    write_file:
+      # Pi harness
+      - ~/.pi/agent/mcp.log
     write_dir:
       - "."
       - ~/workspaces
@@ -102,6 +131,15 @@ sandbox:
       - ~/.copilot/logs
       - ~/.copilot/session-state
       - ~/.copilot/sidebar-session-state
+
+      # OpenCode harness
+      - ~/.cache/opencode
+      - ~/.local/share/opencode
+      - ~/.local/state/opencode
+
+      # Pi harness
+      - ~/.pi/agent/sessions
+      - ~/.pi/agent/tmp
 
   # Full sandboxes (seperated kernel), it applies to sbx only
   full:
@@ -158,6 +196,29 @@ sandbox:
       - ~/.copilot/lsp-config.json
       - ~/.copilot/settings.json # fine, not overridden by copilot sbx
       - ~/.copilot/skills
+
+      # Agent Skills (opencode, pi)
+      - ~/.agents/skills
+
+      # OpenCode harness
+      - ~/.config/opencode/agents
+      - ~/.config/opencode/cli.json
+      - ~/.config/opencode/commands
+      - ~/.config/opencode/opencode.json
+      - ~/.config/opencode/plugins
+      - ~/.config/opencode/skills
+
+      # Pi harness
+      - ~/.pi/agent/extensions
+      - ~/.pi/agent/git
+      - ~/.pi/agent/keybindings.json
+      - ~/.pi/agent/mcp.json
+      - ~/.pi/agent/models.json
+      - ~/.pi/agent/npm
+      - ~/.pi/agent/prompts
+      - ~/.pi/agent/settings.json
+      - ~/.pi/agent/skills
+      - ~/.pi/agent/trust.json
     allow_write: []
 
   # Network constraints

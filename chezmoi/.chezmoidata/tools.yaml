@@ -71,7 +71,7 @@ default_tools:
     - terraform
     - uv
 
-agent_runtimes: [claude, copilot]
+agent_runtimes: [claude, copilot, opencode, pi]
 default_agent_runtimes:
   home: [claude, copilot]
   soprasteria: [copilot]

@@ -11,4 +11,6 @@ set -e
 if command -v rtk >/dev/null 2>&1; then
   ! grep -qs 'rtk hook claude' "$HOME/.claude/settings.json" || rtk init -g --uninstall --auto-patch
   [ ! -f "$HOME/.copilot/hooks/rtk-rewrite.json" ] || rtk init -g --uninstall --copilot --auto-patch
+  [ ! -f "$HOME/.config/opencode/plugins/rtk.ts" ] || rtk init -g --uninstall --auto-patch
+  [ ! -f "$HOME/.pi/agent/extensions/rtk.ts" ] || rtk init -g --uninstall --agent pi --auto-patch
 fi

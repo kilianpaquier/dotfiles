@@ -17,6 +17,7 @@ dependencies:
 
 includes: auto
 targets:
+{{- /* APM has no pi target before 0.39, and pi reads the agent-skills target's ~/.agents/skills. */}}
 {{- range .ai.runtimes }}
-  - {{ . }}
+  - {{ eq . "pi" | ternary "agent-skills" . }}
 {{- end }}

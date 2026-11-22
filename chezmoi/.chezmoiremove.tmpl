@@ -23,6 +23,17 @@
 .cache/copilot
 {{- end }}
 
+{{- if not (has "opencode" .ai.runtimes) }}
+.cache/opencode
+.config/opencode
+.local/share/opencode
+.local/state/opencode
+{{- end }}
+
+{{- if not (has "pi" .ai.runtimes) }}
+.pi
+{{- end }}
+
 {{- if eq (len .ai.sandboxes) 0 }}
 .cache/sandboxes
 {{- end }}

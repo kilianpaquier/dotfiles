@@ -17,3 +17,9 @@ rtk init -g --auto-patch
 {{- if has "copilot" .ai.runtimes }}
 rtk init -g --copilot --auto-patch
 {{- end }}
+{{- if has "opencode" .ai.runtimes }}
+rtk init -g --opencode --auto-patch
+{{- end }}
+{{- if has "pi" .ai.runtimes }}
+rtk init -g --agent pi --auto-patch
+{{- end }}

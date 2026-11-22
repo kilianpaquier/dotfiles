@@ -105,7 +105,6 @@ sandbox:
   write:
     - "."
     - ~/workspaces
-    - /tmp/claude
 
     # Claude harness
     - ~/.claude/debug

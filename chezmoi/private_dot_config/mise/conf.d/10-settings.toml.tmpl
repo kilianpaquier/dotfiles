@@ -29,7 +29,7 @@ incus = "github:lxc/incus[matching=incus.,rename_exe=incus]"
 # ]"""
 # kotlin-lsp = """http:kotlin-lsp[\
 #   rename_exe={intellij-server='kotlin-lsp'},\
-#   url='https://download.jetbrains.com/language-server/kotlin-server/{{ version }}/kotlin-server-{{ version }}{{ arch(x64="", arm64="-aarch64") }}.tar.gz',\
+#   url='{{ `https://download.jetbrains.com/language-server/kotlin-server/{{ version }}/kotlin-server-{{ version }}{{ arch(x64="", arm64="-aarch64") }}.tar.gz` }}',\
 #   version_json_path='.[].name',\
 #   version_list_url='https://api.github.com/repos/Kotlin/kotlin-lsp/releases',\
 #   version_order='semver',\
@@ -46,6 +46,7 @@ tofu-ls = "github:opentofu/tofu-ls"
 [env]
 AGENTSVIEW_TELEMETRY_ENABLED = "0"
 CAVEMAN_DEFAULT_MODE = "caveman"
+CLAUDE_CODE_TMPDIR = "/tmp/claude-{{ .chezmoi.uid }}"
 DO_NOT_TRACK = "1"
 MEMPALACE_HOOKS_AUTO_SAVE = "false"
 MISE_IGNORED_CONFIG_PATHS = "**/private_dot_*/**"

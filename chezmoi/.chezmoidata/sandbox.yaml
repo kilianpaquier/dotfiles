@@ -143,83 +143,47 @@ sandbox:
 
   # Full sandboxes (seperated kernel), it applies to sbx only
   full:
-    allow_read: # FIXME not working, maybe the kit way could be less painful, kit claude / copilot fails on harness mount and shell kit fails on mise / binaries PATH part
-      # Git configuration (signing, aliases, etc.)
-      - ~/.config/git
-      - ~/.ssh/id_ed25519.pub
-      - ~/.gitconfig
+    files:
+      common:
+        # Git configuration (signing, aliases, etc.)
+        - ~/.config/git
+        - ~/.gitconfig
+        - ~/.ssh/id_ed25519.pub
 
-      # Binaries accesses
-      - /nix/store
-      - ~/.bun
-      - ~/.local/bin
-      - ~/.local/lib
-      - ~/.local/share/uv
-      - ~/.local/state/nix
-
-      # Mise binaries accesses
-      - ~/.config/mise/config.toml
-      # - ~/.cache/mise
-      - ~/.config/mise/conf.d
-      - ~/.local/share/mise
-
-      # RC files
-      # - ~/.bash_aliases
-      # - ~/.bash_logout
-      # - ~/.bashenv
-      # - ~/.bashrc
-      # - ~/.env.zsh
-      # - ~/.p10k.zsh
-      # - ~/.profile
-      # - ~/.zlogout
-      # - ~/.zprofile
-      # - ~/.zshenv
-      # - ~/.zshrc
-
-      # Claude harness
-      - ~/.claude.json
-      - ~/.claude/CLAUDE.md
-      - ~/.claude/RTK.md
-      - ~/.claude/settings.json # FIXME the mounting disables dangerous mode which should be on by default with sbx (the whole purpose)
-      - ~/.claude/agents
-      - ~/.claude/plugins
-      - ~/.claude/rules
-      - ~/.claude/skills
-
-      # Copilot harness
-      - ~/.copilot/agents
-      - ~/.copilot/config.json
-      - ~/.copilot/copilot-instructions.md
-      - ~/.copilot/hooks
-      - ~/.copilot/installed-plugins
-      - ~/.copilot/instructions
-      - ~/.copilot/lsp-config.json
-      - ~/.copilot/settings.json # fine, not overridden by copilot sbx
-      - ~/.copilot/skills
-
-      # Agent Skills (opencode, pi)
-      - ~/.agents/skills
-
-      # OpenCode harness
-      - ~/.config/opencode/agents
-      - ~/.config/opencode/cli.json
-      - ~/.config/opencode/commands
-      - ~/.config/opencode/opencode.json
-      - ~/.config/opencode/plugins
-      - ~/.config/opencode/skills
-
-      # Pi harness
-      - ~/.pi/agent/extensions
-      - ~/.pi/agent/git
-      - ~/.pi/agent/keybindings.json
-      - ~/.pi/agent/mcp.json
-      - ~/.pi/agent/models.json
-      - ~/.pi/agent/npm
-      - ~/.pi/agent/prompts
-      - ~/.pi/agent/settings.json
-      - ~/.pi/agent/skills
-      - ~/.pi/agent/trust.json
-    allow_write: []
+        # Mise configuration
+        - ~/.config/mise/conf.d/10-settings.toml
+        - ~/.config/mise/config.toml
+      claude:
+        - ~/.claude/RTK.md
+        - ~/.claude/agents
+        - ~/.claude/rules
+        - ~/.claude/skills
+      copilot:
+        - ~/.copilot/agents
+        - ~/.copilot/copilot-instructions.md
+        - ~/.copilot/hooks
+        - ~/.copilot/instructions
+        - ~/.copilot/lsp-config.json
+        - ~/.copilot/mcp-config.json
+        - ~/.copilot/settings.json
+        - ~/.copilot/skills
+      opencode:
+        - ~/.agents/skills
+        - ~/.config/opencode/agents
+        - ~/.config/opencode/cli.json
+        - ~/.config/opencode/commands
+        - ~/.config/opencode/opencode.json
+        - ~/.config/opencode/plugins
+        - ~/.config/opencode/skills
+      pi:
+        - ~/.agents/skills
+        - ~/.pi/agent/extensions
+        - ~/.pi/agent/keybindings.json
+        - ~/.pi/agent/mcp.json
+        - ~/.pi/agent/models.json
+        - ~/.pi/agent/prompts
+        - ~/.pi/agent/skills
+        - ~/.pi/agent/trust.json
 
   # Network constraints
   network:

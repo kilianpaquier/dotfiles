@@ -1,5 +1,9 @@
 {{- $set := include "private_dot_claude/settings.partial.json" | fromJson }}
 
+{{- /* host-only permission mode, the sbx claude mixin uses the partial as its managed settings */ -}}
+{{- $_ := set $set.permissions "defaultMode" "auto" }}
+{{- $_ := set $set.permissions "disableBypassPermissionsMode" "disable" }}
+
 {{- $enabled_plugins := dict }}
 {{- $unset := list (list "sandbox") }}
 

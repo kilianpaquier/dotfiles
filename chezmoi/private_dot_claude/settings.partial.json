@@ -297,9 +297,7 @@
             "mcp__plugin_mempalace_mempalace__mempalace_delete_tunnel",
             "mcp__plugin_mempalace_mempalace__mempalace_kg_invalidate"
         ],
-        "defaultMode": "auto",
-        "deny": [],
-        "disableBypassPermissionsMode": "disable"
+        "deny": []
     },
     "preferredNotifChannel": "auto",
     "remoteControlAtStartup": false,

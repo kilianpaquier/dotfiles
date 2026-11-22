@@ -106,7 +106,14 @@ AppData
 
 {{- if not (has "sbx" $data.ai.sandboxes) }}
 .config/sandboxes
+.local/bin/sbx
 .sbx
+{{- end }}
+
+{{- range $agent := list "claude" "copilot" "opencode" "pi" }}
+{{- if not (has $agent $data.ai.runtimes) }}
+.sbx/kits/{{ $agent }}
+{{- end }}
 {{- end }}
 
 {{- if or (eq $data.machine.kind "desktop") (not (has "vscode" $data.ide)) }}

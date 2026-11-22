@@ -4,6 +4,10 @@
 {{- $_ := set $set.permissions "defaultMode" "auto" }}
 {{- $_ := set $set.permissions "disableBypassPermissionsMode" "disable" }}
 
+{{- $fetch := list }}
+{{- range .sandbox.network.fetch_domain }}{{- $fetch = append $fetch (printf "WebFetch(domain:%s)" .) }}{{- end }}
+{{- $_ := set $set.permissions "allow" (concat $set.permissions.allow $fetch) }}
+
 {{- $enabled_plugins := dict }}
 {{- $unset := list (list "sandbox") }}
 

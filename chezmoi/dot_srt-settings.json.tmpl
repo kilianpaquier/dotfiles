@@ -87,7 +87,7 @@
     "mandatoryDenySearchDepth": 6,
     "network": {
         "allowAllUnixSockets": false,
-        "allowedDomains": {{ .sandbox.network.allow_domain | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "allowedDomains": {{ concat .sandbox.network.fetch_domain .sandbox.network.auth_domain .sandbox.network.dl_domain | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "deniedDomainReasons": {{ $deny_reason | toPrettyJson "    " | indent 8 | trim }},
         "deniedDomains": {{ $deny_domain | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "tlsTerminate": {}

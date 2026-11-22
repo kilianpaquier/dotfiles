@@ -2,6 +2,9 @@
 
 {{- if has "copilot" .ai.runtimes }}
 {{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.copilot.partial.json" | fromJson) }}
+{{- $urls := dict }}
+{{- range .sandbox.network.fetch_domain }}{{- $_ := set $urls (printf "https://%s" .) true }}{{- end }}
+{{- $_ := set $set "chat.tools.urls.autoApprove" $urls }}
 {{- else }}
 {{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.no-copilot.partial.json" | fromJson) }}
 {{- end }}

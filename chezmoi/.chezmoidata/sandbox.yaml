@@ -146,35 +146,28 @@ sandbox:
 
   # Network constraints
   network:
-    allow_domain:
-      - "*.githubcopilot.com"
+    # Hosts agents fetch without asking, the sandboxes allow them
+    fetch_domain:
       - "*.k8s.io"
       - "*.kubernetes.io"
       - aaif.io
       - agent-plugins.org
+      - agents.md
       - agentsview.io
       - ai.kilianpaquier.dev
       - antigravity.google
-      - api.anthropic.com
       - api.github.com
-      - api.openai.com
-      - archive.apache.org
       - artifacthub.io
       - aur.archlinux.org
-      - auth.openai.com
       - bun.sh
-      - cdn.dl.k8s.io
       - cert-manager.io
-      - chatgpt.com
       - chezmoi.io
-      - claude.ai
       - cli.devin.ai
       - cli.github.com
       - cli.netlify.com
       - cloud.google.com
       - code.claude.com
       - code.visualstudio.com
-      - codeload.github.com
       - context7.com
       - conventionalcomments.org
       - crates.io
@@ -184,8 +177,7 @@ sandbox:
       - developer.mozilla.org
       - developers.google.com
       - developers.openai.com
-      - dl.google.com
-      - dl.k8s.io
+      - docs.anthropic.com
       - docs.astral.sh
       - docs.aws.amazon.com
       - docs.claude.com
@@ -197,28 +189,23 @@ sandbox:
       - docs.google.com
       - docs.kernel.org
       - docs.mistral.ai
-      - docs.nono.sh
       - docs.podman.io
       - docs.renovatebot.com
       - docs.rs
       - docs.sigstore.dev
-      - download.eclipse.org
-      - downloads.claude.ai
       - en.wikipedia.org
-      - files.pythonhosted.org
-      - get.helm.sh
       - getplumber.io
-      - ghcr.io
       - git-scm.com
       - github.com
-      - githubcopilot.com
       - gitlab.com
       - go.dev
       - gohugo.io
       - golangci-lint.run
       - google.github.io
+      - gvisor.dev
       - helm.sh
       - helmfile.readthedocs.io
+      - herdr.dev
       - hermes-agent.nousresearch.com
       - hindsight.vectorize.io
       - hub.docker.com
@@ -237,20 +224,12 @@ sandbox:
       - learn.chatgpt.com
       - learn.microsoft.com
       - linuxcontainers.org
-      - mcp-proxy.anthropic.com
-      - mcr.microsoft.com
+      - man.openbsd.org
       - mempalaceofficial.com
       - microsoft.github.io
-      - mise-java.jdx.dev
-      - mise-versions.jdx.dev
-      - mise.jdx.dev
-      - mise.run
       - nix-community.github.io
-      - nodejs.org
-      - nono.sh
       - npmjs.com
       - oauth2-proxy.github.io
-      - objects.githubusercontent.com
       - open-api.netlify.com
       - opencode.ai
       - openjdk.org
@@ -259,41 +238,70 @@ sandbox:
       - packages.debian.org
       - pi.dev
       - pkg.go.dev
-      - pkgs.alpinelinux.org
-      - platform.claude.com
       - pre-commit.com
-      - proxy.golang.org
       - pulumi.com
       - pypi.org
-      - quay.io
       - raw.githubusercontent.com
-      - registry-1.docker.io
-      - registry.nono.sh
-      - registry.npmjs.org
-      - registry.opentofu.org
-      - registry.terraform.io
-      - release-assets.githubusercontent.com
-      - releases.hashicorp.com
-      - repo.maven.apache.org
       - sass-lang.com
       - schemastore.org
       - search.nixos.org
       - semantic-release.gitbook.io
-      - services.google.com
       - shellcheck.net
       - skills.sh
       - stackoverflow.com
-      - statsig.anthropic.com
-      - sum.golang.org
       - trivy.dev
-      - tuf-repo-cdn.sigstore.dev
       - university.gitlab.com
-      - uploads.github.com
+      - wiki.archlinux.org
       - www.chezmoi.io
       - www.freedesktop.org
       - www.rtk-ai.app
       - www.schemastore.org
       - www.skills.sh
+
+    # Hosts agents authenticate or call APIs on, the sandboxes allow them
+    auth_domain:
+      - "*.githubcopilot.com"
+      - api.anthropic.com
+      - api.openai.com
+      - auth.openai.com
+      - chatgpt.com
+      - claude.ai
+      - githubcopilot.com
+      - mcp-proxy.anthropic.com
+      - platform.claude.com
+      - statsig.anthropic.com
+      - uploads.github.com
+
+    # Hosts agents download from, the sandboxes allow them and no fetch is auto-approved
+    dl_domain:
+      - archive.apache.org
+      - cdn.dl.k8s.io
+      - dl.google.com
+      - dl.k8s.io
+      - download.eclipse.org
+      - downloads.claude.ai
+      - files.pythonhosted.org
+      - get.helm.sh
+      - ghcr.io
+      - mcr.microsoft.com
+      - mise-java.jdx.dev
+      - mise-versions.jdx.dev
+      - mise.jdx.dev
+      - mise.run
+      - nodejs.org
+      - pkgs.alpinelinux.org
+      - proxy.golang.org
+      - quay.io
+      - registry-1.docker.io
+      - registry.npmjs.org
+      - registry.opentofu.org
+      - registry.terraform.io
+      - releases.hashicorp.com
+      - repo.maven.apache.org
+      - services.google.com
+      - sum.golang.org
+      - tuf-repo-cdn.sigstore.dev
+
     deny_domain: []
       # - altssh.gitlab.com
       # - github.com:22

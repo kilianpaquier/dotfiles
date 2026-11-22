@@ -7,6 +7,7 @@
 {{- if $on }}{{- $_ := set $enabled_plugins $id true }}{{- else }}{{- $unset = append $unset (list "enabledPlugins" $id) }}{{- end }}
 {{- end }}
 {{- $_ := set $set "enabledPlugins" $enabled_plugins }}
+{{- $_ := set $set "allowedUrls" (.sandbox.network.fetch_domain | sortAlpha) }}
 
 {{- includeTemplate "scripts/json-merge.py" (dict
   "indent" 2

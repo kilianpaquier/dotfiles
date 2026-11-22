@@ -14,9 +14,10 @@ Each runtime of `agent_runtimes` (`.chezmoidata/tools.yaml`) gets the same setup
 
 - A tool permission goes in `private_dot_claude/settings.partial.json` (`permissions`) and `dot_vscode-server/data/Machine/settings.copilot.partial.json` (`chat.tools.terminal.autoApprove`).
 - [**Copilot CLI**](https://docs.github.com/en/copilot/how-tos/copilot-cli) takes tool permissions only as `--allow-tool` flags, so it has no entry.
-- A URL permission goes in `private_dot_claude/settings.partial.json` (`WebFetch(domain:…)`), `private_dot_copilot/settings.partial.json` (`allowedUrls`) and `dot_vscode-server/data/Machine/settings.copilot.partial.json` (`chat.tools.urls.autoApprove`).
 - A path or host an agent reaches goes in `.chezmoidata/sandbox.yaml`, which every sandbox renders.
-- A host listed in `sandbox.network.allow_domain` is allowed, one in `deny_domain` or on a `deny_port` is blocked, and any other host asks.
+- A host an agent fetches goes in `sandbox.network.fetch_domain`, one it authenticates on in `auth_domain` and one it downloads from in `dl_domain`.
+- Only `fetch_domain` feeds the URL permissions of the three modify scripts, so no partial lists a host.
+- A host listed in `fetch_domain`, `auth_domain` or `dl_domain` is allowed, one in `deny_domain` or on a `deny_port` is blocked, and any other host asks.
 - A token comes from [**gopass**](https://www.gopass.pw) (**git**'s credential helper here), so a tool or sandbox reaches **gopass** instead of an exported variable.
 
 Done when every file of the pair carries the entry.

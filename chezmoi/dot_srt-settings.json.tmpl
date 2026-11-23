@@ -1,5 +1,5 @@
 {{/* chezmoi:template:missing-key=zero */}}
-{{- $allow_write := append .sandbox.write (print "/tmp/claude-" .chezmoi.uid) }}
+{{- $allow_write := concat .sandbox.write (list (print "/tmp/claude-" .chezmoi.uid) (print "/tmp/cc-daemon-" .chezmoi.uid)) }}
 {{- $deny_domain := .sandbox.network.deny_domain }}
 
 {{- $deny_reason := dict }}
@@ -16,7 +16,7 @@
 {{- $names := concat (keys .sandbox.credentials) (keys $local_credentials) | uniq | sortAlpha }}
 
 {{- $domains := concat .sandbox.network.fetch_domain .sandbox.network.auth_domain .sandbox.network.dl_domain
-      ($local.fetch_domain | default list) ($local.auth_domain | default list) ($local.dl_domain | default list) }}
+      ($local.fetch_domain | default list) ($local.auth_domain | default list) ($local.dl_domain | default list) -}}
 
 {
     "credentials": {
@@ -48,7 +48,7 @@
     },
     "mandatoryDenySearchDepth": 6,
     "network": {
-        "allowAllUnixSockets": false,
+        "allowAllUnixSockets": true,
         "allowedDomains": {{ $domains | uniq | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "deniedDomainReasons": {{ $deny_reason | toPrettyJson "    " | indent 8 | trim }},
         "deniedDomains": {{ $deny_domain | sortAlpha | toPrettyJson "    " | indent 8 | trim }},

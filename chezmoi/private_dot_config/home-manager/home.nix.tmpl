@@ -63,7 +63,7 @@
 {{- if has "srt" .ai.sandboxes }}
 
   # srt hands CLAUDE_CODE_TMPDIR to the sandbox as TMPDIR without creating it, and /tmp is a tmpfs emptied at each boot
-  systemd.user.tmpfiles.rules = [ "d /tmp/claude-%U 0700 - - 10d" ];
+  systemd.user.tmpfiles.rules = [ "d /tmp/cc-daemon-%U 0700 - - 10d" "d /tmp/claude-%U 0700 - - 10d" ];
 {{- end }}
 
 {{- if or (glob "/usr/share/wayland-sessions/*") (glob "/usr/share/xsessions/*") (stat "/mnt/wslg") }}

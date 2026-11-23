@@ -30,6 +30,9 @@ sandbox:
     # Agent Skills (opencode, pi)
     - ~/.agents/skills
 
+    # MemPalace
+    - ~/.mempalace
+
     # OpenCode harness
     - ~/.config/opencode/agents
     - ~/.config/opencode/cli.json
@@ -63,6 +66,9 @@ sandbox:
 
     # Copilot harness
     - ~/.copilot/config.json
+
+    # MemPalace embedding model
+    - ~/.cache/chroma/onnx_models/all-MiniLM-L6-v2
 
   # Paths only the shared kernel sandboxes read, since sbx seeds these files itself
   read_host:
@@ -108,15 +114,29 @@ sandbox:
 
     # Claude harness
     - ~/.claude/debug
+    - ~/.claude/history.jsonl
     - ~/.claude/plans
+    - ~/.claude/projects
     - ~/.claude/session-env
+    - ~/.claude/sessions
 
     # Copilot harness
     - ~/.copilot/command-history-state
     - ~/.copilot/ide
     - ~/.copilot/logs
     - ~/.copilot/session-state
+    - ~/.copilot/session-store.db
+    - ~/.copilot/session-store.db-shm
+    - ~/.copilot/session-store.db-wal
     - ~/.copilot/sidebar-session-state
+
+    # MemPalace
+    - ~/.mempalace/hook_state
+    - ~/.mempalace/knowledge_graph.sqlite3
+    - ~/.mempalace/knowledge_graph.sqlite3-shm
+    - ~/.mempalace/knowledge_graph.sqlite3-wal
+    - ~/.mempalace/locks
+    - ~/.mempalace/palace
 
     # OpenCode harness
     - ~/.cache/opencode
@@ -124,6 +144,7 @@ sandbox:
     - ~/.local/state/opencode
 
     # Pi harness
+    - ~/.pi/agent/bin
     - ~/.pi/agent/mcp.log
     - ~/.pi/agent/sessions
     - ~/.pi/agent/tmp
@@ -142,7 +163,53 @@ sandbox:
     - /var/lib/private
     - /var/log
     - /var/run/credentials
+    - ~/.local/share/mise/command-wrappers
   deny_write: []
+
+  # Variables every sandbox masks, keyed by name with the hosts the real value is injected for, and an optional extract regex (without it the whole value is masked, as srt needs for the AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_SESSION_TOKEN trio it re-signs)
+  credentials:
+    ANTHROPIC_API_KEY:
+      extract: ^(.+)$
+      hosts: [api.anthropic.com]
+    ANTHROPIC_AUTH_TOKEN:
+      extract: ^(.+)$
+      hosts: [api.anthropic.com]
+    ANTHROPIC_AWS_API_KEY:
+      extract: ^(.+)$
+      hosts: ["*.api.aws"]
+    ANTHROPIC_FOUNDRY_API_KEY:
+      extract: ^(.+)$
+      hosts: ["*.services.ai.azure.com"]
+    AWS_ACCESS_KEY_ID:
+      hosts: ["*.amazonaws.com"]
+    AWS_BEARER_TOKEN_BEDROCK:
+      extract: ^(.+)$
+      hosts: ["*.amazonaws.com"]
+    AWS_SECRET_ACCESS_KEY:
+      hosts: ["*.amazonaws.com"]
+    AWS_SESSION_TOKEN:
+      hosts: ["*.amazonaws.com"]
+    CLAUDE_CODE_OAUTH_TOKEN:
+      extract: ^(.+)$
+      hosts: [api.anthropic.com]
+    COPILOT_GITHUB_TOKEN:
+      extract: ^(?:gho_|ghu_|github_pat_)(.+)$
+      hosts: ["*.githubcopilot.com", api.github.com, githubcopilot.com]
+    GEMINI_API_KEY:
+      extract: ^(.+)$
+      hosts: [generativelanguage.googleapis.com]
+    GITHUB_TOKEN:
+      extract: ^(.+)$
+      hosts: [api.github.com, uploads.github.com]
+    GITLAB_TOKEN:
+      extract: ^(.+)$
+      hosts: [gitlab.com]
+    GOOGLE_API_KEY:
+      extract: ^(.+)$
+      hosts: [generativelanguage.googleapis.com]
+    OPENAI_API_KEY:
+      extract: ^(.+)$
+      hosts: [api.openai.com]
 
   # Network constraints
   network:
@@ -261,13 +328,17 @@ sandbox:
     # Hosts agents authenticate or call APIs on, the sandboxes allow them
     auth_domain:
       - "*.githubcopilot.com"
+      - "*.services.ai.azure.com"
+      - aiplatform.googleapis.com
       - api.anthropic.com
       - api.openai.com
       - auth.openai.com
       - chatgpt.com
       - claude.ai
       - githubcopilot.com
+      - login.microsoftonline.com
       - mcp-proxy.anthropic.com
+      - oauth2.googleapis.com
       - platform.claude.com
       - statsig.anthropic.com
       - uploads.github.com
@@ -296,6 +367,7 @@ sandbox:
       - registry.npmjs.org
       - registry.opentofu.org
       - registry.terraform.io
+      - release-assets.githubusercontent.com
       - releases.hashicorp.com
       - repo.maven.apache.org
       - services.google.com

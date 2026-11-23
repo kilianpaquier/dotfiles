@@ -3,7 +3,7 @@
 # same rules as mise: install selected, uninstall deselected, leave unknown packages alone
 
 {{- $editor := "VIM" }}
-{{- if has "vscode" .ide }}{{ $editor = "VisualStudioCode" }}{{ end }}
+{{- if has "vscode" .ide }}{{ $editor = "VisualStudioCode" }}{{- end }}
 
 # installed in order, Git's EditorOption only resolves VS Code when it's already installed
 $wanted = @(

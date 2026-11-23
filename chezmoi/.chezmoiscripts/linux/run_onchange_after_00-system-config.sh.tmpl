@@ -1,3 +1,7 @@
+{{- $ignore := list }}
+{{- $ignore_file := joinPath .chezmoi.homeDir ".config/chezmoi/.chezmoiignore" }}
+{{- if stat $ignore_file }}{{ $ignore = include $ignore_file | splitList "\n" }}{{- end -}}
+
 #!/bin/sh
 
 set -e
@@ -16,6 +20,14 @@ set -e
 
 # shellcheck disable=SC1091
 . "{{ .chezmoi.sourceDir }}/scripts/sudo.sh"
+
+# paths listed in ~/.config/chezmoi/.chezmoiignore, whose writes are skipped
+ignored() {
+  case " {{ range $ignore }}{{ if hasPrefix "/" . }}{{ . }} {{ end }}{{ end }}" in
+  *" $1 "*) return 0 ;;
+  esac
+  return 1
+}
 
 # root-only setup home-manager cannot own: system daemons and host identity
 
@@ -64,6 +76,8 @@ pkg_install openssh-client openssh-clients openssh ||
 pkg_install uidmap shadow-utils shadow ||
   warn "uidmap is missing, rootless containers can't start, install uidmap (apt), shadow-utils (dnf) or shadow (pacman) as root"
 
+{{- if not (has "/etc/wsl.conf" $ignore) }}
+
 wsl_config() {
   wsl_conf=$(cat <<'EOF'
 {{ includeTemplate "wsl.conf.tmpl" . | trim }}
@@ -82,4 +96,5 @@ EOF
   info "wsl.conf updated, run 'wsl.exe --shutdown' from Windows and reopen this distro to apply"
 }
 wsl_config
+{{- end }}
 {{- end }}

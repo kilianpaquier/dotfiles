@@ -2,9 +2,11 @@
 
 set -e
 
-# home-manager config: {{ list
-    (includeTemplate "private_dot_config/home-manager/home.nix.tmpl" .)
-    (include (joinPath .chezmoi.sourceDir ".." "symlinks" "home.local.nix")) | join "" | sha256sum }}
+{{- $local := "" }}
+{{- $local_file := joinPath .chezmoi.homeDir ".config/chezmoi/home.local.nix" }}
+{{- if stat $local_file }}{{ $local = include $local_file }}{{- end }}
+
+# home-manager config: {{ list (includeTemplate "private_dot_config/home-manager/home.nix.tmpl" .) $local | join "" | sha256sum }}
 
 # shellcheck disable=SC1091
 [ ! -f "$HOME/.profile" ] || . "$HOME/.profile"

@@ -1,0 +1,25 @@
+# Extra hosts for the sandboxes, merged with .chezmoidata/sandbox.yaml
+
+# Hosts agents authenticate on (login, API endpoints)
+auth_domain: []
+  # - bedrock-runtime.eu-west-1.amazonaws.com
+  # - sts.eu-west-1.amazonaws.com
+
+# Hosts agents download from (registries, mirrors)
+dl_domain: []
+  # - registry.corp.example
+
+# Hosts agents fetch without asking
+fetch_domain: []
+  # - docs.corp.example
+
+# Variables every sandbox masks, keyed by name. The hosts add up to the repository ones,
+# and an optional extract regex keeps capture group 1 as the secret
+credentials: {}
+  # CORP_API_TOKEN:
+  #   extract: ^Bearer (.+)$
+  #   hosts: [api.corp.example]
+  # CORP_SIGNING_SECRET:
+  #   hosts: [signing.corp.example]
+  # GITLAB_TOKEN:
+  #   hosts: [gitlab.corp.example]

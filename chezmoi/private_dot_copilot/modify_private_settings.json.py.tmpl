@@ -1,4 +1,9 @@
+{{/* chezmoi:template:missing-key=zero */}}
 {{- $set := include "private_dot_copilot/settings.partial.json" | fromJson }}
+
+{{- $local := dict }}
+{{- $file := joinPath .chezmoi.homeDir ".config/chezmoi/sandbox.local.yaml" }}
+{{- if stat $file }}{{ $local = include $file | fromYaml }}{{- end }}
 
 {{- $enabled_plugins := dict }}
 {{- $unset := list (list "sandbox") }}
@@ -7,7 +12,7 @@
 {{- if $on }}{{- $_ := set $enabled_plugins $id true }}{{- else }}{{- $unset = append $unset (list "enabledPlugins" $id) }}{{- end }}
 {{- end }}
 {{- $_ := set $set "enabledPlugins" $enabled_plugins }}
-{{- $_ := set $set "allowedUrls" (.sandbox.network.fetch_domain | sortAlpha) }}
+{{- $_ := set $set "allowedUrls" (concat .sandbox.network.fetch_domain ($local.fetch_domain | default list) | sortAlpha) }}
 
 {{- includeTemplate "scripts/json-merge.py" (dict
   "indent" 2

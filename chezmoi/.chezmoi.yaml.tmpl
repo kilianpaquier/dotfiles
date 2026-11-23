@@ -1,35 +1,35 @@
 {{- $data := include ".chezmoidata/tools.yaml" | fromYaml }}
 
-{{- $machine_name := promptStringOnce . "machine.name" "What is this machine's name" .chezmoi.hostname }}
-{{- $username := promptStringOnce . "user.username" "What is your username" (base .chezmoi.homeDir) }}
+{{- $machine_name := promptStringOnce . "machine.name" "What is this machine's name" (dig "machine" "name" .chezmoi.hostname .) }}
+{{- $username := promptStringOnce . "user.username" "What is your username" (dig "user" "username" (base .chezmoi.homeDir) .) }}
 
 {{- $machine := "desktop" }}
 {{- $shell := "" }}
 {{- if ne .chezmoi.os "windows" }}
   {{- $machines := (contains "microsoft" (.chezmoi.kernel.osrelease | lower)) | ternary (without $data.machines "server") $data.machines }}
-  {{- $machine = promptChoiceOnce . "machine.kind" "What kind of machine is this (desktop: apps only, workstation: dev tooling, server: dev tooling + hostname/timezone)" $machines "workstation" }}
-  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") "zsh" }}
+  {{- $machine = promptChoiceOnce . "machine.kind" "What kind of machine is this (desktop: apps only, workstation: dev tooling, server: dev tooling + hostname/timezone)" $machines (dig "machine" "kind" "workstation" .) }}
+  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "bash" "zsh") (dig "shell" "zsh" .) }}
 {{- else }}
-  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "git-bash" "powershell") "powershell" }}
+  {{- $shell = promptChoiceOnce . "shell" "Which shell will you be using" (list "git-bash" "powershell") (dig "shell" "powershell" .) }}
 {{- end }}
 {{- $dev := ne $machine "desktop" }}
 
-{{- $profile := promptChoiceOnce . "profile" "Which profile should apply to this machine" $data.profiles }}
+{{- $profile := promptChoiceOnce . "profile" "Which profile should apply to this machine" $data.profiles (dig "profile" (first $data.profiles) .) }}
 
 {{- $gaming := false }}
 {{- $wsl := false }}
 {{- if eq .chezmoi.os "windows" }}
   {{- if eq $profile "home" }}
-    {{- $gaming = promptBoolOnce . "gaming" "Is this a gaming machine" }}
+    {{- $gaming = promptBoolOnce . "gaming" "Is this a gaming machine" (dig "gaming" false .) }}
   {{- end }}
-  {{- $wsl = promptBoolOnce . "wsl" "Will you be using WSL" true }}
+  {{- $wsl = promptBoolOnce . "wsl" "Will you be using WSL" (dig "wsl" true .) }}
 {{- end }}
 
 {{- $ide := promptMultichoiceOnce . "ide" "What IDE are you using to develop" (list "intellij" "vscode" "zed") (list "vscode") }}
 
 {{- $timezone := "UTC" }}
 {{- if eq $machine "server" }}
-  {{- $timezone = promptStringOnce . "machine.timezone" "Which timezone should this server use" "UTC" }}
+  {{- $timezone = promptStringOnce . "machine.timezone" "Which timezone should this server use" (dig "machine" "timezone" "UTC" .) }}
 {{- end }}
 
 {{- $managers := $data.managers }}
@@ -49,9 +49,9 @@
 {{- $plugins := list }}
 {{- $sandboxes := list }}
 {{- if $dev }}
-  {{- $email = promptStringOnce . "user.email" "What is your committer email" }}
+  {{- $email = promptStringOnce . "user.email" "What is your committer email" (dig "user" "email" "" .) }}
 
-  {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" true }}
+  {{- $git_ssh = promptBoolOnce . "git.ssh" "Would you like to sign commits with your SSH key" (dig "git" "ssh" true .) }}
   {{- $agent_runtimes = promptMultichoiceOnce . "ai.runtimes" "Which agent runtimes will you be using" $data.agent_runtimes (index $data.default_agent_runtimes $profile) }}
 
   {{- if gt (len $agent_runtimes) 0 }}
@@ -125,11 +125,6 @@ data:
   shell: {{ $shell }}
   # Whether to install and configure WSL
   wsl: {{ $wsl }}
-
-  # Files to exclude from chezmoi generation, in case you'd want to own some
-  #
-  # Note that some files are by default merged, allowing you to enrich them without loosing custom changes on 'chezmoi apply'
-  ignore:{{ with (dig "ignore" list .) }}{{ . | toYaml | trim | nindent 4 }}{{ else }} []{{ end }}
 {{- else }}
   # Which work profile applies ('home' or 'soprasteria')
   profile: {{ $profile }}
@@ -172,11 +167,6 @@ data:
     #
     # Even when on, agents do not run by default in sandboxes, please see the README
     sandboxes:{{ if eq (len $sandboxes) 0 }} []{{ else }}{{ $sandboxes | toYaml | trim | nindent 6 }}{{ end }}
-
-  # Files to exclude from chezmoi generation, in case you'd want to own some
-  #
-  # Note that some files are by default merged, allowing you to enrich them without loosing custom changes on 'chezmoi apply'
-  ignore:{{ with (dig "ignore" list .) }}{{ . | toYaml | trim | nindent 4 }}{{ else }} []{{ end }}
 
   # Which tool bundles to install
   #

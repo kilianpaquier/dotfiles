@@ -1,9 +1,14 @@
+{{/* chezmoi:template:missing-key=zero */}}
 {{- $set := include "dot_vscode-server/data/Machine/settings.base.partial.json" | fromJson }}
+
+{{- $local := dict }}
+{{- $file := joinPath .chezmoi.homeDir ".config/chezmoi/sandbox.local.yaml" }}
+{{- if stat $file }}{{ $local = include $file | fromYaml }}{{- end }}
 
 {{- if has "copilot" .ai.runtimes }}
 {{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.copilot.partial.json" | fromJson) }}
 {{- $urls := dict }}
-{{- range .sandbox.network.fetch_domain }}{{- $_ := set $urls (printf "https://%s" .) true }}{{- end }}
+{{- range concat .sandbox.network.fetch_domain ($local.fetch_domain | default list) }}{{- $_ := set $urls (printf "https://%s" .) true }}{{- end }}
 {{- $_ := set $set "chat.tools.urls.autoApprove" $urls }}
 {{- else }}
 {{- $_ := mergeOverwrite $set (include "dot_vscode-server/data/Machine/settings.no-copilot.partial.json" | fromJson) }}

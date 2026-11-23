@@ -1,3 +1,4 @@
+{{/* chezmoi:template:missing-key=zero */}}
 {{- $allow_write := append .sandbox.write (print "/tmp/claude-" .chezmoi.uid) }}
 {{- $deny_domain := .sandbox.network.deny_domain }}
 
@@ -5,77 +6,38 @@
 {{- range .sandbox.network.deny_port }}
 {{- $deny_domain = append $deny_domain (printf "*:%v" .) }}
 {{- $_ := set $deny_reason (printf "*:%v" .) "Port blocked, related actions must be made on the host by the user" }}
-{{- end -}}
+{{- end }}
+
+{{- $local := dict }}
+{{- $file := joinPath .chezmoi.homeDir ".config/chezmoi/sandbox.local.yaml" }}
+{{- if stat $file }}{{ $local = include $file | fromYaml }}{{- end }}
+
+{{- $local_credentials := $local.credentials | default dict }}
+{{- $names := concat (keys .sandbox.credentials) (keys $local_credentials) | uniq | sortAlpha }}
+
+{{- $domains := concat .sandbox.network.fetch_domain .sandbox.network.auth_domain .sandbox.network.dl_domain
+      ($local.fetch_domain | default list) ($local.auth_domain | default list) ($local.dl_domain | default list) }}
 
 {
     "credentials": {
         "envVars": [
+{{- range $i, $name := $names }}
+  {{- $base := get $.sandbox.credentials $name | default dict }}
+  {{- $extra := get $local_credentials $name | default dict }}
+  {{- $extract := $extra.extract | default $base.extract }}
+  {{- $hosts := concat ($base.hosts | default list) ($extra.hosts | default list) | uniq | sortAlpha }}
+  {{- $domains = concat $domains $hosts }}
+  {{- if $i }},{{ end }}
             {
-                "name": "ANTHROPIC_API_KEY",
+                "name": {{ $name | quote }},
                 "mode": "mask",
-                "extract": "^(.+)$",
+{{- if $extract }}
+                "extract": {{ $extract | toJson }},
                 "onExtractNoMatch": "deny",
-                "injectHosts": ["api.anthropic.com"]
-            },
-            {
-                "name": "ANTHROPIC_AUTH_TOKEN",
-                "mode": "mask",
-                "extract": "^(.+)$",
-                "onExtractNoMatch": "deny",
-                "injectHosts": ["api.anthropic.com"]
-            },
-            {
-                "name": "CLAUDE_CODE_OAUTH_TOKEN",
-                "mode": "mask",
-                "extract": "^(.+)$",
-                "onExtractNoMatch": "deny",
-                "injectHosts": ["api.anthropic.com"]
-            },
-            {
-                "name": "COPILOT_GITHUB_TOKEN",
-                "mode": "mask",
-                "extract": "^(?:gho_|ghu_|github_pat_)(.+)$",
-                "onExtractNoMatch": "deny",
-                "injectHosts": [
-                    "*.githubcopilot.com",
-                    "api.github.com",
-                    "githubcopilot.com"
-                ]
-            },
-            {
-                "name": "GITHUB_TOKEN",
-                "mode": "mask",
-                "extract": "^(.+)$",
-                "onExtractNoMatch": "deny",
-                "injectHosts": [
-                  "api.github.com",
-                  "uploads.github.com"
-                ]
-            },
-            {
-                "name": "GH_TOKEN",
-                "mode": "mask",
-                "extract": "^(.+)$",
-                "onExtractNoMatch": "deny",
-                "injectHosts": [
-                  "api.github.com",
-                  "uploads.github.com"
-                ]
-            },
-            {
-                "name": "GITLAB_TOKEN",
-                "mode": "mask",
-                "extract": "^(.+)$",
-                "onExtractNoMatch": "deny",
-                "injectHosts": ["gitlab.com"]
-            },
-            {
-                "name": "GL_TOKEN",
-                "mode": "mask",
-                "extract": "^(.+)$",
-                "onExtractNoMatch": "deny",
-                "injectHosts": ["gitlab.com"]
+{{- end }}
+                "injectHosts": {{ $hosts | toJson }}
             }
+{{- end }}
         ]
     },
     "filesystem": {
@@ -87,7 +49,7 @@
     "mandatoryDenySearchDepth": 6,
     "network": {
         "allowAllUnixSockets": false,
-        "allowedDomains": {{ concat .sandbox.network.fetch_domain .sandbox.network.auth_domain .sandbox.network.dl_domain | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
+        "allowedDomains": {{ $domains | uniq | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "deniedDomainReasons": {{ $deny_reason | toPrettyJson "    " | indent 8 | trim }},
         "deniedDomains": {{ $deny_domain | sortAlpha | toPrettyJson "    " | indent 8 | trim }},
         "tlsTerminate": {}

@@ -1,4 +1,4 @@
-# machine-local home-manager extension, symlinked into the repo like the shell rc files
+# Extra home-manager configuration, merged with home.nix
 { pkgs, ... }:
 
 {

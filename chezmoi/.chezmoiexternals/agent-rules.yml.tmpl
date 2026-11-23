@@ -1,20 +1,23 @@
 {{- if ne .chezmoi.os "windows" }}
-{{- $url := "https://github.com/kilianpaquier/agent-rules/archive/refs/heads/main.tar.gz" }}
-{{- $token := env "GITHUB_TOKEN" | default (env "GH_TOKEN") | default "" }}
-{{- with $token }}{{ $url = replace "https://" (printf "https://x-access-token:%s@" .) $url }}{{ end }}
-{{- if and (has "claude" .ai.runtimes) (not (has ".claude/rules" .ignore)) }}
+
+{{- $ignore := list }}
+{{- $ignore_file := joinPath .chezmoi.homeDir ".config/chezmoi/.chezmoiignore" }}
+{{- if stat $ignore_file }}{{ $ignore = include $ignore_file | splitList "\n" }}{{- end }}
+
+{{- if and (has "claude" .ai.runtimes) (not (has ".claude/rules" $ignore)) }}
 .claude/rules:
   type: archive
-  url: {{ $url | quote }}
+  url: https://github.com/kilianpaquier/agent-rules/archive/refs/heads/main.tar.gz
   include:
     - "*/.apm/instructions/**"
   stripComponents: 3
   refreshPeriod: 24h
 {{- end }}
-{{- if and (has "copilot" .ai.runtimes) (not (has ".copilot/instructions" .ignore)) }}
+
+{{- if and (has "copilot" .ai.runtimes) (not (has ".copilot/instructions" $ignore)) }}
 .copilot/instructions:
   type: archive
-  url: {{ $url | quote }}
+  url: https://github.com/kilianpaquier/agent-rules/archive/refs/heads/main.tar.gz
   include:
     - "*/.apm/instructions/**"
   stripComponents: 3

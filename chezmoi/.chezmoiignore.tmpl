@@ -9,6 +9,7 @@ workspaces
 {{- if eq .chezmoi.os "windows" }}
 # Windows
 .chezmoiscripts/linux/**
+.config/chezmoi/home.local.nix
 .gnupg
 .ssh
 {{- end }}
@@ -38,8 +39,9 @@ workspaces
 {{- end }}
 {{- end }}
 
-{{- range .ignore }}
-{{ . }}
+{{- $ignore_file := joinPath .chezmoi.homeDir ".config/chezmoi/.chezmoiignore" }}
+{{- if stat $ignore_file }}
+{{- range include $ignore_file | splitList "\n" }}{{- if not (hasPrefix "/" .) }}{{ . }}{{- end }}{{- end }}
 {{- end }}
 
 {{ includeTemplate "deselected.tmpl" . }}

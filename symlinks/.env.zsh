@@ -2,7 +2,7 @@
 # shellcheck disable=SC1071
 
 # Don't start tmux.
-# zstyle ':z4h:' start-tmux 'no'
+zstyle ':z4h:' start-tmux 'no'
 # Move prompt to the bottom when zsh starts and on Ctrl+L.
 zstyle ':z4h:' prompt-at-bottom 'no'
 # Recursively traverse directories when TAB-completing files.

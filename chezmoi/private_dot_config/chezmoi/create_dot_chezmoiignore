@@ -1,0 +1,13 @@
+# Patterns chezmoi must not manage, one per line, like a .chezmoiignore
+
+# An element of a script is named by the path it writes
+# /etc/hostname
+# /etc/hosts
+# /etc/localtime
+# /etc/subgid (covers /etc/subuid too)
+# /etc/subuid (covers /etc/subgid too)
+# /etc/wsl.conf
+
+# .claude/rules
+# .copilot/instructions
+# .config/git/config

@@ -20,8 +20,8 @@
 {{- end }}
 
 {
-  # user extension point, a symlink into the dotfiles repo
-  imports = [ ./home.local.nix ];
+  # user extension point, created once in the chezmoi config directory
+  imports = [ {{ .chezmoi.homeDir }}/.config/chezmoi/home.local.nix ];
 
   home.username = "{{ .chezmoi.username }}";
   home.homeDirectory = "{{ .chezmoi.homeDir }}";

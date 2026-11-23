@@ -1,11 +1,16 @@
+{{/* chezmoi:template:missing-key=zero */}}
 {{- $set := include "private_dot_claude/settings.partial.json" | fromJson }}
 
 {{- /* host-only permission mode, the sbx claude mixin uses the partial as its managed settings */ -}}
 {{- $_ := set $set.permissions "defaultMode" "auto" }}
 {{- $_ := set $set.permissions "disableBypassPermissionsMode" "disable" }}
 
+{{- $local := dict }}
+{{- $file := joinPath .chezmoi.homeDir ".config/chezmoi/sandbox.local.yaml" }}
+{{- if stat $file }}{{ $local = include $file | fromYaml }}{{- end }}
+
 {{- $fetch := list }}
-{{- range .sandbox.network.fetch_domain }}{{- $fetch = append $fetch (printf "WebFetch(domain:%s)" .) }}{{- end }}
+{{- range concat .sandbox.network.fetch_domain ($local.fetch_domain | default list) }}{{- $fetch = append $fetch (printf "WebFetch(domain:%s)" .) }}{{- end }}
 {{- $_ := set $set.permissions "allow" (concat $set.permissions.allow $fetch) }}
 
 {{- $enabled_plugins := dict }}

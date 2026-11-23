@@ -31,6 +31,7 @@
   - [Credentials](#credentials)
   - [Agent components](#agent-components)
   - [Agent sandboxes](#agent-sandboxes)
+  - [Local files](#local-files)
   - [Servers](#servers)
   - [WSL](#wsl)
 
@@ -112,6 +113,8 @@ The repository also filters default values to prompts based on profiles, to ease
 Two profiles exist, `home` and `soprasteria`.
 
 ## Prompts
+
+Once answered, `chezmoi init --prompt` proposes the current answers for `machine.name`, `user.username`, `user.email`, `machine.timezone`, `machine.kind`, `shell`, `profile`, `gaming`, `wsl` and `git.ssh`.
 
 ### Every machine
 
@@ -398,6 +401,23 @@ sbx secret set gitlab                           # GitLab token with the api scop
 
 > [!warning]
 > For now, **sbx** doesn't get the local harness mounted, so running agents may not be efficient.
+
+### Local files
+
+Your machine-specific changes live in three files of `~/.config/chezmoi/`, each shipped with commented examples.
+The first apply creates them and later ones never overwrite them, so you edit them in place and the next `chezmoi apply` picks up your changes.
+
+- The `.chezmoiignore` file lists what **chezmoi** must leave alone.
+- The `sandbox.local.yaml` file adds hosts and credentials to the agent sandboxes.
+- The `home.local.nix` file adds your own packages to **home-manager**.
+
+The system scripts are skipped the same way, by listing the path they write in `.chezmoiignore`:
+
+- `/etc/wsl.conf`: **WSL** only, **chezmoi** no longer writes the file.
+- `/etc/hosts`: servers only, the hostname change no longer rewrites it.
+- `/etc/hostname`: servers only, the hostname is no longer set.
+- `/etc/localtime`: servers only, the timezone is no longer set.
+- `/etc/subuid` or `/etc/subgid`: machines with a container runtime, either line skips the setup of both files.
 
 ### Servers
 

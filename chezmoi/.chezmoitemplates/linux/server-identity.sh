@@ -6,12 +6,15 @@ set_hostname() {
     return 0
   fi
 
-  # hostnamectl leaves /etc/hosts alone, replace the whitespace-bounded old name
-  hosts=$(sed -E "s#(^|[[:space:]])$old([[:space:]]|$)#\1{{ .machine.name }}\2#g" /etc/hosts)
+  if ! ignored /etc/hosts; then
+    # hostnamectl leaves /etc/hosts alone, replace the whitespace-bounded old name
+    hosts=$(sed -E "s#(^|[[:space:]])$old([[:space:]]|$)#\1{{ .machine.name }}\2#g" /etc/hosts)
 
-  # /etc/hosts goes first, a refused hostnamectl leaves the hostname different and the next run retries
-  sudo_write /etc/hosts "$hosts" || return 1
-  sudo_run hostnamectl set-hostname "{{ .machine.name }}"
+    # /etc/hosts goes first, a refused hostnamectl leaves the hostname different and the next run retries
+    sudo_write /etc/hosts "$hosts" || return 1
+  fi
+
+  ignored /etc/hostname || sudo_run hostnamectl set-hostname "{{ .machine.name }}"
 }
 
 set_timezone() {
@@ -38,7 +41,7 @@ if [ -d /run/systemd/system ]; then
     warn "hostname isn't {{ .machine.name }}, run as root: hostnamectl set-hostname {{ .machine.name }}, and rename $old in /etc/hosts"
   fi
 
-  set_timezone
+  ignored /etc/localtime || set_timezone
 else
   warn "systemd isn't running, skipping hostname and timezone"
 fi

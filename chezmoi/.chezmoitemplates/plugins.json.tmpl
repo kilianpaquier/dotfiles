@@ -1,20 +1,21 @@
 {{- $plugins := dict
-    "cave-talk@one-for-all" (has "cave-talk" .ai.plugins)
-    "caveman@one-for-all" false
-    "code-simplifier@one-for-all" true
-    "codegraph@one-for-all" (has "codegraph" .tools.mise)
-    "context7@one-for-all" (has "context7" .tools.mise)
-    "dcg@one-for-all" (has "destructive-command-guard" .tools.mise)
-    "devkit@one-for-all" true
-    "docker-skills@docker" (gt (len .container.runtimes) 0)
-    "exam-drill@one-for-all" true
-    "feature-dev@one-for-all" (has "feature-dev" .ai.plugins)
-    "go@go-skills" (has "go" .tools.mise)
-    "humanizer@humanizer" (has "humanizer" .ai.plugins)
-    "mempalace@mempalace" (has "mempalace" .tools.mise)
-    "ponytail@ponytail" (has "ponytail" .ai.plugins)
-    "protected-paths@one-for-all" false
-    "schema-converter@one-for-all" true }}
+  "cave-talk@one-for-all" (has "cave-talk" .ai.plugins)
+  "caveman@one-for-all" false
+  "code-simplifier@one-for-all" true
+  "codegraph@one-for-all" (has "codegraph" .tools.mise)
+  "context7@one-for-all" (has "context7" .tools.mise)
+  "dcg@one-for-all" (has "destructive-command-guard" .tools.mise)
+  "devkit@one-for-all" true
+  "docker-skills@docker" (gt (len .container.runtimes) 0)
+  "exam-drill@one-for-all" true
+  "feature-dev@one-for-all" (has "feature-dev" .ai.plugins)
+  "go@go-skills" (has "go" .tools.mise)
+  "humanizer@humanizer" (has "humanizer" .ai.plugins)
+  "mempalace@mempalace" (has "mempalace" .tools.mise)
+  "ponytail@ponytail" (has "ponytail" .ai.plugins)
+  "protected-paths@one-for-all" false
+  "schema-converter@one-for-all" true }}
+
 {{- if .lsps }}
   {{- $plugins = merge $plugins (dict
     "bash-language-server@claude-code-lsps" (has "shell" .tools.mise)
@@ -24,4 +25,5 @@
     "terraform-ls@claude-code-lsps" (has "terraform" .tools.mise)
     "tofu-ls@claude-code-lsps" (has "opentofu" .tools.mise)) }}
 {{- end }}
+
 {{- $plugins | toJson }}

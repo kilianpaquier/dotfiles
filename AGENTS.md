@@ -63,7 +63,7 @@ Done when the sibling has no item the new tool lacks.
 
 ## Environment variables
 
-- A variable a [**mise**](https://mise.jdx.dev/) tool or an agent reads goes in `[env]` of `private_dot_config/mise/conf.d/10-settings.toml.tmpl`, keys alphabetical.
+- A variable a [**mise**](https://mise.jdx.dev/) tool or an agent reads goes in `[env]` of `private_dot_config/mise/conf.d/10-settings.toml.tmpl`, keys alphabetical within each group.
 - A variable the login shell needs before **mise** runs (`MISE_ENV`) goes in `symlinks/.profile`.
 - The `symlinks/.env.zsh` file holds **zsh**'s own configuration only.
 

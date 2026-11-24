@@ -1,5 +1,5 @@
 {{- $ignore := list }}
-{{- $ignore_file := joinPath .chezmoi.homeDir ".config/chezmoi/.chezmoiignore" }}
+{{- $ignore_file := joinPath .chezmoi.homeDir ".config/chezmoi/chezmoiignore" }}
 {{- if stat $ignore_file }}{{ $ignore = include $ignore_file | splitList "\n" }}{{- end -}}
 
 #!/bin/sh
@@ -21,7 +21,7 @@ set -e
 # shellcheck disable=SC1091
 . "{{ .chezmoi.sourceDir }}/scripts/sudo.sh"
 
-# paths listed in ~/.config/chezmoi/.chezmoiignore, whose writes are skipped
+# paths listed in ~/.config/chezmoi/chezmoiignore, whose writes are skipped
 ignored() {
   case " {{ range $ignore }}{{ if hasPrefix "/" . }}{{ . }} {{ end }}{{ end }}" in
   *" $1 "*) return 0 ;;

@@ -61,24 +61,20 @@ sandbox:
     - ~/.local/state/nix
     # - ~/.cache/mise
 
-    # Claude harness
-    - ~/.claude.json
-
-    # Copilot harness
-    - ~/.copilot/config.json
-
     # MemPalace embedding model
     - ~/.cache/chroma/onnx_models/all-MiniLM-L6-v2
 
   # Paths only the shared kernel sandboxes read, since sbx seeds these files itself
   read_host:
     # Claude harness
+    - ~/.claude.json
     - ~/.claude/CLAUDE.md
     - ~/.claude/plugins
     - ~/.claude/settings.json
 
     # Copilot harness
     - ~/.copilot/.cache
+    - ~/.copilot/config.json
     - ~/.copilot/extensions
     - ~/.copilot/installed-plugins
     - ~/.copilot/permissions-config.json
@@ -166,7 +162,10 @@ sandbox:
     - ~/.local/share/mise/command-wrappers
   deny_write: []
 
-  # Variables every sandbox masks, keyed by name with the hosts the real value is injected for, and an optional extract regex (without it the whole value is masked, as srt needs for the AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_SESSION_TOKEN trio it re-signs)
+  # Variables every sandbox masks, keyed by name. The hosts add up to the repository ones,
+  # and an optional extract regex keeps capture group 1 as the secret.
+  #
+  # Note that without 'extract' to at least '^(.+)$', a fake key will be provided even on empty environment variables.
   credentials:
     ANTHROPIC_API_KEY:
       extract: ^(.+)$
@@ -174,46 +173,56 @@ sandbox:
     ANTHROPIC_AUTH_TOKEN:
       extract: ^(.+)$
       hosts: [api.anthropic.com]
-    ANTHROPIC_AWS_API_KEY:
-      extract: ^(.+)$
-      hosts: ["*.api.aws"]
-    ANTHROPIC_FOUNDRY_API_KEY:
-      extract: ^(.+)$
-      hosts: ["*.services.ai.azure.com"]
-    AWS_ACCESS_KEY_ID:
-      hosts: ["*.amazonaws.com"]
-    AWS_BEARER_TOKEN_BEDROCK:
-      extract: ^(.+)$
-      hosts: ["*.amazonaws.com"]
-    AWS_SECRET_ACCESS_KEY:
-      hosts: ["*.amazonaws.com"]
-    AWS_SESSION_TOKEN:
-      hosts: ["*.amazonaws.com"]
     CLAUDE_CODE_OAUTH_TOKEN:
       extract: ^(.+)$
       hosts: [api.anthropic.com]
     COPILOT_GITHUB_TOKEN:
       extract: ^(?:gho_|ghu_|github_pat_)(.+)$
       hosts: ["*.githubcopilot.com", api.github.com, githubcopilot.com]
-    GEMINI_API_KEY:
-      extract: ^(.+)$
-      hosts: [generativelanguage.googleapis.com]
     GITHUB_TOKEN:
       extract: ^(.+)$
       hosts: [api.github.com, uploads.github.com]
     GITLAB_TOKEN:
       extract: ^(.+)$
       hosts: [gitlab.com]
-    GOOGLE_API_KEY:
-      extract: ^(.+)$
-      hosts: [generativelanguage.googleapis.com]
-    OPENAI_API_KEY:
-      extract: ^(.+)$
-      hosts: [api.openai.com]
 
   # Network constraints
   network:
-    # Hosts agents fetch without asking, the sandboxes allow them
+    # Hosts agents authenticate on (login, API endpoints)
+    auth_domain: []
+
+    # Hosts agents download from (registries, mirrors)
+    dl_domain:
+      - archive.apache.org
+      - cdn.dl.k8s.io
+      - dl.google.com
+      - dl.k8s.io
+      - download.eclipse.org
+      - downloads.claude.ai
+      - files.pythonhosted.org
+      - get.helm.sh
+      - ghcr.io
+      - mcr.microsoft.com
+      - mise-java.jdx.dev
+      - mise-versions.jdx.dev
+      - mise.jdx.dev
+      - mise.run
+      - nodejs.org
+      - pkgs.alpinelinux.org
+      - proxy.golang.org
+      - quay.io
+      - registry-1.docker.io
+      - registry.npmjs.org
+      - registry.opentofu.org
+      - registry.terraform.io
+      - release-assets.githubusercontent.com
+      - releases.hashicorp.com
+      - repo.maven.apache.org
+      - services.google.com
+      - sum.golang.org
+      - tuf-repo-cdn.sigstore.dev
+
+    # Hosts agents fetch without asking
     fetch_domain:
       - "*.k8s.io"
       - "*.kubernetes.io"
@@ -324,55 +333,6 @@ sandbox:
       - www.rtk-ai.app
       - www.schemastore.org
       - www.skills.sh
-
-    # Hosts agents authenticate or call APIs on, the sandboxes allow them
-    auth_domain:
-      - "*.githubcopilot.com"
-      - "*.services.ai.azure.com"
-      - aiplatform.googleapis.com
-      - api.anthropic.com
-      - api.openai.com
-      - auth.openai.com
-      - chatgpt.com
-      - claude.ai
-      - githubcopilot.com
-      - login.microsoftonline.com
-      - mcp-proxy.anthropic.com
-      - oauth2.googleapis.com
-      - platform.claude.com
-      - statsig.anthropic.com
-      - uploads.github.com
-
-    # Hosts agents download from, the sandboxes allow them and no fetch is auto-approved
-    dl_domain:
-      - archive.apache.org
-      - cdn.dl.k8s.io
-      - dl.google.com
-      - dl.k8s.io
-      - download.eclipse.org
-      - downloads.claude.ai
-      - files.pythonhosted.org
-      - get.helm.sh
-      - ghcr.io
-      - mcr.microsoft.com
-      - mise-java.jdx.dev
-      - mise-versions.jdx.dev
-      - mise.jdx.dev
-      - mise.run
-      - nodejs.org
-      - pkgs.alpinelinux.org
-      - proxy.golang.org
-      - quay.io
-      - registry-1.docker.io
-      - registry.npmjs.org
-      - registry.opentofu.org
-      - registry.terraform.io
-      - release-assets.githubusercontent.com
-      - releases.hashicorp.com
-      - repo.maven.apache.org
-      - services.google.com
-      - sum.golang.org
-      - tuf-repo-cdn.sigstore.dev
 
     deny_domain: []
       # - altssh.gitlab.com

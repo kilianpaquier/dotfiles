@@ -41,15 +41,22 @@ srt = "npm:@anthropic-ai/sandbox-runtime"
 tofu-ls = "github:opentofu/tofu-ls"
 
 [env]
-AGENTSVIEW_TELEMETRY_ENABLED = "0"
-CAVEMAN_DEFAULT_MODE = "caveman"
+# Agent runtimes
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1"
 CLAUDE_CODE_TMPDIR = "/tmp/claude-{{ .chezmoi.uid }}"
 COPILOT_AUTO_UPDATE = "false"
+DISABLE_ERROR_REPORTING = "1" # Claude Code
 DISABLE_UPDATES = "1" # Claude Code
-DO_NOT_TRACK = "1" # General env variable to disable telemetry (standard)
-MEMPALACE_HOOKS_AUTO_SAVE = "false"
-MISE_IGNORED_CONFIG_PATHS = "**/private_dot_*/**"
 OPENCODE_DISABLE_AUTOUPDATE = "1"
 PI_SELF_UPDATE_COMMAND = "mise upgrade pi"
 PI_SKIP_VERSION_CHECK = "1"
+
+# Agent plugins
+CAVEMAN_DEFAULT_MODE = "caveman"
+MEMPALACE_HOOKS_AUTO_SAVE = "false"
 PONYTAIL_DEFAULT_MODE = "ultra"
+
+# Tools
+AGENTSVIEW_TELEMETRY_ENABLED = "0"
+DO_NOT_TRACK = "1" # General env variable to disable telemetry (standard)
+MISE_IGNORED_CONFIG_PATHS = "**/private_dot_*/**"

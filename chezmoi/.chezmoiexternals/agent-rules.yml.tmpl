@@ -1,7 +1,7 @@
 {{- if ne .chezmoi.os "windows" }}
 
 {{- $ignore := list }}
-{{- $ignore_file := joinPath .chezmoi.homeDir ".config/chezmoi/.chezmoiignore" }}
+{{- $ignore_file := joinPath .chezmoi.homeDir ".config/chezmoi/chezmoiignore" }}
 {{- if stat $ignore_file }}{{ $ignore = include $ignore_file | splitList "\n" }}{{- end }}
 
 {{- if and (has "claude" .ai.runtimes) (not (has ".claude/rules" $ignore)) }}

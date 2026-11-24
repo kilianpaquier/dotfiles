@@ -2,6 +2,21 @@
 
 # Hosts agents authenticate on (login, API endpoints)
 auth_domain: []
+  # Public URLs ones, not in the default data
+  # - "*.services.ai.azure.com"
+  # - aiplatform.googleapis.com
+  # - api.openai.com
+  # - auth.openai.com
+  # - chatgpt.com
+  # - login.microsoftonline.com
+  # - oauth2.googleapis.com
+
+  # Claude Code interactive /login only, use them at your own risk.
+  # The sandboxes don't allow writes under ~/.claude, so a login can't save its credentials in ~/.claude/.credentials.json.
+  # - claude.ai # Browser sign-in with a claude.ai account
+  # - platform.claude.com # Console sign-in, and OAuth token exchange, refresh and revocation
+
+  # Corp ones
   # - bedrock-runtime.eu-west-1.amazonaws.com
   # - sts.eu-west-1.amazonaws.com
 
@@ -14,12 +29,56 @@ fetch_domain: []
   # - docs.corp.example
 
 # Variables every sandbox masks, keyed by name. The hosts add up to the repository ones,
-# and an optional extract regex keeps capture group 1 as the secret
+# and an optional extract regex keeps capture group 1 as the secret.
+#
+# Note that without 'extract' to at least '^(.+)$', a fake key will be provided even on empty environment variables.
+# When adding a new public URL not company specific, feel free to open a PR to add it for others too.
 credentials: {}
-  # CORP_API_TOKEN:
-  #   extract: ^Bearer (.+)$
-  #   hosts: [api.corp.example]
-  # CORP_SIGNING_SECRET:
-  #   hosts: [signing.corp.example]
+  # Public URLs ones, not in the default data
+  # ANTHROPIC_AWS_API_KEY:
+  #   extract: ^(.+)$
+  #   hosts: ["*.api.aws"]
+  # ANTHROPIC_FOUNDRY_API_KEY:
+  #   extract: ^(.+)$
+  #   hosts: ["*.services.ai.azure.com"]
+  # AWS_ACCESS_KEY_ID:
+  #   hosts: ["*.amazonaws.com"]
+  # AWS_BEARER_TOKEN_BEDROCK:
+  #   extract: ^(.+)$
+  #   hosts: ["*.amazonaws.com"]
+  # AWS_SECRET_ACCESS_KEY:
+  #   hosts: ["*.amazonaws.com"]
+  # AWS_SESSION_TOKEN:
+  #   hosts: ["*.amazonaws.com"]
+  # GEMINI_API_KEY:
+  #   extract: ^(.+)$
+  #   hosts: [generativelanguage.googleapis.com]
+  # GOOGLE_API_KEY:
+  #   extract: ^(.+)$
+  #   hosts: [generativelanguage.googleapis.com]
+  # OPENAI_API_KEY:
+  #   extract: ^(.+)$
+  #   hosts: [api.openai.com]
+
+  # Corp ones, hosts of a name already in the default data add up to its own
+  # ANTHROPIC_API_KEY:
+  #   extract: ^(.+)$
+  #   hosts: [llm-gateway.corp.example]
+  # ANTHROPIC_AUTH_TOKEN:
+  #   extract: ^(.+)$
+  #   hosts: [llm-gateway.corp.example]
+  # COPILOT_GITHUB_TOKEN:
+  #   extract: ^(?:gho_|ghu_|github_pat_)(.+)$
+  #   hosts: ["*.corp.ghe.com"]
+  # GITHUB_TOKEN:
+  #   extract: ^(.+)$
+  #   hosts: [github.corp.example, "*.corp.ghe.com"]
   # GITLAB_TOKEN:
+  #   extract: ^(.+)$
   #   hosts: [gitlab.corp.example]
+  # NPM_TOKEN:
+  #   extract: ^(.+)$
+  #   hosts: [npm.corp.example]
+  # SONAR_TOKEN:
+  #   extract: ^(.+)$
+  #   hosts: [sonar.corp.example]

@@ -39,7 +39,7 @@ workspaces
 {{- end }}
 {{- end }}
 
-{{- $ignore_file := joinPath .chezmoi.homeDir ".config/chezmoi/.chezmoiignore" }}
+{{- $ignore_file := joinPath .chezmoi.homeDir ".config/chezmoi/chezmoiignore" }}
 {{- if stat $ignore_file }}
 {{- range include $ignore_file | splitList "\n" }}{{- if not (hasPrefix "/" .) }}{{ . }}{{- end }}{{- end }}
 {{- end }}

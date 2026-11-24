@@ -83,5 +83,5 @@ default_sandboxes:
 
 plugins: [cave-talk, feature-dev, humanizer, ponytail]
 default_plugins:
-  home: [cave-talk, humanizer, ponytail]
-  soprasteria: [cave-talk, humanizer, ponytail]
+  home: [humanizer]
+  soprasteria: [humanizer]

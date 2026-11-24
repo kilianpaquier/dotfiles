@@ -5,7 +5,7 @@
 {{- if has "claude" .ai.runtimes }}{{- $packages = append $packages "bubblewrap" }}{{- end }}
 {{- if has "copilot" .ai.runtimes }}{{- $packages = concat $packages (list "bubblewrap" "iptables" "slirp4netns") }}{{- end }}
 
-{{- if has "docker" .container.runtimes }}{{- $packages = concat $packages (list "docker" "passt") }}{{- end }}
+{{- if has "docker" .container.runtimes }}{{- $packages = append $packages "docker" }}{{- end }}
 {{- if has "podman" .container.runtimes }}{{- $packages = concat $packages (list "podman" "podman-compose" "docker-compose") }}{{- end }}
 {{- if gt (len .container.runtimes) 0 }}{{- $packages = append $packages "docker-credential-helpers" }}{{- end }}
 
@@ -80,9 +80,10 @@
   '';
 {{- end }}
 
-{{- if has "podman" .container.runtimes }}
+{{- if or (has "docker" .container.runtimes) (has "podman" .container.runtimes) }}
 
   nixpkgs.overlays = [
+{{- if has "podman" .container.runtimes }}
     # podman-compose 1.6.0 loops on depends_on service_healthy (#1422, #1541), drop once a release has #1608.
     (final: prev: {
       podman-compose = prev.podman-compose.overridePythonAttrs (old: {
@@ -94,6 +95,23 @@
         };
       });
     })
+{{- end }}
+{{- if has "docker" .container.runtimes }}
+    # rootlesskit 2.3.6 drops the client source IP on the builtin port driver, drop once nixpkgs ships 3.3.0 (NixOS/nixpkgs#510845).
+    (final: prev: {
+      rootlesskit = prev.rootlesskit.overrideAttrs (finalAttrs: previousAttrs: {
+        version = "3.3.0";
+        # the commit id is the integrity check, so no hash to compute
+        src = builtins.fetchGit {
+          url = "https://github.com/rootless-containers/rootlesskit";
+          rev = "888c3189e9cdf34dcdb19011e1c7c34eb94b5393";
+        };
+        vendorHash = "sha256-FTBYVCE0jvAmkKiO+Aqr4IyZ3XDtx9PyMtHc39A3kIk=";
+        # the iptables backend test needs CAP_NET_ADMIN, which the nix build sandbox lacks
+        checkFlags = [ "-skip=^TestSourceIPTransparentBackend$" ];
+      });
+    })
+{{- end }}
   ];
 {{- end }}
 
@@ -102,13 +120,12 @@
   systemd.user.services.docker = {
     Install.WantedBy = [ "default.target" ];
     Service = {
-      # the user manager PATH has newuidmap but not the nix profile, pasta lives there
       Environment = [
-        "DOCKERD_ROOTLESS_ROOTLESSKIT_NET=pasta"
-        "DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=implicit"
-        "PATH=${config.home.profileDirectory}/bin:/usr/bin:/bin"
+        "DOCKERD_ROOTLESS_ROOTLESSKIT_NET=slirp4netns"
+        "DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=builtin"
       ];
-      ExecStart = "${pkgs.docker}/bin/dockerd-rootless";
+      # the userland proxy would hide the client source IP from containers
+      ExecStart = "${pkgs.docker}/bin/dockerd-rootless --userland-proxy=false";
     };
   };
 {{- end }}

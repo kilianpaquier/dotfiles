@@ -290,7 +290,6 @@ Two main container runtimes can be installed:
 #### Limitations
 
 - Rootless docker can't bind ports below 1024 by default, updates can be done in `/proc/sys/net/ipv4/ip_unprivileged_port_start`.
-- Rootless docker can't publish a port inside the kernel's ephemeral range (`/proc/sys/net/ipv4/ip_local_port_range`, usually `32768 60999`).
 
 ### Credentials
 

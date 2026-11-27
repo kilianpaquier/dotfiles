@@ -17,7 +17,7 @@ single="$HOME/.local/state/nix/profile/etc/profile.d/nix.sh"
 multi=/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 # renovate: datasource=github-tags packageName=NixOS/nix
-nix_version=2.35.6
+nix_version=2.36.0
 nix_installer="https://releases.nixos.org/nix/nix-$nix_version/install"
 
 # a pre-existing multi-user nix must not trigger the single-user installer
